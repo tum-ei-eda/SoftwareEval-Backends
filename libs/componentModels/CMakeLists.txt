@@ -1,0 +1,7 @@
+# TODO: Make independent library!?
+
+ADD_SUBDIRECTORY(src)
+
+TARGET_INCLUDE_DIRECTORIES(SWEVAL_BACKENDS_LIB PRIVATE
+    include
+)
