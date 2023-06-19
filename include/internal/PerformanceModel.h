@@ -67,11 +67,14 @@ public:
 
     const std::string name;
 
+    virtual void connectChannel(Channel*) = 0;
+
+    void callInstrTimeFunc(int);
     void update(void) { instrIndex++; };
     void newTraceBlock(void) { instrIndex = 0; };
-    void callInstrTimeFunc(int);
+    
 
-    virtual void connectChannel(Channel*) = 0;
+    
     virtual int getCycleCount(void) = 0;
 
     virtual std::string getPipelineStream(void) = 0;

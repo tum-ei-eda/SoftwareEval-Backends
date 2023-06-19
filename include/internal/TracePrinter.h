@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Chair of EDA, Technical University of Munich
+ * Copyright 2023 Chair of EDA, Technical University of Munich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,32 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+#ifndef SWEVAL_BACKENDS_TRACE_PRINTER_H
+#define SWEVAL_BACKENDS_TRACE_PRINTER_H
 
 #include "Channel.h"
 #include "Backend.h"
+#include "Printer.h"
 
-#include <string>
-
-namespace SwEvalBackends
+class TracePrinter: public Backend
 {
-
-class Factory
-{
-private:
-  enum var_t {CV32E40P, AssemblyTrace};
+  
 public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
+  TracePrinter(Printer* printer_): printer_ptr{printer_} {};
+  ~TracePrinter();
+
+  void connectChannel(Channel*);
+  void initialize(void);
+  void execute(void);
+  void finalize(void);
+
+private:
+  Printer* printer_ptr;
+
+  // Pointer to channel content
+  int* ch_typeId_ptr;
+  int* ch_instrCnt_ptr;
+  
 };
 
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+#endif// SWEVAL_BACKENDS_TRACE_PRINTER_H

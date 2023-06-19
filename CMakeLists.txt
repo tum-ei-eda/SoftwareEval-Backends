@@ -2,10 +2,11 @@ PROJECT(SWEVAL_BACKENDS_LIB)
 
 SET (SRC_FILES
   src/api/Factory.cpp
+  src/api/Backend.cpp
   src/internal/PerformanceEstimator.cpp
   src/internal/PerformanceModel.cpp
+  src/internal/TracePrinter.cpp
   src/internal/Printer.cpp
-  src/internal/Streamer.cpp
 )
 
 ADD_LIBRARY(${PROJECT_NAME} STATIC ${SRC_FILES})

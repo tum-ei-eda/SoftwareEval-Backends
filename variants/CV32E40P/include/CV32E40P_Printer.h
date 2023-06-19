@@ -21,13 +21,32 @@
 
 #include "Printer.h"
 
+#include "Channel.h"
+
+#include <string>
+
 class CV32E40P_Printer : public Printer
 {
 public:
 
   CV32E40P_Printer();
 
-  virtual void initialize(void);
+  virtual void connectChannel(Channel*);
+  
+  virtual std::string getPrintHeader(void);
+
+  int get_rs1(void){ return rs1_ptr[instrIndex]; };
+  int get_rs2(void){ return rs2_ptr[instrIndex]; };
+  int get_rd(void){ return rd_ptr[instrIndex]; };
+  int get_pc(void){ return pc_ptr[instrIndex]; };
+  int get_brTarget(void){ return brTarget_ptr[instrIndex]; };
+
+private:
+  int* rs1_ptr;
+  int* rs2_ptr;
+  int* rd_ptr;
+  int* pc_ptr;
+  int* brTarget_ptr;
 };
 
 #endif // SWEVAL_BACKENDS_CV32E40P_PRINTER_H

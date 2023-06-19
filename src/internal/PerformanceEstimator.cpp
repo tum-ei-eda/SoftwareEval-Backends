@@ -33,16 +33,29 @@ void PerformanceEstimator::connectChannel(Channel* channel_)
   perfModel_ptr->connectChannel(channel_);
 }
 
+void PerformanceEstimator::initialize(void)
+{
+  // TODO: Need some kind of file/table header
+  streamer.openStream();
+}
+
 void PerformanceEstimator::execute(void)
 {
   int instrCnt = *ch_instrCnt_ptr;
-
+  
   perfModel_ptr->newTraceBlock();
-
+  
   for(int instr_i=0; instr_i < instrCnt; instr_i++)
   {
     perfModel_ptr->callInstrTimeFunc(ch_typeId_ptr[instr_i]);
     perfModel_ptr->update();
+
+    if(streamer.isActive())
+    {
+      streamer.stream(perfModel_ptr->getPipelineStream());
+      streamer.stream("\n");
+    }
+
   }
 
   globalInstrCnt += instrCnt;
@@ -56,4 +69,6 @@ void PerformanceEstimator::finalize(void)
   std::cout << " >> Estimated number of processor cycles: " << globalCycleCnt << "\n";
   std::cout << " >> Estimated average number of processor cycles per instruction: " << ((float)globalCycleCnt/(float)globalInstrCnt) << "\n";
   std::cout << "-----------------------------------------------------------------------------------------------------------------\n";
+
+  streamer.closeStream();
 }

@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+/********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
+
+#ifndef ASSEMBLYTRACE_CHANNEL_H
+#define ASSEMBLYTRACE_CHANNEL_H
 
 #include "Channel.h"
-#include "Backend.h"
 
 #include <string>
+#include <stdbool.h>
 
-namespace SwEvalBackends
+class AssemblyTrace_Channel: public Channel
 {
-
-class Factory
-{
-private:
-  enum var_t {CV32E40P, AssemblyTrace};
 public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
+
+  AssemblyTrace_Channel() {};
+  ~AssemblyTrace_Channel() {};
+
+  int pc [100];
+  char assembly [100] [50];
+
+  virtual void *getTraceValueHook(std::string);
 };
 
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+#endif // ASSEMBLYTRACE_CHANNEL_H

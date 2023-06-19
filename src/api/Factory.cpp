@@ -21,11 +21,15 @@
 
 #include "PerformanceEstimator.h"
 #include "PerformanceModel.h"
+#include "TracePrinter.h"
 #include "Printer.h"
 
 #include "CV32E40P_Channel.h"
 #include "CV32E40P_PerformanceModel.h"
 #include "CV32E40P_Printer.h"
+
+#include "AssemblyTrace_Channel.h"
+#include "AssemblyTrace_Printer.h"
 
 namespace SwEvalBackends
 {
@@ -36,6 +40,10 @@ int Factory::getVariantHandle(std::string var_)
     {
         return CV32E40P;
     }
+    if(var_ == "AssemblyTrace")
+    {
+        return AssemblyTrace;
+    }
     return -1;
 }
 
@@ -44,6 +52,7 @@ Channel* Factory::getChannel(int var_)
   switch((var_t)var_)
   {
     case CV32E40P: return new CV32E40P_Channel();
+    case AssemblyTrace: return new AssemblyTrace_Channel();
     default: return nullptr;
   }
 }
@@ -70,36 +79,31 @@ Backend* Factory::getPerformanceEstimator(int var_)
     return nullptr;
   }
 }
-  
-//PerformanceEstimator* Factory::getPerformanceEstimator(int var_)
-//{
-//  PerformanceModel* perfModel = getPerformanceModel(var_);
-//  if(perfModel != nullptr)
-//  {
-//    return new PerformanceEstimator(perfModel);
-//  }
-//  else
-//  {
-//    return nullptr;
-//  }
-//}
 
-//PerformanceModel* Factory::getPerformanceModel(int var_)
-//{
-//  switch((var_t)var_)
-//  {
-//    case CV32E40P: return new CV32E40P_Model();
-//    default: return nullptr;
-//  }
-//}
+Backend* Factory::getTracePrinter(int var_)
+{
+  // Get variant specific printer
+  Printer* printer;
+  switch((var_t)var_)
+  {
+    case CV32E40P:
+      printer = new CV32E40P_Printer();
+      break;
+    case AssemblyTrace:
+      printer = new AssemblyTrace_Printer();
+      break;
+    default: printer = nullptr;
+  }
 
-//Backend* Factory::getPrinter(int var_)
-//{
-//  switch((var_t)var_)
-//  {
-//    case CV32E40P: return new CV32E40P_Printer();
-//    default: return nullptr;
-//  }
-//}
+  // Create TracePrinter
+  if(printer != nullptr)
+  {
+    return new TracePrinter(printer);
+  }
+  else
+  {
+    return nullptr;
+  }
+}
 
 } // namespace SwEvalBackends

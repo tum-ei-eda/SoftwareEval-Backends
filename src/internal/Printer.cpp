@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Chair of EDA, Technical University of Munich
+ * Copyright 2023 Chair of EDA, Technical University of Munich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,62 +16,33 @@
 
 #include "Printer.h"
 
-#include <string>
-#include <set>
-#include <functional>
-#include <iostream> // TODO: For debugging / info prints
-#include <sstream>
-#include <stdbool.h>
+#include <iostream>
 
 Printer::Printer(std::string name_, InstructionPrinterSet* instrPrinterSet_) : name(name_), instrPrinterSet(instrPrinterSet_)
 {
-    std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
-    std::cout << "Creating printer: " << name << "\n";
-    std::cout << " - Creating printer-function map:\n";
-
-    instrPrinterSet->foreach([this](InstructionPrinter &instr)
-    {
-
-        auto it = instrPrinterFunc_map.find(instr.id);
-        if(it != instrPrinterFunc_map.end())
-        {
-            std::cout << "\tERROR: Cannot add" << instr.id << ". ID already registered.\n";
-            return;
-        }
-        instrPrinterFunc_map[instr.id] = instr.printerFunc;
-        std::cout << "\tAdding instruction type " << instr.id << " to monitor-function map\n";
-
-    });
-    std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
-}
-
-void Printer::connectChannel(Channel* channel_)
-{
-    channel = channel_;
-}
-
-void Printer::setOutFile(std::string outDir_="", std::string fileName_="DUMP", int fileSize_=0x1000000)
-{
-  if(outDir_.compare("") != 0)
+  std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
+  std::cout << "Creating printer: " << name << "\n";
+  std::cout << " - Creating printer-function map:\n";
+  
+  instrPrinterSet->foreach([this](InstructionPrinter &instr)
   {
-    streamer.setOutFile(outDir_, fileName_, ".txt", fileSize_);
-  }
-}
 
-void Printer::execute(void)
-{
-  for(int instr_i=0; instr_i < channel->instrCnt; instr_i++)
-  {
-    if (instrPrinterFunc_map[channel->typeId[instr_i]])
+    auto it = instrPrintFunc_map.find(instr.id);
+    if(it != instrPrintFunc_map.end())
     {
-      streamer.stream(instrPrinterFunc_map[channel->typeId[instr_i]](channel, instr_i) + "\n");
+      std::cout << "\tERROR: Cannot add" << instr.id << ". ID already registered.\n";
+      return;
     }
-  }
+    instrPrintFunc_map[instr.id] = instr.printFunc;
+    std::cout << "\tAdding instruction type " << instr.id << " to monitor-function map\n";
+    
+  });
+  std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
 }
 
-void Printer::finalize(void)
+std::string Printer::callInstrPrintFunc(int typeId_)
 {
-  streamer.closeStream();
+  return instrPrintFunc_map[typeId_](this);
 }
 
 void InstructionPrinterSet::addInstructionPrinter(InstructionPrinter* instrPrinter)
@@ -87,12 +58,11 @@ void InstructionPrinterSet::foreach(std::function<void(InstructionPrinter &)> fu
     }
 }
 
-InstructionPrinter::InstructionPrinter(InstructionPrinterSet* parent_, std::string type_, int id_, std::function<std::string(Channel*, int)> printerFunc_) :
+InstructionPrinter::InstructionPrinter(InstructionPrinterSet* parent_, std::string type_, int id_, std::function<std::string(Printer*)> printFunc_) :
     parentSet(parent_),
     type(type_),
     id(id_),
-    printerFunc(printerFunc_)
+    printFunc(printFunc_)
 {
     parentSet->addInstructionPrinter(this);
 }
-

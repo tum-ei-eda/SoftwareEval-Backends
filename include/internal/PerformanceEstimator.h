@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_ESTIMATOR_H
-#define SWEVAL_BACKENDS_ESTIMATOR_H
+#ifndef SWEVAL_BACKENDS_PERFORMANCE_ESTIMATOR_H
+#define SWEVAL_BACKENDS_PERFORMANCE_ESTIMATOR_H
 
 #include "Channel.h"
 #include "Backend.h"
@@ -28,6 +28,7 @@ class PerformanceEstimator: public Backend
   ~PerformanceEstimator();
 
   void connectChannel(Channel* channel_);
+  void initialize(void);
   void execute(void);
   void finalize(void);
 
@@ -42,4 +43,4 @@ class PerformanceEstimator: public Backend
   int globalInstrCnt = 0;
 };
 
-#endif //SWEVAL_BACKENDS_ESTIMATOR_H
+#endif //SWEVAL_BACKENDS_PERFORMANCE_ESTIMATOR_H

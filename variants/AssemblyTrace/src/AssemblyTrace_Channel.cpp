@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Chair of EDA, Technical University of Munich
+ * Copyright 2023 Chair of EDA, Technical University of Munich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,17 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+#include "AssemblyTrace_Channel.h"
 
-#include "Channel.h"
-#include "Backend.h"
-
-#include <string>
-
-namespace SwEvalBackends
+void *AssemblyTrace_Channel::getTraceValueHook(std::string trVal_)
 {
-
-class Factory
-{
-private:
-  enum var_t {CV32E40P, AssemblyTrace};
-public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
-};
-
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+  if(trVal_ == "pc")
+  {
+    return pc;
+  }
+  if(trVal_ == "assembly")
+  {
+    return assembly;
+  }
+  return nullptr;
+}

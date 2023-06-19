@@ -30,7 +30,7 @@ public:
     int instrCnt;
     int typeId [100];
 
-    virtual bool hookTraceValue(std::string, int*&) = 0; // TODO: Make a version to handle both int and string?
+    virtual void *getTraceValueHook(std::string)=0;
 };
 
 #endif //SWEVAL_BACKENDS_CHANNEL_H

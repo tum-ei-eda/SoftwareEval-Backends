@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Chair of EDA, Technical University of Munich
+ * Copyright 2023 Chair of EDA, Technical University of Munich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,67 +18,65 @@
 #define SWEVAL_BACKENDS_PRINTER_H
 
 #include "Channel.h"
-#include "Streamer.h"
 
 #include <string>
-#include <functional>
 #include <map>
+#include <functional>
 #include <set>
-#include <stdbool.h>
-#include <iostream> // TODO: For debugging / info prints
-#include <fstream>
 
 class InstructionPrinterSet;
 
 class Printer
 {
-public:
-    Printer(std::string, InstructionPrinterSet*);
-    virtual ~Printer() = default;
+ public:
+  Printer(std::string, InstructionPrinterSet*);
+  virtual ~Printer()=default;
 
-    const std::string name;
+  const std::string name;
 
-    virtual void connectChannel(Channel*);
-    void setOutFile(std::string, std::string, int);
+  virtual void connectChannel(Channel*)=0;
+
+  std::string callInstrPrintFunc(int);
+  void newTraceBlock(void) { instrIndex = 0; };
+  void update(void) { instrIndex++; };
+
+  virtual std::string getPrintHeader(void)=0;
   
-    virtual void initialize(void) = 0;
-    void execute(void);
-    void finalize(void);
+ private:
+  InstructionPrinterSet* const instrPrinterSet;
+  std::map<int, std::function<std::string(Printer*)>> instrPrintFunc_map;
+ protected:
+  int instrIndex;
   
-private:
-    InstructionPrinterSet* const instrPrinterSet;
-    std::map<int, std::function<std::string(Channel*, int)>> instrPrinterFunc_map;
-    Channel* channel; // TODO: Member of Printer?
-  
-protected:
-    Streamer streamer;
 };
 
 class InstructionPrinter;
 
 class InstructionPrinterSet
 {
-public:
-    InstructionPrinterSet(std::string name_) : name(name_) {};
-    const std::string name;
-    void addInstructionPrinter(InstructionPrinter*);
-    void foreach(std::function<void(InstructionPrinter &)>);
-private:
-    std::set<InstructionPrinter*> instrPrinter_set;
+ public:
+  InstructionPrinterSet(std::string name_) : name(name_) {};
+  ~InstructionPrinterSet()=default; // TODO: Remove InstructionPrinters?
+  const std::string name;
+  void addInstructionPrinter(InstructionPrinter*);
+  void foreach(std::function<void(InstructionPrinter &)>);
+ private:
+  std::set<InstructionPrinter*> instrPrinter_set;
 };
 
 class InstructionPrinter
 {
-public:
-    InstructionPrinter(InstructionPrinterSet*, std::string,  int, std::function<std::string(Channel*, int)>);
-    ~InstructionPrinter(); // TODO: Remove unused Destructors (All over the place)
-    
-    const std::string type;
-    const int id;
-    const std::function<std::string(Channel*, int)> printerFunc;
+ public:
+  InstructionPrinter(InstructionPrinterSet*, std::string, int, std::function<std::string(Printer*)>);
+  ~InstructionPrinter()=default;
 
-private:
-    InstructionPrinterSet* const parentSet;
+  const std::string type;
+  const int id;
+  const std::function<std::string(Printer*)> printFunc;
+
+ private:
+  InstructionPrinterSet* const parentSet;
 };
 
-#endif //SWEVAL_BACKENDS_PRINTER_H
+#endif // SWEVAL_BACKENDS_PRINTER_H
+

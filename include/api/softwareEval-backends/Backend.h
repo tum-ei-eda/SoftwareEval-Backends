@@ -19,15 +19,59 @@
 
 #include "Channel.h"
 
+#include <stdbool.h>
+#include <string>
+#include <fstream>
+
+class Streamer
+{
+public:
+  Streamer(){};
+  ~Streamer()=default;
+
+  void activate(void) { activated = true; };
+  bool isActive(void) { return activated; };
+  void openStream(void);
+  void stream(std::string);
+  void closeStream(void);
+  void setOutFile(std::string, std::string, std::string, int);
+  void setPrintHeader(std::string);
+  
+private:
+  bool activated = false;
+  bool streamOpen = false;
+  bool streamToFile = false;
+
+  std::ofstream outFile;
+  int maxFileSize;
+  int fileIndex=0;
+  std::string outDir;
+  std::string fileNameBase;
+  std::string filePostfix;
+  
+  std::string printHeader="";
+  
+  bool outFileFull(void) { return outFile.tellp() > maxFileSize; };
+  void swapOutFile(void);
+  std::string getFileName(void);
+};
+
 class Backend
 {
  public:
-  Backend(){};
+  Backend(): streamer() {};
   ~Backend()=default;
-
+  
   virtual void connectChannel(Channel*)=0;
+  virtual void initialize(void)=0;
   virtual void execute(void)=0;
   virtual void finalize(void)=0;
+
+  void activateStreamToCout(void) { streamer.activate(); };
+  void activateStreamToFile(std::string, std::string, std::string, int);
+
+protected:
+  Streamer streamer;
   
 };
 

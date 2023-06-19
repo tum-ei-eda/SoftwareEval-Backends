@@ -20,6 +20,8 @@
 
 #include "Printer.h"
 
+#include "CV32E40P_Channel.h"
+
 #include <iostream>
 #include <iomanip>
 
@@ -28,7 +30,19 @@ extern InstructionPrinterSet* CV32E40P_InstrPrinterSet;
 CV32E40P_Printer::CV32E40P_Printer(): Printer("CV32E40P_Printer", CV32E40P_InstrPrinterSet)
 {}
 
-void CV32E40P_Printer::initialize(void)
+void CV32E40P_Printer::connectChannel(Channel* ch_)
+{
+  CV32E40P_Channel* channel = static_cast<CV32E40P_Channel*>(ch_);
+
+  rs1_ptr = channel->rs1;
+  rs2_ptr = channel->rs2;
+  rd_ptr = channel->rd;
+  pc_ptr = channel->pc;
+  brTarget_ptr = channel->brTarget;
+  
+}
+
+std::string CV32E40P_Printer::getPrintHeader(void)
 {
   std::stringstream caption_strs;	
   caption_strs << std::setfill(' ') << std::setw(10) << std::left << "rs1" << " | ";
@@ -37,6 +51,5 @@ void CV32E40P_Printer::initialize(void)
   caption_strs << std::setfill(' ') << std::setw(10) << std::left << "pc" << " | ";
   caption_strs << std::setfill(' ') << std::setw(10) << std::left << "brTarget" << " | ";
 
-  streamer.openStream();
-  streamer.stream(caption_strs.str() + "\n");
+  return caption_strs.str();
 }

@@ -16,33 +16,27 @@
 
 #include "CV32E40P_Channel.h"
 
-bool CV32E40P_Channel::hookTraceValue(std::string trVal_, int*& ptr_)
+void *CV32E40P_Channel::getTraceValueHook(std::string trVal_)
 {
-    if(trVal_ == "rs1")
-    {
-        ptr_ = rs1;
-        return true;
-    }
-    if(trVal_ == "rs2")
-    {
-        ptr_ = rs2;
-        return true;
-    }
-    if(trVal_ == "rd")
-    {
-        ptr_ = rd;
-        return true;
-    }
-    if(trVal_ == "pc")
-    {
-        ptr_ = pc;
-        return true;
-    }
-    if(trVal_ == "brTarget")
-    {
-        ptr_ = brTarget;
-        return true;
-    }
-    ptr_ = nullptr;
-    return false;
+  if(trVal_ == "rs1")
+  {
+    return rs1;
+  }
+  if(trVal_ == "rs2")
+  {
+    return rs2;
+  }
+  if(trVal_ == "rd")
+  {
+    return rd;
+  }
+  if(trVal_ == "pc")
+  {
+    return pc;
+  }
+  if(trVal_ == "brTarget")
+  {
+    return brTarget;
+  }
+  return nullptr;
 }

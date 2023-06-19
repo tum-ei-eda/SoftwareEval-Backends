@@ -37,7 +37,7 @@ public:
   int pc [100];
   int brTarget [100];
 
-  virtual bool hookTraceValue(std::string, int*&);
+  virtual void *getTraceValueHook(std::string);
 };
 
 #endif // CV32E40P_CHANNEL_H
