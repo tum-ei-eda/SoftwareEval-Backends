@@ -28,6 +28,8 @@ public:
   int* rs2_ptr;
   int* rd_ptr;
 
+  // TODO: Consider corner-case rd = 0?
+  
   int getXa(void){ return registerModel[rs1_ptr[getInstrIndex()]]; };
   int getXb(void){ return registerModel[rs2_ptr[getInstrIndex()]]; };
   void setXd(int xd_) { registerModel[rd_ptr[getInstrIndex()]] = xd_; };

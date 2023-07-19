@@ -14,28 +14,31 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+// TODO: Hand-written as a proof-of-concept
+ 
+#ifndef CVA6_CHANNEL_H
+#define CVA6_CHANNEL_H
 
 #include "Channel.h"
-#include "Backend.h"
 
 #include <string>
+#include <stdbool.h>
 
-namespace SwEvalBackends
+class CVA6_Channel: public Channel
 {
-
-class Factory
-{
-private:
-  enum var_t {CV32E40P, CVA6, AssemblyTrace};
 public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
+
+  CVA6_Channel() {};
+  ~CVA6_Channel() {};
+
+  int rs1 [100];
+  int rs2 [100];
+  int rd [100];
+  int pc [100];
+  int brTarget [100];
+  int memAddr [100];
+
+  virtual void *getTraceValueHook(std::string);
 };
 
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+#endif // CVA6_CHANNEL_H

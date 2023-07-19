@@ -14,28 +14,25 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+#ifndef CLOBBER_MODEL_H
+#define CLOBBER_MODEL_H
 
-#include "Channel.h"
-#include "Backend.h"
+#include "PerformanceModel.h"
 
-#include <string>
-
-namespace SwEvalBackends
+class ClobberModel : public ConnectorModel
 {
-
-class Factory
-{
-private:
-  enum var_t {CV32E40P, CVA6, AssemblyTrace};
 public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
+  ClobberModel(PerformanceModel* parent_) : ConnectorModel("ClobberModel", parent_) {};
+
+  int* rd_ptr;
+
+  // TODO: Consider corner-case rd = 0?
+  
+  int getCb_Is(void){ return registerModel[rd_ptr[getInstrIndex()]]; };
+  void setCb_Com(int xd_){ registerModel[rd_ptr[getInstrIndex()]] = xd_; };
+
+private:
+  int registerModel [64] = {0};
 };
 
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+#endif //CLOBBER_MODEL_H

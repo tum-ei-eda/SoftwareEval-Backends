@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Chair of EDA, Technical University of Munich
+ * Copyright 2023 Chair of EDA, Technical University of Munich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,35 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+// TODO: Hand-written as a proof-of-concept
 
-#include "Channel.h"
-#include "Backend.h"
+#include "CVA6_Channel.h"
 
-#include <string>
-
-namespace SwEvalBackends
+void *CVA6_Channel::getTraceValueHook(std::string trVal_)
 {
-
-class Factory
-{
-private:
-  enum var_t {CV32E40P, CVA6, AssemblyTrace};
-public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
-};
-
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+  if(trVal_ == "rs1")
+  {
+    return rs1;
+  }
+  if(trVal_ == "rs2")
+  {
+    return rs2;
+  }
+  if(trVal_ == "rd")
+  {
+    return rd;
+  }
+  if(trVal_ == "pc")
+  {
+    return pc;
+  }
+  if(trVal_ == "brTarget")
+  {
+    return brTarget;
+  }
+  if(trVal_ == "memAddr")
+  {
+    return memAddr;
+  }
+  return nullptr;
+}
