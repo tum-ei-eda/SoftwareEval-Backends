@@ -17,6 +17,8 @@
 #ifndef STANDARD_REGISTER_MODEL_H
 #define STANDARD_REGISTER_MODEL_H
 
+#include <cstdint>
+
 #include "PerformanceModel.h"
 
 class StandardRegisterModel : public ConnectorModel
@@ -24,18 +26,18 @@ class StandardRegisterModel : public ConnectorModel
 public:
   StandardRegisterModel(PerformanceModel* parent_) : ConnectorModel("StandardRegisterModel", parent_) {};
 
-  int* rs1_ptr;
-  int* rs2_ptr;
-  int* rd_ptr;
+  uint64_t* rs1_ptr;
+  uint64_t* rs2_ptr;
+  uint64_t* rd_ptr;
 
   // TODO: Consider corner-case rd = 0?
   
-  int getXa(void){ return registerModel[rs1_ptr[getInstrIndex()]]; };
-  int getXb(void){ return registerModel[rs2_ptr[getInstrIndex()]]; };
-  void setXd(int xd_) { registerModel[rd_ptr[getInstrIndex()]] = xd_; };
+  uint64_t getXa(void){ return registerModel[rs1_ptr[getInstrIndex()]]; };
+  uint64_t getXb(void){ return registerModel[rs2_ptr[getInstrIndex()]]; };
+  void setXd(uint64_t xd_) { registerModel[rd_ptr[getInstrIndex()]] = xd_; };
 
 private:
-  int registerModel [64] = {0};
+  uint64_t registerModel [64] = {0};
 };
 
 #endif //STANDARD_REGISTER_PREDICT_MODEL_H

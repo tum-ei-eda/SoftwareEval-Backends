@@ -24,10 +24,10 @@ class StatisticalMemoryModel : public ResourceModel
 public:
   StatisticalMemoryModel(PerformanceModel* parent_) : ResourceModel("StatisticalMemoryModel", parent_) {};
 
-  int getDelay(void) {return ((cnt++)%100 == 0) ? 5 : 1; };
+  unsigned int getDelay(void) {return ((cnt++)%100 == 0) ? 5 : 1; };
   
 private:
-  int cnt = 0;
+  unsigned int cnt = 0;
 };
 
 #endif //STATISTICAL_MEMORY_MODEL_H

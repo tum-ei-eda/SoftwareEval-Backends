@@ -27,8 +27,8 @@ public:
     Channel() { instrCnt = 0; };
     ~Channel() = default;
 
-    int instrCnt;
-    int typeId [100];
+    uint64_t instrCnt;
+    uint64_t typeId [100];
 
     virtual void *getTraceValueHook(std::string)=0;
 };

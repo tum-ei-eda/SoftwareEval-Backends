@@ -21,42 +21,81 @@
 #include <stdbool.h>
 #include <string>
 #include <sstream>
+#include <cstdint>
 
 #include "Channel.h"
 
 #include "CVA6_Channel.h"
 
-void CVA6_IfStage_Model::set_leaveICache(int c)
+void CVA6_IfStage_Model::set_leaveICache(uint64_t c)
 {
   leaveICache[iCache_ptr] = c;
   iCache_ptr = (++iCache_ptr)%2;
 }
 
-void CVA6_IqStage_Model::set_leaveStage(int c)
+/*
+void CVA6_IfStage_Model::update(void)
 {
+  iCache_array[iCache_ptr] = leaveICache;
+  iCache_ptr = (++iCache_ptr)%2;
+}
+*/
+
+void CVA6_IqStage_Model::set_leaveStage(uint64_t c)
+{
+  curLeaveStage = c;
   leaveStage[stage_ptr] = c;
   stage_ptr = (++stage_ptr)%7;
 }
 
-void CVA6_ExStage_Model::set_leaveMul(int c)
+/*
+void CVA6_IqStage_Model::update(void)
+{
+  stage_array[stage_ptr] = leaveStage;
+  stage_ptr = (++stage_ptr)%7;
+}
+*/
+
+void CVA6_ExStage_Model::set_leaveMul(uint64_t c)
 {
   leaveMul[mul_ptr_i2] = c;
   mul_ptr_i2 = (++mul_ptr_i2)%2;
   mul_ptr_i1 = (++mul_ptr_i1)%2;
 }
 
-void CVA6_ExStage_Model::set_leaveStage(int c)
+void CVA6_ExStage_Model::set_leaveStage(uint64_t c)
 {
+  curLeaveStage = c;
   leaveStage[stage_ptr_i8] = c;
   stage_ptr_i8 = (++stage_ptr_i8)%8;
   stage_ptr_i1 = (++stage_ptr_i1)%8;
 }
 
-void CVA6_ComStage_Model::set_leaveStage(int c)
+void CVA6_ExStage_Model::update(void)
 {
+  //stage_array[stage_ptr_i8] = leaveStage;
+  //stage_ptr_i8 = (++stage_ptr_i8)%8;
+  //stage_ptr_i1 = (++stage_ptr_i1)%8;
+
+  //mul_array[mul_ptr_i2] = leaveMul;
+  //mul_ptr_i2 = (++mul_ptr_i2)%2;
+  //mul_ptr_i1 = (++mul_ptr_i1)%2;
+}
+
+void CVA6_ComStage_Model::set_leaveStage(uint64_t c)
+{
+  curLeaveStage = c;
   leaveStage[stage_ptr] = c;
   stage_ptr = (++stage_ptr)%2;
 }
+
+/*
+void CVA6_ComStage_Model::update(void)
+{
+  stage_array[stage_ptr] = leaveStage;
+  stage_ptr = (++stage_ptr)%2;
+}
+*/
 
 void CVA6_Model::connectChannel(Channel* channel_)
 {
@@ -67,16 +106,14 @@ void CVA6_Model::connectChannel(Channel* channel_)
   regModel.rd_ptr = channel->rd;
 
   cbModel.rd_ptr = channel->rd;
-  
-  staBranchPredModel.pc_ptr = channel->pc;
-  staBranchPredModel.brTarget_ptr = channel->brTarget;
-
+ 
   iCacheModel.pc_ptr = channel->pc;
 
   dCacheModel.addr_ptr = channel->memAddr;
 
   brPredModel.pc_ptr = channel->pc;
   brPredModel.brTarget_ptr = channel->brTarget;
+  brPredModel.imm_ptr = channel->imm;
   
 }
 
@@ -84,12 +121,29 @@ std::string CVA6_Model::getPipelineStream(void)
 {
   std::stringstream ret_strs;
   
-  ret_strs << PcGenStage.get_leaveStage(); 
-  ret_strs << "," << IfStage.get_leaveStage();
-  ret_strs << "," << IqStage.get_leaveStage();
-  ret_strs << "," << IdStage.get_leaveStage();
-  ret_strs << "," << IsStage.get_leaveStage();
-  ret_strs << "," << ExStage.get_leaveStage_i1();
-  ret_strs << "," << ComStage.get_leaveStage();
+  ret_strs << PcGenStage.getStageInfo(); 
+  ret_strs << "," << IfStage.getStageInfo();
+  ret_strs << "," << IqStage.getStageInfo();
+  ret_strs << "," << IdStage.getStageInfo();
+  ret_strs << "," << IsStage.getStageInfo();
+  ret_strs << "," << ExStage.getStageInfo();
+  ret_strs << "," << ComStage.getStageInfo();
+  ret_strs << "," << brPredModel.getInfo();
+  return ret_strs.str();
+}
+
+std::string CVA6_Model::getPrintHeader(void)
+{
+  std::stringstream ret_strs;
+
+  ret_strs << "PCGEN";
+  ret_strs << "," << "IF";
+  ret_strs << "," << "IQ";
+  ret_strs << "," << "ID";
+  ret_strs << "," << "IS";
+  ret_strs << "," << "EX";
+  ret_strs << "," << "COM";
+  ret_strs << "," << "mispredict";
+  
   return ret_strs.str();
 }

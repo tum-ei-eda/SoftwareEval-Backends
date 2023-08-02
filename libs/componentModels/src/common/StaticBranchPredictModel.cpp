@@ -16,19 +16,21 @@
 
 #include "models/common/StaticBranchPredictModel.h"
 
-void StaticBranchPredictModel::setPc_p(int pc_p_)
+#include <cstdint>
+
+void StaticBranchPredictModel::setPc_p(uint64_t pc_p_)
 {
   pc_p = pc_p_;
 }
 
-void StaticBranchPredictModel::setPc_np(int pc_np_)
+void StaticBranchPredictModel::setPc_np(uint64_t pc_np_)
 {
   pc_np = pc_np_;
   branchInstr = true;
   branchTarget = brTarget_ptr[getInstrIndex()];
 }
 
-int StaticBranchPredictModel::getPc(void)
+uint64_t StaticBranchPredictModel::getPc(void)
 {
   if(!branchInstr)
   {

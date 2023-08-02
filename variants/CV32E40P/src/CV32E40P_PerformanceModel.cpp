@@ -52,3 +52,14 @@ std::string CV32E40P_Model::getPipelineStream(void)
   ret_strs << "," << CV32E40P_pipeline.getWB_stage();
   return ret_strs.str();
 }
+
+std::string CV32E40P_Model::getPrintHeader(void)
+{
+  std::stringstream ret_strs;
+
+  ret_strs << "IF";
+  ret_strs << "," << "ID";
+  ret_strs << "," << "EX";
+  ret_strs << "," << "WB";
+  return ret_strs.str();
+}

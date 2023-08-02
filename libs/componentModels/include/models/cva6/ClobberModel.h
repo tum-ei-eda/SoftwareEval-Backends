@@ -18,21 +18,22 @@
 #define CLOBBER_MODEL_H
 
 #include "PerformanceModel.h"
+#include <cstdint>
 
 class ClobberModel : public ConnectorModel
 {
 public:
   ClobberModel(PerformanceModel* parent_) : ConnectorModel("ClobberModel", parent_) {};
 
-  int* rd_ptr;
+  uint64_t* rd_ptr;
 
   // TODO: Consider corner-case rd = 0?
   
-  int getCb_Is(void){ return registerModel[rd_ptr[getInstrIndex()]]; };
-  void setCb_Com(int xd_){ registerModel[rd_ptr[getInstrIndex()]] = xd_; };
+  uint64_t getCb_Is(void){ return registerModel[rd_ptr[getInstrIndex()]]; };
+  void setCb_Com(uint64_t xd_){ registerModel[rd_ptr[getInstrIndex()]] = xd_; };
 
 private:
-  int registerModel [64] = {0};
+  uint64_t registerModel [64] = {0};
 };
 
 #endif //CLOBBER_MODEL_H

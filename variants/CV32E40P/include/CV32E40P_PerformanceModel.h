@@ -21,6 +21,7 @@
 
 #include <stdbool.h>
 #include <string>
+#include <cstdint>
 
 #include "PerformanceModel.h"
 #include "Channel.h"
@@ -40,19 +41,19 @@ public:
     ,stage("WB_stage")
   };
 
-  void setIF_stage(int c) { stages[0].cnt = c; };
-  int getIF_stage(void) { return stages[0].cnt; };
+  void setIF_stage(uint64_t c) { stages[0].cnt = c; };
+  uint64_t getIF_stage(void) { return stages[0].cnt; };
   
-  void setID_stage(int c) { stages[1].cnt = c; };
-  int getID_stage(void) { return stages[1].cnt; };
+  void setID_stage(uint64_t c) { stages[1].cnt = c; };
+  uint64_t getID_stage(void) { return stages[1].cnt; };
   
-  void setEX_stage(int c) { stages[2].cnt = c; };
-  int getEX_stage(void) { return stages[2].cnt; };
+  void setEX_stage(uint64_t c) { stages[2].cnt = c; };
+  uint64_t getEX_stage(void) { return stages[2].cnt; };
   
-  void setWB_stage(int c) { stages[3].cnt = c; };
-  int getWB_stage(void) { return stages[3].cnt; };
+  void setWB_stage(uint64_t c) { stages[3].cnt = c; };
+  uint64_t getWB_stage(void) { return stages[3].cnt; };
 
-  int getCycleCount(void) { return stages[3].cnt; };
+  uint64_t getCycleCount(void) { return stages[3].cnt; };
   
 };
 
@@ -76,9 +77,9 @@ public:
   StaticBranchPredictModel staBranchPredModel;
 
   virtual void connectChannel(Channel*);
-  virtual int getCycleCount(void){ return CV32E40P_pipeline.getCycleCount(); };
+  virtual uint64_t getCycleCount(void){ return CV32E40P_pipeline.getCycleCount(); };
   virtual std::string getPipelineStream(void);
-
+  virtual std::string getPrintHeader(void);
 };
 
 #endif // SWEVAL_BACKENDS_CV32E40P_PERFORMANCE_MODEL_H

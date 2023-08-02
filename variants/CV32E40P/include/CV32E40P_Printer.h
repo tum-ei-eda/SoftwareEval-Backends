@@ -42,11 +42,11 @@ public:
   int get_brTarget(void){ return brTarget_ptr[instrIndex]; };
 
 private:
-  int* rs1_ptr;
-  int* rs2_ptr;
-  int* rd_ptr;
-  int* pc_ptr;
-  int* brTarget_ptr;
+  uint64_t* rs1_ptr;
+  uint64_t* rs2_ptr;
+  uint64_t* rd_ptr;
+  uint64_t* pc_ptr;
+  uint64_t* brTarget_ptr;
 };
 
 #endif // SWEVAL_BACKENDS_CV32E40P_PRINTER_H

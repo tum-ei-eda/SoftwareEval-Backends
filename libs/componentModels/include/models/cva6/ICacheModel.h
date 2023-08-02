@@ -31,7 +31,7 @@ class ICacheModel : public ResourceModel
     virtual int getDelay(void);
 
     // Trace value
-    int* pc_ptr;
+    uint64_t* pc_ptr;
 
     private:
 

@@ -31,11 +31,11 @@ public:
   CV32E40P_Channel() {};
   ~CV32E40P_Channel() {};
 
-  int rs1 [100];
-  int rs2 [100];
-  int rd [100];
-  int pc [100];
-  int brTarget [100];
+  uint64_t rs1 [100];
+  uint64_t rs2 [100];
+  uint64_t rd [100];
+  uint64_t pc [100];
+  uint64_t brTarget [100];
 
   virtual void *getTraceValueHook(std::string);
 };

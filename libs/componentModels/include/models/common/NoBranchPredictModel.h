@@ -20,17 +20,18 @@
 #include "PerformanceModel.h"
 
 #include <stdbool.h>
+#include <cstdint>
 
 class NoBranchPredictModel : public ConnectorModel
 {
 public:
     NoBranchPredictModel(PerformanceModel* parent_) : ConnectorModel("NoBranchPredictModel", parent_) {};
 
-    void setPc_np(int pc_np_) { pc = pc_np_; };
-    int getPc(void) { return pc; };
+    void setPc_np(uint64_t pc_np_) { pc = pc_np_; };
+    uint64_t getPc(void) { return pc; };
     
 private:
-    int pc = 0;
+    uint64_t pc = 0;
 };
 
 #endif //NO_BRANCH_PREDICT_MODEL_H

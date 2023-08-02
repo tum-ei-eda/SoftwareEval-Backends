@@ -44,5 +44,9 @@ void *CVA6_Channel::getTraceValueHook(std::string trVal_)
   {
     return memAddr;
   }
+  if(trVal_ == "imm")
+  {
+    return imm;
+  }
   return nullptr;
 }

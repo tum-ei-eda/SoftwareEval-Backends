@@ -32,7 +32,7 @@ class DCacheModel : public ResourceModel
     virtual int getDelay(void);
 
     // Trace value
-    int* addr_ptr;
+    uint64_t* addr_ptr;
 
     private:
 

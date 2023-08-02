@@ -25,34 +25,35 @@
 #include <list>
 #include <functional>
 #include <stdbool.h>
+#include <cstdint>
 
 #include <iostream> // TODO: For debug. Remove
 
 // TODO: Remove max-functions. Using build-in version
-inline int max_2(int a, int b)
-{
-    return (a > b) ? a : b;
-}
-
-inline int max_3(int a, int b, int c)
-{
-    int temp_ab;
-    temp_ab = max_2(a, b);
-    return max_2(temp_ab, c);
-}
-
-inline int max_4(int a, int b, int c, int d)
-{
-    int temp_ab;
-    int temp_cd;
-    temp_ab = max_2(a,b);
-    temp_cd = max_2(c,d);
-    return max_2(temp_ab, temp_cd);
-}
+//inline int max_2(int a, int b)
+//{
+//    return (a > b) ? a : b;
+//}
+//
+//inline int max_3(int a, int b, int c)
+//{
+//    int temp_ab;
+//    temp_ab = max_2(a, b);
+//    return max_2(temp_ab, c);
+//}
+//
+//inline int max_4(int a, int b, int c, int d)
+//{
+//    int temp_ab;
+//    int temp_cd;
+//    temp_ab = max_2(a,b);
+//    temp_cd = max_2(c,d);
+//    return max_2(temp_ab, temp_cd);
+//}
 
 struct stage
 {
-    int cnt = 0;
+    uint64_t cnt = 0;
     std::string name;
     stage(std::string name_) : name(name_) {};
 };
@@ -73,11 +74,9 @@ public:
     void update(void) { instrIndex++; };
     void newTraceBlock(void) { instrIndex = 0; };
     
-
-    
-    virtual int getCycleCount(void) = 0;
-
+    virtual uint64_t getCycleCount(void) = 0;
     virtual std::string getPipelineStream(void) = 0;
+    virtual std::string getPrintHeader(void) = 0; 
   
     int instrIndex; // TODO: Make protected, with ConnectorModel as a friend?
 
@@ -140,44 +139,44 @@ private:
     PerformanceModel* const parentModel;
 };
 
-struct ResourceBlockEntry
-{
-    int start = 0;
-    int end = 0;
-    ResourceBlockEntry(int start_, int end_, std::string info_) : start(start_), end(end_) {};
-};
-
-class SharedResourceModel
-{
-public:
-    virtual ~SharedResourceModel() = default;
-
-    virtual int getDelayFromResource() = 0;
-    int getDelay(int);
-    
-private:
-    std::list<ResourceBlockEntry*> blockList;
-    bool isLastEntry(std::list<ResourceBlockEntry*>::iterator);
-};
-
-class StaticSharedResourceModel : public SharedResourceModel
-{
-public:
-    StaticSharedResourceModel(int delay_) : delay(delay_) {};
-    virtual int getDelayFromResource() { return delay; };
-
-private:
-    const int delay;
-};
-
-class DynamicSharedResourceModel : public SharedResourceModel
-{
-public:
-    DynamicSharedResourceModel(ResourceModel* resModel_) : resModel(resModel_) {};
-    virtual int getDelayFromResource() { return resModel->getDelay(); };
-
-private:
-    ResourceModel* const resModel;
-};
+//struct ResourceBlockEntry
+//{
+//    int start = 0;
+//    int end = 0;
+//    ResourceBlockEntry(int start_, int end_, std::string info_) : start(start_), end(end_) {};
+//};
+//
+//class SharedResourceModel
+//{
+//public:
+//    virtual ~SharedResourceModel() = default;
+//
+//    virtual int getDelayFromResource() = 0;
+//    int getDelay(int);
+//    
+//private:
+//    std::list<ResourceBlockEntry*> blockList;
+//    bool isLastEntry(std::list<ResourceBlockEntry*>::iterator);
+//};
+//
+//class StaticSharedResourceModel : public SharedResourceModel
+//{
+//public:
+//    StaticSharedResourceModel(int delay_) : delay(delay_) {};
+//    virtual int getDelayFromResource() { return delay; };
+//
+//private:
+//    const int delay;
+//};
+//
+//class DynamicSharedResourceModel : public SharedResourceModel
+//{
+//public:
+//    DynamicSharedResourceModel(ResourceModel* resModel_) : resModel(resModel_) {};
+//    virtual int getDelayFromResource() { return resModel->getDelay(); };
+//
+//private:
+//    ResourceModel* const resModel;
+//};
 
 #endif // SWEVAL_BACKENDS_PERFORMANCE_MODEL_H

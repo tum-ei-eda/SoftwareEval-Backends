@@ -27,7 +27,7 @@ void TracePrinter::connectChannel(Channel* channel_)
   ch_typeId_ptr = channel_->typeId;
   ch_instrCnt_ptr = &(channel_->instrCnt);
 
-  // Forward channel to perfModel
+  // Forward channel to printer
   printer_ptr->connectChannel(channel_);
   
 }

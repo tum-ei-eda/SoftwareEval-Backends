@@ -17,6 +17,7 @@
 #include "PerformanceEstimator.h"
 
 #include <iostream>
+#include <cstdint>
 
 PerformanceEstimator::~PerformanceEstimator()
 {
@@ -36,6 +37,7 @@ void PerformanceEstimator::connectChannel(Channel* channel_)
 void PerformanceEstimator::initialize(void)
 {
   // TODO: Need some kind of file/table header
+  streamer.setPrintHeader(perfModel_ptr->getPrintHeader());
   streamer.openStream();
 }
 
@@ -63,7 +65,7 @@ void PerformanceEstimator::execute(void)
 
 void PerformanceEstimator::finalize(void)
 {
-  int globalCycleCnt = perfModel_ptr->getCycleCount();
+  uint64_t globalCycleCnt = perfModel_ptr->getCycleCount();
   std::cout << "-----------------------------------------------------------------------------------------------------------------\n";
   std::cout << " >> Number of instructions: " << globalInstrCnt << "\n";
   std::cout << " >> Estimated number of processor cycles: " << globalCycleCnt << "\n";

@@ -102,7 +102,7 @@ void Streamer::swapOutFile(void)
   fileIndex += 1;
   outFile.open(getFileName());
   stream(printHeader);
-  stream("\n");
+  //stream("\n");
 }
 
 std::string Streamer::getFileName(void)

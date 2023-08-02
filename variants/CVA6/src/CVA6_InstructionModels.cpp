@@ -17,6 +17,7 @@
 // TODO: Hand-written as a proof of concept
 
 #include <algorithm>
+#include <cstdint>
 
 #include "PerformanceModel.h"
 
@@ -29,10 +30,10 @@
 
 // -- PcGen-Stage
 
-#define PE_TIMEFUNC_PCGEN_STAGE int n_pcgen_start, n_pcgen_1, n_pcgen_2, n_pcgen_leave; \
+#define PE_TIMEFUNC_PCGEN_STAGE uint64_t n_pcgen_start, n_pcgen_1, n_pcgen_2, n_pcgen_leave; \
   n_pcgen_start = perfModel->PcGenStage.get_leaveStage();\
   n_pcgen_1 = n_pcgen_start + 1;\
-  n_pcgen_2 = std::max({n_pcgen_start, perfModel->brPredModel.getPc()});\
+  n_pcgen_2 = std::max({n_pcgen_start, perfModel->brPredModel.getPc()}); \
   n_pcgen_leave = std::max({n_pcgen_1, n_pcgen_2, perfModel->IfStage.get_backPressure()});\
   perfModel->PcGenStage.set_leaveStage(n_pcgen_leave);
 
@@ -45,7 +46,7 @@
 
 // -- If-Stage
 
-#define PE_TIMEFUNC_IF_STAGE int n_if_1, n_if_2, n_if_3, n_if_leave;\
+#define PE_TIMEFUNC_IF_STAGE uint64_t n_if_1, n_if_2, n_if_3, n_if_leave;\
   n_if_1 = n_pcgen_leave + perfModel->iCacheModel.getDelay();\
   n_if_2 = std::max({n_if_1, perfModel->IfStage.get_leaveStage()});\
   perfModel->IfStage.set_leaveICache(n_if_2);\
@@ -53,7 +54,7 @@
   n_if_leave = std::max({n_if_3, perfModel->IqStage.get_backPressure()});\
   perfModel->IfStage.set_leaveStage(n_if_leave);
 
-#define PE_TIMEFUNC_IF_STAGE_BRANCH int n_if_1, n_if_2, n_if_3, n_if_leave;\
+#define PE_TIMEFUNC_IF_STAGE_BRANCH uint64_t n_if_1, n_if_2, n_if_3, n_if_leave;\
   n_if_1 = n_pcgen_leave + perfModel->iCacheModel.getDelay();\
   n_if_2 = std::max({n_if_1, perfModel->IfStage.get_leaveStage()});\
   perfModel->IfStage.set_leaveICache(n_if_2);\
@@ -66,7 +67,7 @@
 
 // TODO: Add Buffer mechanism
 
-#define PE_TIMEFUNC_IQ_STAGE int n_iq_1, n_iq_leave;\
+#define PE_TIMEFUNC_IQ_STAGE uint64_t n_iq_1, n_iq_leave;\
   n_iq_1 = n_if_leave + 1;\
   perfModel->IqStage.set_leaveInsert(n_iq_1);\
   n_iq_leave = std::max({n_iq_1, perfModel->IdStage.get_backPressure()});\
@@ -74,7 +75,7 @@
 
 // -- Id-Stage
 
-#define PE_TIMEFUNC_ID_STAGE int n_id_1, n_id_leave;\
+#define PE_TIMEFUNC_ID_STAGE uint64_t n_id_1, n_id_leave;\
   n_id_1 = n_iq_leave + 1;\
   n_id_leave = std::max({n_id_1, perfModel->IsStage.get_backPressure()});\
   perfModel->IdStage.set_leaveStage(n_id_leave);
@@ -88,20 +89,20 @@
 
 #define PE_TIMEFUNC_IS_STAGE_BP_ALU n_is_leave = std::max({n_is_done, perfModel->ExStage.get_backPressure_arith()});
 
-#define PE_TIMEFUNC_IS_STAGE_DEF int n_is_1, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_DEF uint64_t n_is_1, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_done = n_is_1;\
   PE_TIMEFUNC_IS_STAGE_BP_ALU\
   PE_TIMEFUNC_IS_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IS_STAGE_ALU int n_is_1, n_is_2, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_ALU uint64_t n_is_1, n_is_2, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->cbModel.getCb_Is();\
   n_is_done = std::max({n_is_1, n_is_2});\
   PE_TIMEFUNC_IS_STAGE_BP_ALU\
   PE_TIMEFUNC_IS_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IS_STAGE_ALU_RS1 int n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_ALU_RS1 uint64_t n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->regModel.getXa();\
   n_is_3 = perfModel->cbModel.getCb_Is();\
@@ -109,7 +110,7 @@
   PE_TIMEFUNC_IS_STAGE_BP_ALU\
   PE_TIMEFUNC_IS_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IS_STAGE_ALU_RS2 int n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_ALU_RS2 uint64_t n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->regModel.getXb();\
   n_is_3 = perfModel->cbModel.getCb_Is();\
@@ -117,7 +118,7 @@
   PE_TIMEFUNC_IS_STAGE_BP_ALU\
   PE_TIMEFUNC_IS_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IS_STAGE_ALU_RS1_RS2 int n_is_1, n_is_2, n_is_3, n_is_4, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_ALU_RS1_RS2 uint64_t n_is_1, n_is_2, n_is_3, n_is_4, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->regModel.getXa();\
   n_is_3 = perfModel->regModel.getXb();\
@@ -126,7 +127,7 @@
   PE_TIMEFUNC_IS_STAGE_BP_ALU\
   PE_TIMEFUNC_IS_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IS_STAGE_BRANCH int n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_BRANCH uint64_t n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->regModel.getXa();\
   n_is_3 = perfModel->regModel.getXb();\
@@ -134,7 +135,7 @@
   PE_TIMEFUNC_IS_STAGE_BP_ALU\
   PE_TIMEFUNC_IS_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IS_STAGE_MUL int n_is_1, n_is_2, n_is_3, n_is_4, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_MUL uint64_t n_is_1, n_is_2, n_is_3, n_is_4, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->regModel.getXa();\
   n_is_3 = perfModel->regModel.getXb();\
@@ -143,7 +144,7 @@
   n_is_leave = std::max({n_is_done, perfModel->ExStage.get_backPressure_mul()});\
   PE_TIMEFUNC_IS_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IS_STAGE_DIV int n_is_1, n_is_2, n_is_3, n_is_4, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_DIV uint64_t n_is_1, n_is_2, n_is_3, n_is_4, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->regModel.getXa();\
   n_is_3 = perfModel->regModel.getXb();\
@@ -152,7 +153,7 @@
   n_is_leave = std::max({n_is_done, perfModel->ExStage.get_backPressure_div()});\
   PE_TIMEFUNC_IS_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IS_STAGE_LOAD int n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_LOAD uint64_t n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->regModel.getXa();\
   n_is_3 = perfModel->cbModel.getCb_Is();\
@@ -160,7 +161,7 @@
   n_is_leave = std::max({n_is_done, perfModel->ExStage.get_backPressure_load()});\
   PE_TIMEFUNC_IS_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IS_STAGE_STORE int n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
+#define PE_TIMEFUNC_IS_STAGE_STORE uint64_t n_is_1, n_is_2, n_is_3, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->regModel.getXa();\
   n_is_3 = perfModel->regModel.getXb();\
@@ -173,24 +174,24 @@
 #define PE_TIMEFUNC_EX_STAGE_LEAVE n_ex_leave = std::max({n_ex_done, perfModel->ExStage.get_transGuard(), perfModel->ComStage.get_backPressure()});\
   perfModel->ExStage.set_leaveStage(n_ex_leave);
 
-#define PE_TIMEFUNC_EX_STAGE_DEF int n_ex_done, n_ex_leave;\
+#define PE_TIMEFUNC_EX_STAGE_DEF uint64_t n_ex_done, n_ex_leave;\
   n_ex_done = n_is_leave +1;\
   perfModel->ExStage.set_leaveAlu(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
 
-#define PE_TIMEFUNC_EX_STAGE_ARITH int n_ex_done, n_ex_leave;\
+#define PE_TIMEFUNC_EX_STAGE_ARITH uint64_t n_ex_done, n_ex_leave;\
   n_ex_done = n_is_leave +1;\
   perfModel->ExStage.set_leaveAlu(n_ex_done);\
   perfModel->regModel.setXd(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
 
-#define PE_TIMEFUNC_EX_STAGE_BRANCH int n_ex_done, n_ex_leave;\
+#define PE_TIMEFUNC_EX_STAGE_BRANCH uint64_t n_ex_done, n_ex_leave;\
   n_ex_done = n_is_leave +1;\
   perfModel->ExStage.set_leaveAlu(n_ex_done);\
   perfModel->brPredModel.setPc_np(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
 
-#define PE_TIMEFUNC_EX_STAGE_MUL int n_ex_done, n_ex_leave;\
+#define PE_TIMEFUNC_EX_STAGE_MUL uint64_t n_ex_done, n_ex_leave;\
   n_ex_done = n_is_leave +2;\
   perfModel->ExStage.set_leaveMul(n_ex_done);\
   perfModel->regModel.setXd(n_ex_done);\
@@ -198,7 +199,7 @@
 
 // TODO: Add dynamic delay for DIV?
 
-#define PE_TIMEFUNC_EX_STAGE_DIV int n_ex_done, n_ex_leave;\
+#define PE_TIMEFUNC_EX_STAGE_DIV uint64_t n_ex_done, n_ex_leave;\
   n_ex_done = n_is_leave +5;\
   perfModel->ExStage.set_leaveDiv(n_ex_done);\
   perfModel->regModel.setXd(n_ex_done);\
@@ -206,7 +207,7 @@
 
 // TODO: Add dynamic model for DCache!
 
-#define PE_TIMEFUNC_EX_STAGE_LOAD int n_ex_1, n_ex_2, n_ex_3, n_ex_4, n_ex_done, n_ex_leave;\
+#define PE_TIMEFUNC_EX_STAGE_LOAD uint64_t n_ex_1, n_ex_2, n_ex_3, n_ex_4, n_ex_done, n_ex_leave;\
   n_ex_1 = n_is_leave +1;\
   n_ex_2 = std::max({n_ex_1, perfModel->ExStage.get_leaveDCache()});\
   perfModel->ExStage.set_leaveLCtrl(n_ex_2);\
@@ -218,7 +219,7 @@
   perfModel->regModel.setXd(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
 
-#define PE_TIMEFUNC_EX_STAGE_STORE int n_ex_1, n_ex_2, n_ex_done, n_ex_leave;\
+#define PE_TIMEFUNC_EX_STAGE_STORE uint64_t n_ex_1, n_ex_2, n_ex_done, n_ex_leave;\
   n_ex_1 = n_is_leave +1;\
   n_ex_2 = std::max({n_ex_1, perfModel->ExStage.get_leaveSUnit()});\
   perfModel->ExStage.set_leaveSCtrl(n_ex_2);\
@@ -228,7 +229,7 @@
 
 // -- Com-Stage
 
-#define PE_TIMEFUNC_COM_STAGE int n_com_leave;\
+#define PE_TIMEFUNC_COM_STAGE uint64_t n_com_leave;\
   n_com_leave = n_ex_leave + 1;\
   perfModel->ComStage.set_leaveStage(n_com_leave);
 

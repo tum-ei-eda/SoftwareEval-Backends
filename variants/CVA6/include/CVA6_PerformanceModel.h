@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <string>
 #include <algorithm>
+#include <cstdint>
 
 #include "PerformanceModel.h"
 #include "Channel.h"
@@ -39,14 +40,17 @@ public:
   
   CVA6_PcGenStage_Model(){};
 
-  int get_backPressure(void) { return get_leaveStage(); };
+  uint64_t get_backPressure(void) { return get_leaveStage(); };
   
-  int get_leaveStage(void) { return leaveStage; };
-  void set_leaveStage(int c) { leaveStage = c; };
+  uint64_t get_leaveStage(void) { return leaveStage; };
+  void set_leaveStage(uint64_t c) { leaveStage = c; };
+
+  void update(void) {};
+  uint64_t getStageInfo(void) { return leaveStage; };
   
 private:
 
-  int leaveStage = 0;
+  uint64_t leaveStage = 0;
   
 };
 
@@ -56,21 +60,24 @@ public:
   
   CVA6_IfStage_Model(){};
 
-  int get_backPressure(void) { return get_leaveICache(); };
+  uint64_t get_backPressure(void) { return get_leaveICache(); };
   
-  int get_leaveICache(void) { return leaveICache[iCache_ptr]; };
-  void set_leaveICache(int);
+  uint64_t get_leaveICache(void) { return leaveICache[iCache_ptr]; };
+  void set_leaveICache(uint64_t);
 
-  int get_leaveStage(void) { return leaveStage; };
-  void set_leaveStage(int c) { leaveStage = c; };
+  uint64_t get_leaveStage(void) { return leaveStage; };
+  void set_leaveStage(uint64_t c) { leaveStage = c; };
+
+  void update(void) {}; // TODO: Remove all update functions!
+  uint64_t getStageInfo(void) { return leaveStage; };
 
 private:
 
-  int leaveICache[2] = { };
-  int leaveStage = 0;
+  uint64_t leaveStage = 0;
 
+  uint64_t leaveICache[2] = {};
   int iCache_ptr = 0;
-  
+
 };
 
 class CVA6_IqStage_Model
@@ -79,21 +86,25 @@ public:
   
   CVA6_IqStage_Model(){};
 
-  int get_backPressure(void) { return std::max({get_leaveStage(), get_leaveInsert()}); };
+  uint64_t get_backPressure(void) { return std::max({get_leaveStage(), get_leaveInsert()}); };
   
-  void set_leaveInsert(int c) { leaveInsert = c ;};
-  int get_leaveInsert(void) {return leaveInsert; };
+  void set_leaveInsert(uint64_t c) { leaveInsert = c ;};
+  uint64_t get_leaveInsert(void) {return leaveInsert; };
 
-  void set_leaveStage (int);
-  int get_leaveStage(void) { return leaveStage[stage_ptr]; };
+  void set_leaveStage (uint64_t);
+  uint64_t get_leaveStage(void) { return leaveStage[stage_ptr]; };
   
+  void update(void) {};
+  uint64_t getStageInfo(void) { return curLeaveStage; };
+
 private:
 
-  int leaveInsert = 0;
-  int leaveStage[7] = {};
+  uint64_t leaveInsert = 0;
 
+  uint64_t leaveStage[7] = {};
   int stage_ptr = 0;
-  
+
+  uint64_t curLeaveStage = 0;
 };
 
 class CVA6_IdStage_Model
@@ -102,14 +113,17 @@ public:
   
   CVA6_IdStage_Model(){};
 
-  int get_backPressure(void) { return get_leaveStage(); };
+  uint64_t get_backPressure(void) { return get_leaveStage(); };
   
-  void set_leaveStage (int c) { leaveStage = c; };
-  int get_leaveStage(void) { return leaveStage; };
+  void set_leaveStage (uint64_t c) { leaveStage = c; };
+  uint64_t get_leaveStage(void) { return leaveStage; };
+
+  void update(void) {};
+  uint64_t getStageInfo(void) { return leaveStage; };
   
 private:
 
-  int leaveStage = 0;
+  uint64_t leaveStage = 0;
   
 };
 
@@ -119,14 +133,17 @@ public:
   
   CVA6_IsStage_Model(){};
 
-  int get_backPressure(void) { return get_leaveStage(); };
+  uint64_t get_backPressure(void) { return get_leaveStage(); };
   
-  void set_leaveStage (int c) { leaveStage = c; };
-  int get_leaveStage(void) { return leaveStage; };
+  void set_leaveStage (uint64_t c) { leaveStage = c; };
+  uint64_t get_leaveStage(void) { return leaveStage; };
   
+  void update(void) {};
+  uint64_t getStageInfo(void) { return leaveStage; };
+
 private:
 
-  int leaveStage = 0;
+  uint64_t leaveStage = 0;
   
 };
 
@@ -136,60 +153,77 @@ public:
   
   CVA6_ExStage_Model(){};
 
-  int get_backPressure_arith(void) { return std::max({get_leaveStage_i8(), get_leaveAlu(), get_leaveMul_i1(), get_leaveDiv()}); };
-  int get_backPressure_mul(void) { return std::max({get_leaveStage_i8(), get_leaveMul_i2(), get_leaveDiv()}); };
-  int get_backPressure_div(void) { return std::max({get_leaveStage_i8(), get_leaveDiv()}); };
-  int get_backPressure_load(void) { return std::max({get_leaveStage_i8(), get_leaveLCtrl()}); };
-  int get_backPressure_store(void) { return std::max({get_leaveStage_i8(), get_leaveSCtrl()}); };
+  uint64_t get_backPressure_arith(void) { return std::max({get_leaveStage_i8(), get_leaveAlu(), get_leaveMul_i1(), get_leaveDiv()}); };
+  uint64_t get_backPressure_mul(void) { return std::max({get_leaveStage_i8(), get_leaveMul_i2(), get_leaveDiv()}); };
+  uint64_t get_backPressure_div(void) { return std::max({get_leaveStage_i8(), get_leaveDiv()}); };
+  uint64_t get_backPressure_load(void) { return std::max({get_leaveStage_i8(), get_leaveLCtrl()}); };
+  uint64_t get_backPressure_store(void) { return std::max({get_leaveStage_i8(), get_leaveSCtrl()}); };
 
-  int get_transGuard(void) { return get_leaveStage_i1(); };
+  uint64_t get_transGuard(void) { return get_leaveStage_i1(); };
 
-  void set_leaveAlu(int c) { leaveAlu = c; };
-  int get_leaveAlu(void) { return leaveAlu; };
+  void set_leaveAlu(uint64_t c) { leaveAlu = c; };
+  uint64_t get_leaveAlu(void) { return leaveAlu; };
 
-  void set_leaveMul(int);
-  int get_leaveMul_i2(void) { return leaveMul[mul_ptr_i2]; };
-  int get_leaveMul_i1(void) { return leaveMul[mul_ptr_i1]; };
+  //void set_leaveMul(uint64_t c) { leaveMul = c; };
+  void set_leaveMul(uint64_t);
+  uint64_t get_leaveMul_i2(void) { return leaveMul[mul_ptr_i2]; };
+  uint64_t get_leaveMul_i1(void) { return leaveMul[mul_ptr_i1]; };
 
-  void set_leaveDiv(int c) { leaveDiv = c; };
-  int get_leaveDiv(void) { return leaveDiv; };
+  void set_leaveDiv(uint64_t c) { leaveDiv = c; };
+  uint64_t get_leaveDiv(void) { return leaveDiv; };
 
-  void set_leaveLCtrl(int c) { leaveLCtrl = c; };
-  int get_leaveLCtrl(void) { return leaveLCtrl; };
+  void set_leaveLCtrl(uint64_t c) { leaveLCtrl = c; };
+  uint64_t get_leaveLCtrl(void) { return leaveLCtrl; };
 
-  void set_leaveDCache(int c) { leaveDCache = c; };
-  int get_leaveDCache(void) { return leaveDCache; };
+  void set_leaveDCache(uint64_t c) { leaveDCache = c; };
+  uint64_t get_leaveDCache(void) { return leaveDCache; };
 
-  void set_leaveLUnit(int c) { leaveLUnit = c; };
-  int get_leaveLUnit(void) { return leaveLUnit; };
+  void set_leaveLUnit(uint64_t c) { leaveLUnit = c; };
+  uint64_t get_leaveLUnit(void) { return leaveLUnit; };
 
-  void set_leaveSCtrl(int c) { leaveSCtrl = c; };
-  int get_leaveSCtrl(void) { return leaveSCtrl; };
+  void set_leaveSCtrl(uint64_t c) { leaveSCtrl = c; };
+  uint64_t get_leaveSCtrl(void) { return leaveSCtrl; };
 
-  void set_leaveSUnit(int c) { leaveSUnit = c; };
-  int get_leaveSUnit(void) { return leaveSUnit; };
+  void set_leaveSUnit(uint64_t c) { leaveSUnit = c; };
+  uint64_t get_leaveSUnit(void) { return leaveSUnit; };
 
-  void set_leaveStage (int);
-  int get_leaveStage_i8(void) { return leaveStage[stage_ptr_i8]; };
-  int get_leaveStage_i1(void) { return leaveStage[stage_ptr_i1]; };
+  void set_leaveStage (uint64_t);
+  uint64_t get_leaveStage_i8(void) { return leaveStage[stage_ptr_i8]; };
+  uint64_t get_leaveStage_i1(void) { return leaveStage[stage_ptr_i1]; };
   
+  void update(void);
+  uint64_t getStageInfo(void) { return curLeaveStage; };
+
 private:
 
-  int leaveDiv = 0;
-  int leaveMul[2] = { };
-  int leaveAlu = 0; // TODO: Do we need to differentiate between ALU, BU and CSR?
-  int leaveLCtrl = 0;
-  int leaveDCache = 0;
-  int leaveLUnit = 0;
-  int leaveSCtrl = 0;
-  int leaveSUnit = 0;
-  int leaveStage[8] = { };
+  uint64_t leaveDiv = 0;
+  uint64_t leaveMul[2] = { };
+  uint64_t leaveAlu = 0; // TODO: Do we need to differentiate between ALU, BU and CSR?
+  uint64_t leaveLCtrl = 0;
+  uint64_t leaveDCache = 0;
+  uint64_t leaveLUnit = 0;
+  uint64_t leaveSCtrl = 0;
+  uint64_t leaveSUnit = 0;
+  uint64_t leaveStage[8] = { };
 
   int mul_ptr_i2 = 0;
   int mul_ptr_i1 = 1;
   int stage_ptr_i8 = 0;
   int stage_ptr_i1 = 7;
-  
+
+  uint64_t curLeaveStage = 0;
+  /*
+  uint64_t leaveMul = 0;
+  int mul_ptr_i2 = 0;
+  int mul_ptr_i1 = 1;
+  uint64_t mul_array[2] = {};
+  */
+
+  //uint64_t leaveStage = 0;
+  //int stage_ptr_i8 = 0;
+  //int stage_ptr_i1 = 7;
+  //uint64_t stage_array[8] = { };
+
 };
 
 class CVA6_ComStage_Model
@@ -198,17 +232,20 @@ public:
   
   CVA6_ComStage_Model(){};
 
-  int get_backPressure(void) { return get_leaveStage(); };
+  uint64_t get_backPressure(void) { return get_leaveStage(); };
 
-  void set_leaveStage (int);
-  int get_leaveStage(void) { return leaveStage[stage_ptr]; };
+  void set_leaveStage (uint64_t);
+  uint64_t get_leaveStage(void) { return leaveStage[stage_ptr]; };
   
+  void update(void) {};
+  uint64_t getStageInfo(void) { return curLeaveStage; };
+
 private:
 
-  int leaveStage[2] = { };
-
+  uint64_t leaveStage[2] = {};
   int stage_ptr = 0;
   
+  uint64_t curLeaveStage = 0;
 };
 
 extern InstructionModelSet* CVA6_InstrModelSet;
@@ -227,7 +264,6 @@ public:
     ,ComStage()
     ,regModel(this)
     ,cbModel(this)
-    ,staBranchPredModel(this)
     ,iCacheModel(this)
     ,dCacheModel(this)
     ,brPredModel(this)	 
@@ -245,14 +281,14 @@ public:
 
   StandardRegisterModel regModel;
   ClobberModel cbModel;
-  StaticBranchPredictModel staBranchPredModel;
   ICacheModel iCacheModel;
   DCacheModel dCacheModel;
   BranchPredictionModel brPredModel;
 
   virtual void connectChannel(Channel*);
-  virtual int getCycleCount(void){ return ComStage.get_leaveStage(); };
+  virtual uint64_t getCycleCount(void){ return ComStage.get_leaveStage(); };
   virtual std::string getPipelineStream(void);
+  virtual std::string getPrintHeader(void);
 
 };
 

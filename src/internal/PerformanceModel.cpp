@@ -88,85 +88,85 @@ InstructionModel::InstructionModel(InstructionModelSet* parent_, std::string nam
     parentSet->addInstructionModel(this);
 }
 
-int SharedResourceModel::getDelay(int prev_cycle)
-{
-
-  int start = prev_cycle + 1;
-  int additionalResDelay = getDelayFromResource() - 1; // Delay -1 since first cycle is already "part of" start
-  
-  if(blockList.size() == 0)
-  {
-    blockList.push_back(new ResourceBlockEntry(start, start + additionalResDelay, "init"));
-    return (additionalResDelay + 1);
-  }
-
-  for(auto entry_it=blockList.begin(); entry_it != blockList.end(); entry_it++)
-  {
-
-    // Entry blocks the requested resource. Check next entry
-    if((start >= (*entry_it)->start) && (start <= (*entry_it)->end))
-    {
-      start = (*entry_it)->end + 1; 
-      if(isLastEntry(entry_it))
-      {
-	blockList.push_back(new ResourceBlockEntry(start, start + additionalResDelay, "Blocked"));
-	break;
-      }
-      else
-      {
-	continue;
-      }
-    }
-
-    // Entry has released the resource at the point of request. Check if there is another entry blocking the resource or claim it.
-    if(start >= (*entry_it)->end)
-    {
-      if(isLastEntry(entry_it))
-      {
-	// Create a new entry at the end
-	blockList.push_back(new ResourceBlockEntry(start, start + additionalResDelay, "Later"));
-	break;
-      }
-      else
-      {
-	continue;
-      }
-    }
-
-    // At the point of request, the entry has not yet blocked the resource. Resource claimed by current request
-    if(start < (*entry_it)->start)
-    {
-
-      int dummy = (*entry_it)->start;
-      
-      // Create new entry
-      blockList.insert(entry_it, new ResourceBlockEntry(start, start + additionalResDelay, "Earlier"));
-
-      // TODO: Find a method to solve conflicts
-      //// Check for conflict
-      //if((start + additionalResDelay) >= dummy)
-      //{
-      //	
-      //}
-
-      break;
-    }
-    
-  }
-  
-  // TODO: Find a reasonable buffer size here!!!
-  if(blockList.size() > 10)
-  {
-    delete blockList.front();
-    blockList.pop_front();
-  }
-  
-  return (start - prev_cycle) + additionalResDelay;
-}
-
-bool SharedResourceModel::isLastEntry(std::list<ResourceBlockEntry*>::iterator it)
-{
-  auto temp = it;
-  ++it;
-  return ((temp != blockList.end()) && (it == blockList.end()));
-}
+//int SharedResourceModel::getDelay(int prev_cycle)
+//{
+//
+//  int start = prev_cycle + 1;
+//  int additionalResDelay = getDelayFromResource() - 1; // Delay -1 since first cycle is already "part of" start
+//  
+//  if(blockList.size() == 0)
+//  {
+//    blockList.push_back(new ResourceBlockEntry(start, start + additionalResDelay, "init"));
+//    return (additionalResDelay + 1);
+//  }
+//
+//  for(auto entry_it=blockList.begin(); entry_it != blockList.end(); entry_it++)
+//  {
+//
+//    // Entry blocks the requested resource. Check next entry
+//    if((start >= (*entry_it)->start) && (start <= (*entry_it)->end))
+//    {
+//      start = (*entry_it)->end + 1; 
+//      if(isLastEntry(entry_it))
+//      {
+//	blockList.push_back(new ResourceBlockEntry(start, start + additionalResDelay, "Blocked"));
+//	break;
+//      }
+//      else
+//      {
+//	continue;
+//      }
+//    }
+//
+//    // Entry has released the resource at the point of request. Check if there is another entry blocking the resource or claim it.
+//    if(start >= (*entry_it)->end)
+//    {
+//      if(isLastEntry(entry_it))
+//      {
+//	// Create a new entry at the end
+//	blockList.push_back(new ResourceBlockEntry(start, start + additionalResDelay, "Later"));
+//	break;
+//      }
+//      else
+//      {
+//	continue;
+//      }
+//    }
+//
+//    // At the point of request, the entry has not yet blocked the resource. Resource claimed by current request
+//    if(start < (*entry_it)->start)
+//    {
+//
+//      int dummy = (*entry_it)->start;
+//      
+//      // Create new entry
+//      blockList.insert(entry_it, new ResourceBlockEntry(start, start + additionalResDelay, "Earlier"));
+//
+//      // TODO: Find a method to solve conflicts
+//      //// Check for conflict
+//      //if((start + additionalResDelay) >= dummy)
+//      //{
+//      //	
+//      //}
+//
+//      break;
+//    }
+//    
+//  }
+//  
+//  // TODO: Find a reasonable buffer size here!!!
+//  if(blockList.size() > 10)
+//  {
+//    delete blockList.front();
+//    blockList.pop_front();
+//  }
+//  
+//  return (start - prev_cycle) + additionalResDelay;
+//}
+//
+//bool SharedResourceModel::isLastEntry(std::list<ResourceBlockEntry*>::iterator it)
+//{
+//  auto temp = it;
+//  ++it;
+//  return ((temp != blockList.end()) && (it == blockList.end()));
+//}

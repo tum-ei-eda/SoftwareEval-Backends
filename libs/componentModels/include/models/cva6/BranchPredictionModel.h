@@ -19,6 +19,7 @@
 
 #include <stdbool.h>
 #include <array>
+#include <cstdint>
 
 #include "PerformanceModel.h"
 
@@ -35,52 +36,69 @@ private:
 };
 
 
+struct BranchHistoryEntry
+{
+  bool valid = false;
+  PredictFsm state;
+};
+
+
 class BranchHistoryTable
 {
 public:
   BranchHistoryTable(){};
-  bool getPrediction(int);
-  void update(int, bool);
+  bool getPrediction(uint64_t, uint64_t);
+  void update(uint64_t, bool);
 private:
-  std::array<PredictFsm, 128> tab;
+  std::array<std::array<BranchHistoryEntry, 64>, 2> tab;
+
+  int getPageIndex(uint64_t pc_) { return ((pc_ & 0x00000002) >> 1); };
+  int getRowIndex(uint64_t pc_) { return ((pc_ & 0x000000FC) >> 2); };
 };
 
 
-class BranchTargetBuffer
-{
-public:
-  BranchTargetBuffer(){};
-  int getPrediction(int);
-  void update(int, int);
-private:
-  std::array<int, 32>tab;
-};
+//class BranchTargetBuffer
+//{
+//public:
+//  BranchTargetBuffer(){};
+//  int getPrediction(int);
+//  void update(int, int);
+//private:
+//  std::array<int, 32>tab;
+//};
 
   
 class BranchPredictionModel : public ConnectorModel
 {
 public:
-  BranchPredictionModel(PerformanceModel* parent_) : ConnectorModel("BranchPredictionModel", parent_), bht(), btb() {};
-
+  BranchPredictionModel(PerformanceModel* parent_) : ConnectorModel("BranchPredictionModel", parent_), bht() {}; //, btb() {};
+   
   // API
-  void setPc_p(int);
-  void setPc_np(int pc_np_){ t_pc_nPred = pc_np_; };
-  int getPc(void);
+  void setPc_p(uint64_t);
+  void setPc_np(uint64_t pc_np_){ t_pc_nPred = pc_np_; };
+  uint64_t getPc(void);
 
+  // Used for model evaluation TODO: Delete?
+  std::string getInfo(void) { return std::to_string(isMispredict); };
+  
   // Trace values
-  int* pc_ptr;
-  int* brTarget_ptr;
+  uint64_t* pc_ptr;
+  uint64_t* brTarget_ptr;
+  uint64_t* imm_ptr;
   
 private:
   BranchHistoryTable bht;
-  BranchTargetBuffer btb;
+  //BranchTargetBuffer btb;
 
   bool branchInstr_flag = false;
-  int bhtIndex = 0;
+  uint64_t branchPc = 0; 
+  uint64_t branchTarget = 0;
   bool predictedTaken = false;
-  int branchTarget = 0;
-  int t_pc_pred = 0;
-  int t_pc_nPred = 0;
+
+  uint64_t t_pc_pred = 0;
+  uint64_t t_pc_nPred = 0;
+
+  bool isMispredict = false; // Used for model evaluation. TODO: DELETE?
 };
 
 #endif //BRANCH_PREDICTION_MODEL_H

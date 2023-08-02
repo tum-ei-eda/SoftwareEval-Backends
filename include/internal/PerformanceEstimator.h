@@ -21,6 +21,10 @@
 #include "Backend.h"
 #include "PerformanceModel.h"
 
+#include <cstdint>
+
+using std::uint64_t;
+
 class PerformanceEstimator: public Backend
 {
  public:
@@ -37,10 +41,10 @@ class PerformanceEstimator: public Backend
   PerformanceModel* perfModel_ptr;
 
   // Pointer to channel content
-  int* ch_typeId_ptr;
-  int* ch_instrCnt_ptr;
+  uint64_t* ch_typeId_ptr;
+  uint64_t* ch_instrCnt_ptr;
   
-  int globalInstrCnt = 0;
+  uint64_t globalInstrCnt = 0;
 };
 
 #endif //SWEVAL_BACKENDS_PERFORMANCE_ESTIMATOR_H

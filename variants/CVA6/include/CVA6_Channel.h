@@ -23,6 +23,7 @@
 
 #include <string>
 #include <stdbool.h>
+#include <cstdint>
 
 class CVA6_Channel: public Channel
 {
@@ -31,13 +32,14 @@ public:
   CVA6_Channel() {};
   ~CVA6_Channel() {};
 
-  int rs1 [100];
-  int rs2 [100];
-  int rd [100];
-  int pc [100];
-  int brTarget [100];
-  int memAddr [100];
-
+  uint64_t rs1 [100];
+  uint64_t rs2 [100];
+  uint64_t rd [100];
+  uint64_t pc [100];
+  uint64_t brTarget [100];
+  uint64_t memAddr [100];
+  uint64_t imm [100];
+  
   virtual void *getTraceValueHook(std::string);
 };
 

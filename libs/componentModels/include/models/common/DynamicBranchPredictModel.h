@@ -23,6 +23,8 @@
 #include <map>
 #include <list>
 
+// TODO: Check where unsigned int should be used instead of int!
+
 class PredictFsm
 {
 public:

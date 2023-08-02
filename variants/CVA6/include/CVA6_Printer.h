@@ -43,12 +43,12 @@ public:
   int get_memAddr(void){ return memAddr_ptr[instrIndex]; };
 
 private:
-  int* rs1_ptr;
-  int* rs2_ptr;
-  int* rd_ptr;
-  int* pc_ptr;
-  int* brTarget_ptr;
-  int* memAddr_ptr;
+  uint64_t* rs1_ptr;
+  uint64_t* rs2_ptr;
+  uint64_t* rd_ptr;
+  uint64_t* pc_ptr;
+  uint64_t* brTarget_ptr;
+  uint64_t* memAddr_ptr;
 };
 
 #endif // SWEVAL_BACKENDS_CVA6_PRINTER_H

@@ -26,17 +26,17 @@ class StaticBranchPredictModel : public ConnectorModel
 public:
     StaticBranchPredictModel(PerformanceModel* parent_) : ConnectorModel("StaticBranchPredictModel", parent_) {};
 
-    int* pc_ptr;
-    int* brTarget_ptr;
+    uint64_t* pc_ptr;
+    uint64_t* brTarget_ptr;
 
-    void setPc_p(int pc_p_);
-    void setPc_np(int pc_np_);
-    int getPc(void);
+    void setPc_p(uint64_t pc_p_);
+    void setPc_np(uint64_t pc_np_);
+    uint64_t getPc(void);
     
 private:
-    int pc_p = 0;
-    int pc_np = 0;
-    int branchTarget = 0;
+    uint64_t pc_p = 0;
+    uint64_t pc_np = 0;
+    uint64_t branchTarget = 0;
     bool branchInstr = false;
 };
 

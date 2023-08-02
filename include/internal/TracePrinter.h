@@ -37,8 +37,8 @@ private:
   Printer* printer_ptr;
 
   // Pointer to channel content
-  int* ch_typeId_ptr;
-  int* ch_instrCnt_ptr;
+  uint64_t* ch_typeId_ptr;
+  uint64_t* ch_instrCnt_ptr;
   
 };
 
