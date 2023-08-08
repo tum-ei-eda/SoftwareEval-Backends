@@ -14,67 +14,59 @@
  * limitations under the License.
  */
 
-// TODO: Proof-of-concept model, taken from Robert (more or less)!
+// TODO: nail preliminary model
 
 #include "models/cva6/ICacheModel.h"
+#include "models/cva6/bit_macros.hpp"
 
 int ICacheModel::getDelay(void)
 {
-    unsigned int pc = pc_ptr[getInstrIndex()];
+    uint64_t pc = pc_ptr[getInstrIndex()];
 
-    if(notCachable(pc) | !inCache(pc))
-    {
-        return MEMORY_DELAY;
+    miss = false;
+    tag = extract_bits(pc, 44, 12);
+    index = extract_bits(pc, 8, 4);
+    //int offset = extract_bits(pc, 4, 0);
+
+    if(!cacheable()) {
+        //report miss
+        miss = true;
+        return 5;
     }
-    return CACHE_DELAY;
+
+    if (!tag_cmp()) {
+        //update tag_ram
+        short way_to_replace = lfsr();
+        //cout << "lfsr:" << way_to_replace << endl;
+        tag_ram[index][way_to_replace] = tag;
+
+        //report miss
+        miss = true;
+        return 6;
+    }
+
+    //report hit
+    miss = false;
+    return 1;
 }
 
-bool ICacheModel::inCache(unsigned int pc_)
-{
-    // tag calculation tag = addr[55:12]
-    // since we only consider 32 bit addresses (int) we can just remove the 12 lower bit
-    unsigned int tag = pc_ >> 12;
+bool ICacheModel::cacheable() {
+    return (0x80000000 <= pc && pc < 0xc0000000) ? true : false;
+}
 
-    // index calculation index = addr[11:4], 8 bit wide, 256 bytes addressable
-    // remove the higher 21 bit, remove the lower 4 bit
-    //unsigned int index = (pc_<<(32-11))>>(32-11+4);
-    // TODO: Check if this line is corret!! Shouldn't it be:
-    unsigned int index = (pc_<<20)>>24;
-
-    for(int way_i=0; way_i<4; way_i++)
-    {
-        if(tag_cache[way_i][index] == tag)
-        {
-            // Cache hit
+bool ICacheModel::tag_cmp() {
+    for(int way=0; way<4; way++) {
+        if(tag_ram[index][way] == tag) {
             return true;
         }
     }
-
-    // Cache miss
-    updateCache(tag, index);
     return false;
 }
 
-bool ICacheModel::notCachable(unsigned int pc_)
-{
-    if((0x80000000 <= pc_) && (pc_ < 0xC0000000))
-    {
-        return false;
-    }
-    return true;
-}
+short ICacheModel::lfsr() {
+    static uint8_t shift_state = 0; // 8bit
+    short shift_in = ~( (extract_bits(shift_state, 1, 7) ^ extract_bits(shift_state, 1, 3) ^ extract_bits(shift_state, 1, 2) ^ extract_bits(shift_state, 1, 1)) ) & 1; //single bit
+    shift_state = (shift_state << 1) | shift_in; // 8bit
 
-void ICacheModel::updateCache(unsigned int tag_, unsigned int index_)
-{
-    // TODO: Only 4-bit LFSR implemented
-    static int lfsrState = 0xF;
-    if(lfsrState & 0x1)
-    {
-        lfsrState = (lfsrState >> 1) ^ 0xC;
-    }
-    else
-    {
-        lfsrState = (lfsrState >> 1);
-    }
-    tag_cache[lfsrState & 0x3][index_] = tag_;
+    return (shift_state & 0x3); // 2bit
 }

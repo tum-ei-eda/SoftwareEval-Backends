@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-// TODO: nail preliminary model
+// TODO: Proof-of-concept model, taken from Robert (more or less)!
 
 #ifndef I_CACHE_MODEL_H
 #define I_CACHE_MODEL_H
 
-//#include <stdbool.h>
+#include <stdbool.h>
 
 #include "PerformanceModel.h"
 
@@ -27,7 +27,7 @@ class ICacheModel : public ResourceModel
 {
     public:
 
-    ICacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_) {};
+    ICacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(2), MEMORY_DELAY(5) {};
     virtual int getDelay(void);
 
     // Trace value
@@ -35,16 +35,19 @@ class ICacheModel : public ResourceModel
 
     private:
 
-    bool cacheable();
-    bool tag_cmp();
-    short lfsr();
-    void main();
+    // Support functions
+    bool inCache(unsigned int);
+    bool notCachable(unsigned int);
+    void updateCache(unsigned int,  unsigned int);
 
-    uint64_t pc = 0;
-    uint64_t tag = 0;
-    int index = 0;
-    int tag_ram[256][4] = {0}; // 256 lines, 4-way associative, line size = 16byte, total size = 16 kbyte
-    bool miss = false;
+    // Cache state
+    // TODO: Associativity hard-coded to 4
+    unsigned int tag_cache[4][256] = {0};
+    //bool valid_cache[4][256]= {false};
+
+    // Constants
+    const int CACHE_DELAY;
+    const int MEMORY_DELAY;
 
 };
 
