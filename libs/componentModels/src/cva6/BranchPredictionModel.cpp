@@ -70,20 +70,28 @@ void PredictFsm::update(bool taken_)
 
 bool BranchHistoryTable::getPrediction(uint64_t pc_, uint64_t imm_)
 {
+
   // TODO: Different behavior for unaligned!
   if (!tab[getPageIndex(pc_)][getRowIndex(pc_)].valid)
   {
     // Predict taken if imm is negative
-    // TODO: Need to adapt this for imm with varying bit-width. Currently just working for bne, bge, etc.
-    return (imm_ & 0x0000000080000000);
+    return (int64_t(imm_) < 0);
   }
   return tab[getPageIndex(pc_)][getRowIndex(pc_)].state.getPrediction();
 }
 
 void BranchHistoryTable::update(uint64_t pc_, bool taken_)
-{
+{  
   tab[getPageIndex(pc_)][getRowIndex(pc_)].valid = true;
   tab[getPageIndex(pc_)][getRowIndex(pc_)].state.update(taken_);
+}
+
+void ReturnAddressStack::push(uint64_t ra_)
+{
+  stack[1] = stack[0];
+
+  stack[0].addr = ra_;
+  stack[0].valid = true;
 }
 
 //int BranchTargetBuffer::getPrediction(int i_)
@@ -114,9 +122,20 @@ void BranchPredictionModel::setPc_p(uint64_t pc_p_)
   t_pc_pred = pc_p_;
 }
 
+void BranchPredictionModel::setPc_p_jal(uint64_t pc_p_)
+{
+  jumpInstr_flag = true;
+  if(isCall())
+  {
+    ras.push(pc_ptr[getInstrIndex()]);
+  }
+  t_pc_pred = pc_p_;
+}
+
 uint64_t BranchPredictionModel::getPc(void)
 {
   isMispredict = false;
+  isTaken = false;
   
   // Check if previous instr was a branch
   if(branchInstr_flag)
@@ -126,22 +145,36 @@ uint64_t BranchPredictionModel::getPc(void)
     // Determine if branch was taken
     uint64_t curPc = pc_ptr[getInstrIndex()];
     bool taken = (curPc == branchTarget);
+    isTaken = taken;
+
+    bool mispredicted = predictedTaken != taken;
     
     // Update BHT
-    bht.update(branchPc, taken);
-  
+    //bht.update(branchPc, taken);
+    if(taken | mispredicted)
+    {
+      bht.update(branchPc, taken);
+    }
+      
     // Return time value
     if(predictedTaken && taken)
     {
       return t_pc_pred;
     }
-    if(predictedTaken != taken) // Misprediction
+    if(mispredicted) // Misprediction
     {
       isMispredict = true;
       return t_pc_nPred;
     }
   }
 
-  // Correctly predicted that branch was not taken
+  // Check if previous instr was unconditional jump (only imm-dependent)
+  if(jumpInstr_flag)
+  {
+    jumpInstr_flag = false;
+    return t_pc_pred;
+  }
+  
+  //  PC provided by PC-Gen Stage
   return 0; // Use 0 to disregard the PC connector in any max operation
 }
