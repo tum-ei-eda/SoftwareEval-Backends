@@ -29,28 +29,6 @@
 
 #include <iostream> // TODO: For debug. Remove
 
-// TODO: Remove max-functions. Using build-in version
-//inline int max_2(int a, int b)
-//{
-//    return (a > b) ? a : b;
-//}
-//
-//inline int max_3(int a, int b, int c)
-//{
-//    int temp_ab;
-//    temp_ab = max_2(a, b);
-//    return max_2(temp_ab, c);
-//}
-//
-//inline int max_4(int a, int b, int c, int d)
-//{
-//    int temp_ab;
-//    int temp_cd;
-//    temp_ab = max_2(a,b);
-//    temp_cd = max_2(c,d);
-//    return max_2(temp_ab, temp_cd);
-//}
-
 struct stage
 {
     uint64_t cnt = 0;

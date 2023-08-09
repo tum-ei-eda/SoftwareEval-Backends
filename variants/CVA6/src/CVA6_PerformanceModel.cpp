@@ -27,34 +27,12 @@
 
 #include "CVA6_Channel.h"
 
-void CVA6_IfStage_Model::set_leaveICache(uint64_t c)
-{
-  leaveICache[iCache_ptr] = c;
-  iCache_ptr = (++iCache_ptr)%2;
-}
-
-/*
-void CVA6_IfStage_Model::update(void)
-{
-  iCache_array[iCache_ptr] = leaveICache;
-  iCache_ptr = (++iCache_ptr)%2;
-}
-*/
-
 void CVA6_IqStage_Model::set_leaveStage(uint64_t c)
 {
   curLeaveStage = c;
   leaveStage[stage_ptr] = c;
   stage_ptr = (++stage_ptr)%7;
 }
-
-/*
-void CVA6_IqStage_Model::update(void)
-{
-  stage_array[stage_ptr] = leaveStage;
-  stage_ptr = (++stage_ptr)%7;
-}
-*/
 
 void CVA6_ExStage_Model::set_leaveMul(uint64_t c)
 {
@@ -71,31 +49,12 @@ void CVA6_ExStage_Model::set_leaveStage(uint64_t c)
   stage_ptr_i1 = (++stage_ptr_i1)%8;
 }
 
-void CVA6_ExStage_Model::update(void)
-{
-  //stage_array[stage_ptr_i8] = leaveStage;
-  //stage_ptr_i8 = (++stage_ptr_i8)%8;
-  //stage_ptr_i1 = (++stage_ptr_i1)%8;
-
-  //mul_array[mul_ptr_i2] = leaveMul;
-  //mul_ptr_i2 = (++mul_ptr_i2)%2;
-  //mul_ptr_i1 = (++mul_ptr_i1)%2;
-}
-
 void CVA6_ComStage_Model::set_leaveStage(uint64_t c)
 {
   curLeaveStage = c;
   leaveStage[stage_ptr] = c;
   stage_ptr = (++stage_ptr)%2;
 }
-
-/*
-void CVA6_ComStage_Model::update(void)
-{
-  stage_array[stage_ptr] = leaveStage;
-  stage_ptr = (++stage_ptr)%2;
-}
-*/
 
 void CVA6_Model::connectChannel(Channel* channel_)
 {

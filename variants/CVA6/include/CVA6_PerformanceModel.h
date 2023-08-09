@@ -44,8 +44,7 @@ public:
   
   uint64_t get_leaveStage(void) { return leaveStage; };
   void set_leaveStage(uint64_t c) { leaveStage = c; };
-
-  void update(void) {};
+  
   uint64_t getStageInfo(void) { return leaveStage; };
   
 private:
@@ -60,23 +59,25 @@ public:
   
   CVA6_IfStage_Model(){};
 
-  uint64_t get_backPressure(void) { return get_leaveICache(); };
+  uint64_t get_backPressure(void) { return get_leaveICacheIn(); };
+
+  uint64_t get_leaveICacheIn(void) { return leaveICacheIn; };
+  void set_leaveICacheIn(uint64_t c) { leaveICacheIn = c; };
   
-  uint64_t get_leaveICache(void) { return leaveICache[iCache_ptr]; };
-  void set_leaveICache(uint64_t);
+  uint64_t get_leaveICache(void) { return leaveICache; };
+  void set_leaveICache(uint64_t c) { leaveICache = c; };
 
   uint64_t get_leaveStage(void) { return leaveStage; };
   void set_leaveStage(uint64_t c) { leaveStage = c; };
 
-  void update(void) {}; // TODO: Remove all update functions!
   uint64_t getStageInfo(void) { return leaveStage; };
 
 private:
 
   uint64_t leaveStage = 0;
 
-  uint64_t leaveICache[2] = {};
-  int iCache_ptr = 0;
+  uint64_t leaveICacheIn = 0;
+  uint64_t leaveICache = 0;
 
 };
 
@@ -94,7 +95,6 @@ public:
   void set_leaveStage (uint64_t);
   uint64_t get_leaveStage(void) { return leaveStage[stage_ptr]; };
   
-  void update(void) {};
   uint64_t getStageInfo(void) { return curLeaveStage; };
 
 private:
@@ -118,7 +118,6 @@ public:
   void set_leaveStage (uint64_t c) { leaveStage = c; };
   uint64_t get_leaveStage(void) { return leaveStage; };
 
-  void update(void) {};
   uint64_t getStageInfo(void) { return leaveStage; };
   
 private:
@@ -138,7 +137,6 @@ public:
   void set_leaveStage (uint64_t c) { leaveStage = c; };
   uint64_t get_leaveStage(void) { return leaveStage; };
   
-  void update(void) {};
   uint64_t getStageInfo(void) { return leaveStage; };
 
 private:
@@ -191,7 +189,6 @@ public:
   uint64_t get_leaveStage_i8(void) { return leaveStage[stage_ptr_i8]; };
   uint64_t get_leaveStage_i1(void) { return leaveStage[stage_ptr_i1]; };
   
-  void update(void);
   uint64_t getStageInfo(void) { return curLeaveStage; };
 
 private:
@@ -237,7 +234,6 @@ public:
   void set_leaveStage (uint64_t);
   uint64_t get_leaveStage(void) { return leaveStage[stage_ptr]; };
   
-  void update(void) {};
   uint64_t getStageInfo(void) { return curLeaveStage; };
 
 private:

@@ -27,7 +27,7 @@ class ICacheModel : public ResourceModel
 {
     public:
 
-    ICacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(2), MEMORY_DELAY(5) {};
+    ICacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(1), MEMORY_DELAY(4) {};
     virtual int getDelay(void);
 
     // Trace value
