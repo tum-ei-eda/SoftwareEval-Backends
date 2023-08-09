@@ -63,9 +63,18 @@
   n_if_leave = std::max({n_if_3, perfModel->IqStage.get_backPressure()});\
   perfModel->IfStage.set_leaveStage(n_if_leave);
 
+#define PE_TIMEFUNC_IF_STAGE_JUMP uint64_t n_if_1, n_if_2, n_if_3, n_if_leave;\
+  n_if_1 = n_pcgen_leave + perfModel->iCacheModel.getDelay();\
+  n_if_2 = std::max({n_if_1, perfModel->IfStage.get_leaveStage()});\
+  perfModel->IfStage.set_leaveICache(n_if_2);\
+  n_if_3 = n_if_2 + 1;\
+  perfModel->brPredModel.setPc_p_jal(n_if_3);\
+  n_if_leave = std::max({n_if_3, perfModel->IqStage.get_backPressure()});\
+  perfModel->IfStage.set_leaveStage(n_if_leave);
+
 // -- Iq-Stage
 
-// TODO: Add Buffer mechanism
+// TODO: Add Buffer mechanism (Is this done?)
 
 #define PE_TIMEFUNC_IQ_STAGE uint64_t n_iq_1, n_iq_leave;\
   n_iq_1 = n_if_leave + 1;\
@@ -84,7 +93,7 @@
 
 // Add RS1, RS2, CB connectors 
 
-#define PE_TIMEFUNC_IS_STAGE_DELAY n_is_1 = n_id_leave + 1;
+#define PE_TIMEFUNC_IS_STAGE_DELAY n_is_1 = n_id_leave + 0;
 #define PE_TIMEFUNC_IS_STAGE_LEAVE perfModel->IsStage.set_leaveStage(n_is_leave);
 
 #define PE_TIMEFUNC_IS_STAGE_BP_ALU n_is_leave = std::max({n_is_done, perfModel->ExStage.get_backPressure_arith()});
@@ -134,6 +143,8 @@
   n_is_done = std::max({n_is_1, n_is_2, n_is_3});\
   PE_TIMEFUNC_IS_STAGE_BP_ALU\
   PE_TIMEFUNC_IS_STAGE_LEAVE
+
+#define PE_TIMEFUNC_IS_STAGE_JUMP PE_TIMEFUNC_IS_STAGE_ALU
 
 #define PE_TIMEFUNC_IS_STAGE_MUL uint64_t n_is_1, n_is_2, n_is_3, n_is_4, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
@@ -190,6 +201,8 @@
   perfModel->ExStage.set_leaveAlu(n_ex_done);\
   perfModel->brPredModel.setPc_np(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
+
+#define PE_TIMEFUNC_EX_STAGE_JUMP PE_TIMEFUNC_EX_STAGE_ARITH
 
 #define PE_TIMEFUNC_EX_STAGE_MUL uint64_t n_ex_done, n_ex_leave;\
   n_ex_done = n_is_leave +2;\
@@ -302,6 +315,17 @@
   PE_TIMEFUNC_IS_STAGE_BRANCH\
   PE_TIMEFUNC_EX_STAGE_BRANCH\
   PE_TIMEFUNC_COM_STAGE\
+}
+
+#define PE_TIMEFUNC_JUMP PE_TIMEFUNC_CALL {\
+  PE_TIMEFUNC_INIT\
+  PE_TIMEFUNC_PCGEN_STAGE\
+  PE_TIMEFUNC_IF_STAGE_JUMP\
+  PE_TIMEFUNC_IQ_STAGE\
+  PE_TIMEFUNC_ID_STAGE\
+  PE_TIMEFUNC_IS_STAGE_JUMP\
+  PE_TIMEFUNC_EX_STAGE_JUMP\
+  PE_TIMEFUNC_COM_STAGE_CB\
 }
 
 #define PE_TIMEFUNC_MUL PE_TIMEFUNC_CALL {\
@@ -705,6 +729,7 @@ static InstructionModel *instrModel_jal = new InstructionModel(
   "jal",
   50,
   PE_TIMEFUNC_DEF
+  //PE_TIMEFUNC_JUMP
 );
 
 static InstructionModel *instrModel_jalr = new InstructionModel(

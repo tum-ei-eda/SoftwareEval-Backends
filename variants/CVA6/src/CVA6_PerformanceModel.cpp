@@ -114,6 +114,7 @@ void CVA6_Model::connectChannel(Channel* channel_)
   brPredModel.pc_ptr = channel->pc;
   brPredModel.brTarget_ptr = channel->brTarget;
   brPredModel.imm_ptr = channel->imm;
+  brPredModel.rd_ptr = channel->rd;
   
 }
 
@@ -128,7 +129,8 @@ std::string CVA6_Model::getPipelineStream(void)
   ret_strs << "," << IsStage.getStageInfo();
   ret_strs << "," << ExStage.getStageInfo();
   ret_strs << "," << ComStage.getStageInfo();
-  ret_strs << "," << brPredModel.getInfo();
+  ret_strs << "," << brPredModel.getInfo_mispredict();
+  ret_strs << "," << brPredModel.getInfo_taken();
   return ret_strs.str();
 }
 
@@ -144,6 +146,7 @@ std::string CVA6_Model::getPrintHeader(void)
   ret_strs << "," << "EX";
   ret_strs << "," << "COM";
   ret_strs << "," << "mispredict";
+  ret_strs << "," << "taken";
   
   return ret_strs.str();
 }
