@@ -23,6 +23,7 @@
 
 #include <string>
 #include <stdbool.h>
+#include <cstdint>
 
 class AssemblyTrace_Channel: public Channel
 {
@@ -31,7 +32,7 @@ public:
   AssemblyTrace_Channel() {};
   ~AssemblyTrace_Channel() {};
 
-  int pc [100];
+  uint64_t pc [100];
   char assembly [100] [50];
 
   virtual void *getTraceValueHook(std::string);

@@ -24,6 +24,7 @@
 #include "Channel.h"
 
 #include <string>
+#include <cstdint>
 
 class AssemblyTrace_Printer : public Printer
 {
@@ -38,7 +39,7 @@ public:
   std::string get_assembly(void){ return assembly_ptr[instrIndex]; };
 
 private:
-  int* pc_ptr;
+  uint64_t* pc_ptr;
   char (*assembly_ptr)[50];
 };
 
