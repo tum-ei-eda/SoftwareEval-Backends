@@ -29,7 +29,7 @@ public:
 
   // TODO: Consider corner-case rd = 0?
   
-  uint64_t getCb_Is(void){ return registerModel[rd_ptr[getInstrIndex()]]; };
+  uint64_t getCb_Is(void){ return (rd_ptr[getInstrIndex()] != 0) ? registerModel[rd_ptr[getInstrIndex()]] : 0; };
   void setCb_Com(uint64_t xd_){ registerModel[rd_ptr[getInstrIndex()]] = xd_; };
 
 private:
