@@ -69,62 +69,83 @@ class ReturnAddressStack
 public:
   ReturnAddressStack(){};
   void push(uint64_t);
-  //void pop(void); // TODO: Make it return ra?
+  uint64_t pop(void);
 private:
   std::array<ReturnAddressEntry,2> stack;
 };
 
-//class BranchTargetBuffer
-//{
-//public:
-//  BranchTargetBuffer(){};
-//  int getPrediction(int);
-//  void update(int, int);
-//private:
-//  std::array<int, 32>tab;
-//};
+
+struct TargetBufferEntry
+{
+  bool valid = false;
+  uint64_t addr = 0;
+};
+
+class BranchTargetBuffer
+{
+public:
+  BranchTargetBuffer(){};
+  uint64_t getPrediction(uint64_t);
+  void update(uint64_t, uint64_t);
+private:
+  std::array<std::array<TargetBufferEntry,16>,2> tab;
+  int getPageIndex(uint64_t pc_) { return ((pc_ & 0x00000002) >> 1); };
+  int getRowIndex(uint64_t pc_) { return ((pc_ & 0x0000003C) >> 2); };
+};
 
   
 class BranchPredictionModel : public ConnectorModel
 {
 public:
-  BranchPredictionModel(PerformanceModel* parent_) : ConnectorModel("BranchPredictionModel", parent_), bht(), ras() {}; //, btb() {};
+  BranchPredictionModel(PerformanceModel* parent_) : ConnectorModel("BranchPredictionModel", parent_), bht(), ras(), btb() {};
    
   // API
   void setPc_p(uint64_t);
-  void setPc_p_jal(uint64_t);
-  void setPc_np(uint64_t pc_np_){ t_pc_nPred = pc_np_; };
-  uint64_t getPc(void);
+  void setPc_p_j(uint64_t);
+  void setPc_p_jr(uint64_t);
+  void setPc_c(uint64_t pc_c_) { t_pc_mp = pc_c_; };
+  uint64_t getPc_mp(void);
+  uint64_t getPc_pt(void);
 
   // Used for model evaluation TODO: Delete?
   std::string getInfo_mispredict(void) { return std::to_string(isMispredict); };
   std::string getInfo_taken(void) { return std::to_string(isTaken); };
+  std::string getInfo_pc_pt(void) { return std::to_string(pc_pt); };
   
   // Trace values
   uint64_t* pc_ptr;
   uint64_t* brTarget_ptr;
   uint64_t* imm_ptr;
+  uint64_t* rs1_ptr;
   uint64_t* rd_ptr;
   
 private:
   BranchHistoryTable bht;
-  //BranchTargetBuffer btb;
+  BranchTargetBuffer btb;
   ReturnAddressStack ras;
 
-  bool branchInstr_flag = false;
+  bool branch_flag = false;
   uint64_t branchPc = 0; 
   uint64_t branchTarget = 0;
-  bool predictedTaken = false;
+  bool branchPredictedTaken = false;
 
-  bool jumpInstr_flag = false;
+  bool jump_flag = false;
+
+  bool jumpR_flag = false;
+  bool return_flag = false;
   
-  uint64_t t_pc_pred = 0;
-  uint64_t t_pc_nPred = 0;
+  uint64_t t_pc_pt = 0; // predicted and taken
+  uint64_t t_pc_mp = 0; // mispredicted
 
+  bool isMispredict = false;
+  bool isTaken = false;
+  
   bool isCall(void) { return ( (rd_ptr[getInstrIndex()] == 1) | (rd_ptr[getInstrIndex()] == 5) ); };
+  bool isReturn(void) {return ( (rs1_ptr[getInstrIndex()] != rd_ptr[getInstrIndex()]) & ((rs1_ptr[getInstrIndex()] == 1) | (rs1_ptr[getInstrIndex()] == 5)) ); };
   
-  bool isMispredict = false; // Used for model evaluation. TODO: DELETE?
-  bool isTaken = false; // Used for model evaluation. TODO: DELETE?
+  // TODO: Use for model evaluation. DELETE!
+  uint64_t pc_pt = 0;
+  
 };
 
 #endif //BRANCH_PREDICTION_MODEL_H

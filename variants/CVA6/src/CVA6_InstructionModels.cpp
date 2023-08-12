@@ -33,7 +33,7 @@
 #define PE_TIMEFUNC_PCGEN_STAGE uint64_t n_pcgen_start, n_pcgen_1, n_pcgen_2, n_pcgen_leave; \
   n_pcgen_start = perfModel->PcGenStage.get_leaveStage();\
   n_pcgen_1 = n_pcgen_start + 1;\
-  n_pcgen_2 = std::max({n_pcgen_start, perfModel->brPredModel.getPc()}); \
+  n_pcgen_2 = std::max({n_pcgen_start, perfModel->brPredModel.getPc_mp()}); \
   n_pcgen_leave = std::max({n_pcgen_1, n_pcgen_2, perfModel->IfStage.get_backPressure()});\
   perfModel->PcGenStage.set_leaveStage(n_pcgen_leave);
 
@@ -41,7 +41,7 @@
 
 #define PE_TIMEFUNC_IF_STAGE_ENTER uint64_t n_if_1, n_if_2, n_if_3, n_if_4, n_if_5, n_if_6, n_if_leave;\
   n_if_1 = n_pcgen_leave + 1;\
-  n_if_2 = n_pcgen_leave;\
+  n_if_2 = std::max({n_pcgen_leave, perfModel->brPredModel.getPc_pt()});\
   n_if_3 = std::max({n_if_1, n_if_2, perfModel->IfStage.get_leaveICache()});\
   perfModel->IfStage.set_leaveICacheIn(n_if_3);\
   n_if_4 = n_if_3 + perfModel->iCacheModel.getDelay();\
@@ -58,8 +58,12 @@
   perfModel->brPredModel.setPc_p(n_if_6);\
   PE_TIMEFUNC_IF_STAGE_LEAVE
 
-#define PE_TIMEFUNC_IF_STAGE_BRANCH PE_TIMEFUNC_IF_STAGE_ENTER\
-  perfModel->brPredModel.setPc_p_jal(n_if_6);\
+#define PE_TIMEFUNC_IF_STAGE_JUMP PE_TIMEFUNC_IF_STAGE_ENTER\
+  perfModel->brPredModel.setPc_p_j(n_if_6);\
+  PE_TIMEFUNC_IF_STAGE_LEAVE
+
+#define PE_TIMEFUNC_IF_STAGE_JUMPR PE_TIMEFUNC_IF_STAGE_ENTER\
+  perfModel->brPredModel.setPc_p_jr(n_if_6);\
   PE_TIMEFUNC_IF_STAGE_LEAVE
 
 // -- Iq-Stage
@@ -136,6 +140,8 @@
 
 #define PE_TIMEFUNC_IS_STAGE_JUMP PE_TIMEFUNC_IS_STAGE_ALU
 
+#define PE_TIMEFUNC_IS_STAGE_JUMPR PE_TIMEFUNC_IS_STAGE_ALU_RS1
+
 #define PE_TIMEFUNC_IS_STAGE_MUL uint64_t n_is_1, n_is_2, n_is_3, n_is_4, n_is_done, n_is_leave;\
   PE_TIMEFUNC_IS_STAGE_DELAY\
   n_is_2 = perfModel->regModel.getXa();\
@@ -189,10 +195,16 @@
 #define PE_TIMEFUNC_EX_STAGE_BRANCH uint64_t n_ex_done, n_ex_leave;\
   n_ex_done = n_is_leave +1;\
   perfModel->ExStage.set_leaveAlu(n_ex_done);\
-  perfModel->brPredModel.setPc_np(n_ex_done);\
+  perfModel->brPredModel.setPc_c(n_ex_done); \
   PE_TIMEFUNC_EX_STAGE_LEAVE
 
 #define PE_TIMEFUNC_EX_STAGE_JUMP PE_TIMEFUNC_EX_STAGE_ARITH
+
+#define PE_TIMEFUNC_EX_STAGE_JUMPR uint64_t n_ex_done, n_ex_leave;\
+  n_ex_done = n_is_leave + 1;\
+  perfModel->ExStage.set_leaveAlu(n_ex_done);\
+  perfModel->brPredModel.setPc_c(n_ex_done);\
+  PE_TIMEFUNC_EX_STAGE_LEAVE
 
 #define PE_TIMEFUNC_EX_STAGE_MUL uint64_t n_ex_done, n_ex_leave;\
   n_ex_done = n_is_leave +2;\
@@ -315,6 +327,17 @@
   PE_TIMEFUNC_ID_STAGE\
   PE_TIMEFUNC_IS_STAGE_JUMP\
   PE_TIMEFUNC_EX_STAGE_JUMP\
+  PE_TIMEFUNC_COM_STAGE_CB\
+}
+
+#define PE_TIMEFUNC_JUMPR PE_TIMEFUNC_CALL {\
+  PE_TIMEFUNC_INIT\
+  PE_TIMEFUNC_PCGEN_STAGE\
+  PE_TIMEFUNC_IF_STAGE_JUMPR\
+  PE_TIMEFUNC_IQ_STAGE\
+  PE_TIMEFUNC_ID_STAGE\
+  PE_TIMEFUNC_IS_STAGE_JUMPR\
+  PE_TIMEFUNC_EX_STAGE_JUMPR\
   PE_TIMEFUNC_COM_STAGE_CB\
 }
 
@@ -718,15 +741,14 @@ static InstructionModel *instrModel_jal = new InstructionModel(
   CVA6_InstrModelSet,
   "jal",
   50,
-  PE_TIMEFUNC_DEF
-  //PE_TIMEFUNC_JUMP
+  PE_TIMEFUNC_JUMP
 );
 
 static InstructionModel *instrModel_jalr = new InstructionModel(
   CVA6_InstrModelSet,
   "jalr",
   51,
-  PE_TIMEFUNC_DEF
+  PE_TIMEFUNC_JUMPR
 );
 
 // TODO / NOTE: Manually added instructions
