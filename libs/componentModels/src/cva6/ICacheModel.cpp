@@ -22,7 +22,9 @@ int ICacheModel::getDelay(void)
 {
     unsigned int pc = pc_ptr[getInstrIndex()];
 
-    if(notCachable(pc) | !inCache(pc))
+    isMiss = !inCache(pc);
+
+    if(notCachable(pc) | isMiss)
     {
         return MEMORY_DELAY;
     }

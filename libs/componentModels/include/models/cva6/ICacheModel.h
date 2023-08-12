@@ -25,30 +25,36 @@
 
 class ICacheModel : public ResourceModel
 {
-    public:
+public:
 
-    ICacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(1), MEMORY_DELAY(4) {};
-    virtual int getDelay(void);
+  ICacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(1), MEMORY_DELAY(4) {};
+  virtual int getDelay(void);
+  
+  void setIc(uint64_t c_) { t_ic = isMiss ? c_ : 0; };
+  uint64_t getIc(void) { return t_ic; };
+  
+  // Trace value
+  uint64_t* pc_ptr;
 
-    // Trace value
-    uint64_t* pc_ptr;
+private:
+  
+  // Cache state
+  // TODO: Associativity hard-coded to 4
+  unsigned int tag_cache[4][256] = {0};
+  //bool valid_cache[4][256]= {false};
+  bool isMiss = false;
 
-    private:
+  // Time when ICache relaeses block on miss
+  uint64_t t_ic = 0;
+  
+  // Constants
+  const int CACHE_DELAY;
+  const int MEMORY_DELAY;
 
-    // Support functions
-    bool inCache(unsigned int);
-    bool notCachable(unsigned int);
-    void updateCache(unsigned int,  unsigned int);
-
-    // Cache state
-    // TODO: Associativity hard-coded to 4
-    unsigned int tag_cache[4][256] = {0};
-    //bool valid_cache[4][256]= {false};
-
-    // Constants
-    const int CACHE_DELAY;
-    const int MEMORY_DELAY;
-
+  // Support functions
+  bool inCache(unsigned int);
+  bool notCachable(unsigned int);
+  void updateCache(unsigned int,  unsigned int);
 };
 
 #endif // I_CACHE_MODEL_H

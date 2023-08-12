@@ -30,11 +30,12 @@
 
 // -- PcGen-Stage
 
-#define PE_TIMEFUNC_PCGEN_STAGE uint64_t n_pcgen_start, n_pcgen_1, n_pcgen_2, n_pcgen_leave; \
+#define PE_TIMEFUNC_PCGEN_STAGE uint64_t n_pcgen_start, n_pcgen_1, n_pcgen_2, n_pcgen_3, n_pcgen_leave; \
   n_pcgen_start = perfModel->PcGenStage.get_leaveStage();\
   n_pcgen_1 = n_pcgen_start + 1;\
-  n_pcgen_2 = std::max({n_pcgen_start, perfModel->brPredModel.getPc_mp()}); \
-  n_pcgen_leave = std::max({n_pcgen_1, n_pcgen_2, perfModel->IfStage.get_backPressure()});\
+  n_pcgen_2 = std::max({n_pcgen_start, perfModel->brPredModel.getPc_mp()});\
+  n_pcgen_3 = std::max({n_pcgen_start, perfModel->iCacheModel.getIc()});\
+  n_pcgen_leave = std::max({n_pcgen_1, n_pcgen_2, n_pcgen_3, perfModel->IfStage.get_backPressure()}); \
   perfModel->PcGenStage.set_leaveStage(n_pcgen_leave);
 
 // -- If-Stage
@@ -45,6 +46,7 @@
   n_if_3 = std::max({n_if_1, n_if_2, perfModel->IfStage.get_leaveICache()});\
   perfModel->IfStage.set_leaveICacheIn(n_if_3);\
   n_if_4 = n_if_3 + perfModel->iCacheModel.getDelay();\
+  perfModel->iCacheModel.setIc(n_if_4);\
   n_if_5 = std::max({n_if_4, perfModel->IfStage.get_leaveStage()});\
   n_if_6 = n_if_5 + 1;
 
