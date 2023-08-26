@@ -33,23 +33,24 @@ CV32E40P_Printer::CV32E40P_Printer(): Printer("CV32E40P_Printer", CV32E40P_Instr
 void CV32E40P_Printer::connectChannel(Channel* ch_)
 {
   CV32E40P_Channel* channel = static_cast<CV32E40P_Channel*>(ch_);
-
+  
   rs1_ptr = channel->rs1;
   rs2_ptr = channel->rs2;
   rd_ptr = channel->rd;
   pc_ptr = channel->pc;
   brTarget_ptr = channel->brTarget;
-  
+  rs2_data_ptr = channel->rs2_data;
 }
 
 std::string CV32E40P_Printer::getPrintHeader(void)
 {
   std::stringstream caption_strs;	
-  caption_strs << std::setfill(' ') << std::setw(10) << std::left << "rs1" << " | ";
-  caption_strs << std::setfill(' ') << std::setw(10) << std::left << "rs2" << " | ";
-  caption_strs << std::setfill(' ') << std::setw(10) << std::left << "rd" << " | ";
-  caption_strs << std::setfill(' ') << std::setw(10) << std::left << "pc" << " | ";
-  caption_strs << std::setfill(' ') << std::setw(10) << std::left << "brTarget" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs1" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs2" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rd" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "pc" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "brTarget" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs2_data" << " | ";
 
   return caption_strs.str();
 }

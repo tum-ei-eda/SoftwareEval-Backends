@@ -30,7 +30,7 @@ static InstructionModel *instrModel_add = new InstructionModel(
   "add",
   0,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -95,7 +95,7 @@ static InstructionModel *instrModel_sub = new InstructionModel(
   "sub",
   1,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -160,7 +160,7 @@ static InstructionModel *instrModel_xor = new InstructionModel(
   "xor",
   2,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -225,7 +225,7 @@ static InstructionModel *instrModel_or = new InstructionModel(
   "or",
   3,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -290,7 +290,7 @@ static InstructionModel *instrModel_and = new InstructionModel(
   "and",
   4,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -355,7 +355,7 @@ static InstructionModel *instrModel_slt = new InstructionModel(
   "slt",
   5,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -420,7 +420,7 @@ static InstructionModel *instrModel_sltu = new InstructionModel(
   "sltu",
   6,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -485,7 +485,7 @@ static InstructionModel *instrModel_sll = new InstructionModel(
   "sll",
   7,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -550,7 +550,7 @@ static InstructionModel *instrModel_srl = new InstructionModel(
   "srl",
   8,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -615,7 +615,7 @@ static InstructionModel *instrModel_sra = new InstructionModel(
   "sra",
   9,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -680,7 +680,7 @@ static InstructionModel *instrModel_addi = new InstructionModel(
   "addi",
   10,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -741,7 +741,7 @@ static InstructionModel *instrModel_xori = new InstructionModel(
   "xori",
   11,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -802,7 +802,7 @@ static InstructionModel *instrModel_ori = new InstructionModel(
   "ori",
   12,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -863,7 +863,7 @@ static InstructionModel *instrModel_andi = new InstructionModel(
   "andi",
   13,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -924,7 +924,7 @@ static InstructionModel *instrModel_slti = new InstructionModel(
   "slti",
   14,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -985,7 +985,7 @@ static InstructionModel *instrModel_sltiu = new InstructionModel(
   "sltiu",
   15,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1046,7 +1046,7 @@ static InstructionModel *instrModel_slli = new InstructionModel(
   "slli",
   16,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1107,7 +1107,7 @@ static InstructionModel *instrModel_srli = new InstructionModel(
   "srli",
   17,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1168,7 +1168,7 @@ static InstructionModel *instrModel_srai = new InstructionModel(
   "srai",
   18,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1229,7 +1229,7 @@ static InstructionModel *instrModel_auipc = new InstructionModel(
   "auipc",
   19,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1286,7 +1286,7 @@ static InstructionModel *instrModel_lui = new InstructionModel(
   "lui",
   20,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1343,7 +1343,7 @@ static InstructionModel *instrModel_mul = new InstructionModel(
   "mul",
   21,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1408,7 +1408,7 @@ static InstructionModel *instrModel_mulh = new InstructionModel(
   "mulh",
   22,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1473,7 +1473,7 @@ static InstructionModel *instrModel_mulhu = new InstructionModel(
   "mulhu",
   23,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1538,7 +1538,7 @@ static InstructionModel *instrModel_mulhsu = new InstructionModel(
   "mulhsu",
   24,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1603,7 +1603,7 @@ static InstructionModel *instrModel_div = new InstructionModel(
   "div",
   25,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1646,72 +1646,7 @@ n_17 = std::max({n_1, n_12, n_14, n_16});
 perfModel->CV32E40P_pipeline.setID_stage(n_17);
 n_18 = n_17;
   uint64_t n_19;
-n_19 = n_18 + 10;
-  uint64_t n_20;
-perfModel->regModel.setXd(n_19);
-n_20 = n_19;
-  uint64_t n_21;
-n_21 = std::max({n_0, n_20});
-  uint64_t n_22;
-perfModel->CV32E40P_pipeline.setEX_stage(n_21);
-n_22 = n_21;
-  uint64_t n_23;
-n_23 = n_22 + 1;
-  uint64_t n_24;
-perfModel->CV32E40P_pipeline.setWB_stage(n_23);
-n_24 = n_23;
-  }
-);
-
-static InstructionModel *instrModel_divu = new InstructionModel(
-  CV32E40P_InstrModelSet,
-  "divu",
-  26,
-  [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
-  uint64_t n_0;
-n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
-  uint64_t n_1;
-n_1 = perfModel->CV32E40P_pipeline.getEX_stage();
-  uint64_t n_2;
-n_2 = perfModel->CV32E40P_pipeline.getID_stage();
-  uint64_t n_3;
-n_3 = perfModel->staBranchPredModel.getPc();
-  uint64_t n_4;
-n_4 = perfModel->CV32E40P_pipeline.getIF_stage();
-  uint64_t n_5;
-n_5 = std::max({n_3, n_4});
-  uint64_t n_6;
-n_6 = n_5 + 1;
-  uint64_t n_7;
-n_7 = std::max({n_3, n_4});
-  uint64_t n_8;
-n_8 = n_7 + 1;
-  uint64_t n_9;
-perfModel->staBranchPredModel.setPc_p(n_8);
-n_9 = n_8;
-  uint64_t n_10;
-n_10 = std::max({n_2, n_6, n_9});
-  uint64_t n_11;
-perfModel->CV32E40P_pipeline.setIF_stage(n_10);
-n_11 = n_10;
-  uint64_t n_12;
-n_12 = n_11 + 1;
-  uint64_t n_13;
-n_13 = perfModel->regModel.getXa();
-  uint64_t n_14;
-n_14 = std::max({n_13, n_11});
-  uint64_t n_15;
-n_15 = perfModel->regModel.getXb();
-  uint64_t n_16;
-n_16 = std::max({n_15, n_11});
-  uint64_t n_17;
-n_17 = std::max({n_1, n_12, n_14, n_16});
-  uint64_t n_18;
-perfModel->CV32E40P_pipeline.setID_stage(n_17);
-n_18 = n_17;
-  uint64_t n_19;
-n_19 = n_18 + 10;
+n_19 = n_18 + perfModel->divider.getDelay();
   uint64_t n_20;
 perfModel->regModel.setXd(n_19);
 n_20 = n_19;
@@ -1731,9 +1666,9 @@ n_24 = n_23;
 static InstructionModel *instrModel_rem = new InstructionModel(
   CV32E40P_InstrModelSet,
   "rem",
-  27,
+  26,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1776,7 +1711,72 @@ n_17 = std::max({n_1, n_12, n_14, n_16});
 perfModel->CV32E40P_pipeline.setID_stage(n_17);
 n_18 = n_17;
   uint64_t n_19;
-n_19 = n_18 + 10;
+n_19 = n_18 + perfModel->divider.getDelay();
+  uint64_t n_20;
+perfModel->regModel.setXd(n_19);
+n_20 = n_19;
+  uint64_t n_21;
+n_21 = std::max({n_0, n_20});
+  uint64_t n_22;
+perfModel->CV32E40P_pipeline.setEX_stage(n_21);
+n_22 = n_21;
+  uint64_t n_23;
+n_23 = n_22 + 1;
+  uint64_t n_24;
+perfModel->CV32E40P_pipeline.setWB_stage(n_23);
+n_24 = n_23;
+  }
+);
+
+static InstructionModel *instrModel_divu = new InstructionModel(
+  CV32E40P_InstrModelSet,
+  "divu",
+  27,
+  [](PerformanceModel* perfModel_){
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
+  uint64_t n_0;
+n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
+  uint64_t n_1;
+n_1 = perfModel->CV32E40P_pipeline.getEX_stage();
+  uint64_t n_2;
+n_2 = perfModel->CV32E40P_pipeline.getID_stage();
+  uint64_t n_3;
+n_3 = perfModel->staBranchPredModel.getPc();
+  uint64_t n_4;
+n_4 = perfModel->CV32E40P_pipeline.getIF_stage();
+  uint64_t n_5;
+n_5 = std::max({n_3, n_4});
+  uint64_t n_6;
+n_6 = n_5 + 1;
+  uint64_t n_7;
+n_7 = std::max({n_3, n_4});
+  uint64_t n_8;
+n_8 = n_7 + 1;
+  uint64_t n_9;
+perfModel->staBranchPredModel.setPc_p(n_8);
+n_9 = n_8;
+  uint64_t n_10;
+n_10 = std::max({n_2, n_6, n_9});
+  uint64_t n_11;
+perfModel->CV32E40P_pipeline.setIF_stage(n_10);
+n_11 = n_10;
+  uint64_t n_12;
+n_12 = n_11 + 1;
+  uint64_t n_13;
+n_13 = perfModel->regModel.getXa();
+  uint64_t n_14;
+n_14 = std::max({n_13, n_11});
+  uint64_t n_15;
+n_15 = perfModel->regModel.getXb();
+  uint64_t n_16;
+n_16 = std::max({n_15, n_11});
+  uint64_t n_17;
+n_17 = std::max({n_1, n_12, n_14, n_16});
+  uint64_t n_18;
+perfModel->CV32E40P_pipeline.setID_stage(n_17);
+n_18 = n_17;
+  uint64_t n_19;
+n_19 = n_18 + perfModel->divider_u.getDelay();
   uint64_t n_20;
 perfModel->regModel.setXd(n_19);
 n_20 = n_19;
@@ -1798,7 +1798,7 @@ static InstructionModel *instrModel_remu = new InstructionModel(
   "remu",
   28,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1841,7 +1841,7 @@ n_17 = std::max({n_1, n_12, n_14, n_16});
 perfModel->CV32E40P_pipeline.setID_stage(n_17);
 n_18 = n_17;
   uint64_t n_19;
-n_19 = n_18 + 10;
+n_19 = n_18 + perfModel->divider_u.getDelay();
   uint64_t n_20;
 perfModel->regModel.setXd(n_19);
 n_20 = n_19;
@@ -1863,7 +1863,7 @@ static InstructionModel *instrModel_csrrw = new InstructionModel(
   "csrrw",
   29,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1924,7 +1924,7 @@ static InstructionModel *instrModel_csrrs = new InstructionModel(
   "csrrs",
   30,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -1985,7 +1985,7 @@ static InstructionModel *instrModel_csrrc = new InstructionModel(
   "csrrc",
   31,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2046,7 +2046,7 @@ static InstructionModel *instrModel_csrrwi = new InstructionModel(
   "csrrwi",
   32,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2103,7 +2103,7 @@ static InstructionModel *instrModel_csrrsi = new InstructionModel(
   "csrrsi",
   33,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2160,7 +2160,7 @@ static InstructionModel *instrModel_csrrci = new InstructionModel(
   "csrrci",
   34,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2217,7 +2217,7 @@ static InstructionModel *instrModel_sb = new InstructionModel(
   "sb",
   35,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2279,7 +2279,7 @@ static InstructionModel *instrModel_sh = new InstructionModel(
   "sh",
   36,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2341,7 +2341,7 @@ static InstructionModel *instrModel_sw = new InstructionModel(
   "sw",
   37,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2403,7 +2403,7 @@ static InstructionModel *instrModel_lw = new InstructionModel(
   "lw",
   38,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2464,7 +2464,7 @@ static InstructionModel *instrModel_lh = new InstructionModel(
   "lh",
   39,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2525,7 +2525,7 @@ static InstructionModel *instrModel_lhu = new InstructionModel(
   "lhu",
   40,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2586,7 +2586,7 @@ static InstructionModel *instrModel_lb = new InstructionModel(
   "lb",
   41,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2647,7 +2647,7 @@ static InstructionModel *instrModel_lbu = new InstructionModel(
   "lbu",
   42,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2708,7 +2708,7 @@ static InstructionModel *instrModel_beq = new InstructionModel(
   "beq",
   43,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2773,7 +2773,7 @@ static InstructionModel *instrModel_bne = new InstructionModel(
   "bne",
   44,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2838,7 +2838,7 @@ static InstructionModel *instrModel_blt = new InstructionModel(
   "blt",
   45,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2903,7 +2903,7 @@ static InstructionModel *instrModel_bge = new InstructionModel(
   "bge",
   46,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -2968,7 +2968,7 @@ static InstructionModel *instrModel_bltu = new InstructionModel(
   "bltu",
   47,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -3033,7 +3033,7 @@ static InstructionModel *instrModel_bgeu = new InstructionModel(
   "bgeu",
   48,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -3098,7 +3098,7 @@ static InstructionModel *instrModel__def = new InstructionModel(
   "_def",
   49,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -3152,7 +3152,7 @@ static InstructionModel *instrModel_jal = new InstructionModel(
   "jal",
   50,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -3180,7 +3180,7 @@ n_10 = std::max({n_2, n_6, n_9});
 perfModel->CV32E40P_pipeline.setIF_stage(n_10);
 n_11 = n_10;
   uint64_t n_12;
-n_12 = n_11 + 2;
+n_12 = n_11 + 1;
   uint64_t n_13;
 perfModel->staBranchPredModel.setPc_np(n_12);
 n_13 = n_12;
@@ -3212,7 +3212,7 @@ static InstructionModel *instrModel_jalr = new InstructionModel(
   "jalr",
   51,
   [](PerformanceModel* perfModel_){
-  CV32E40P_Model* perfModel = static_cast<CV32E40P_Model*>(perfModel_);
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   uint64_t n_0;
 n_0 = perfModel->CV32E40P_pipeline.getWB_stage();
   uint64_t n_1;
@@ -3244,7 +3244,7 @@ n_12 = n_11;
   uint64_t n_13;
 n_13 = std::max({n_2, n_12});
   uint64_t n_14;
-n_14 = n_13 + 2;
+n_14 = n_13 + 1;
   uint64_t n_15;
 perfModel->staBranchPredModel.setPc_np(n_14);
 n_15 = n_14;

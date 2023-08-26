@@ -15,7 +15,7 @@
  */
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
-
+                   
 #ifndef SWEVAL_BACKENDS_CV32E40P_PRINTER_H
 #define SWEVAL_BACKENDS_CV32E40P_PRINTER_H
 
@@ -24,6 +24,7 @@
 #include "Channel.h"
 
 #include <string>
+#include <cstdint>
 
 class CV32E40P_Printer : public Printer
 {
@@ -32,21 +33,23 @@ public:
   CV32E40P_Printer();
 
   virtual void connectChannel(Channel*);
-  
   virtual std::string getPrintHeader(void);
 
-  int get_rs1(void){ return rs1_ptr[instrIndex]; };
-  int get_rs2(void){ return rs2_ptr[instrIndex]; };
-  int get_rd(void){ return rd_ptr[instrIndex]; };
-  int get_pc(void){ return pc_ptr[instrIndex]; };
-  int get_brTarget(void){ return brTarget_ptr[instrIndex]; };
+  uint64_t get_rs1(void){ return rs1_ptr[instrIndex]; };
+  uint64_t get_rs2(void){ return rs2_ptr[instrIndex]; };
+  uint64_t get_rd(void){ return rd_ptr[instrIndex]; };
+  uint64_t get_pc(void){ return pc_ptr[instrIndex]; };
+  uint64_t get_brTarget(void){ return brTarget_ptr[instrIndex]; };
+  uint64_t get_rs2_data(void){ return rs2_data_ptr[instrIndex]; };
 
 private:
+
   uint64_t* rs1_ptr;
   uint64_t* rs2_ptr;
   uint64_t* rd_ptr;
   uint64_t* pc_ptr;
   uint64_t* brTarget_ptr;
+  uint64_t* rs2_data_ptr;
 };
 
 #endif // SWEVAL_BACKENDS_CV32E40P_PRINTER_H

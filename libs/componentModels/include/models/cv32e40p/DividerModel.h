@@ -14,33 +14,24 @@
  * limitations under the License.
  */
 
-#include "CV32E40P_Channel.h"
+#ifndef CV32E40P_DIVIDER_MODEL_H
+#define CV32E40P_DIVIDER_MODEL_H
 
-void *CV32E40P_Channel::getTraceValueHook(std::string trVal_)
+#include <cstdint>
+
+#include "PerformanceModel.h"
+
+class DividerModel : public ResourceModel
 {
-  if(trVal_ == "rs1")
-  {
-    return rs1;
-  }
-  if(trVal_ == "rs2")
-  {
-    return rs2;
-  }
-  if(trVal_ == "rd")
-  {
-    return rd;
-  }
-  if(trVal_ == "pc")
-  {
-    return pc;
-  }
-  if(trVal_ == "brTarget")
-  {
-    return brTarget;
-  }
-  if(trVal_ == "rs2_data")
-  {
-    return rs2_data;
-  }
-  return nullptr;
-}
+public:
+  DividerModel(PerformanceModel* parent_) : ResourceModel("DividerModel", parent_) {};
+
+  uint64_t* rs2_data_ptr;
+  
+  int getDelay(void);
+
+private:
+  int findReverseOneIndex(uint64_t);
+};
+
+#endif // CV32E40P_DIVIDER_MODEL_H

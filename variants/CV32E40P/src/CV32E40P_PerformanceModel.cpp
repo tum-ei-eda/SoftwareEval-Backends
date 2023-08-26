@@ -26,13 +26,19 @@
 
 #include "CV32E40P_Channel.h"
 
+#include "models/cv32e40p/DividerModel.h"
+#include "models/cv32e40p/DividerUnsignedModel.h"
 #include "models/common/StandardRegisterModel.h"
 #include "models/common/StaticBranchPredictModel.h"
 
-void CV32E40P_Model::connectChannel(Channel* channel_)
+void CV32E40P_PerformanceModel::connectChannel(Channel* channel_)
 {
   CV32E40P_Channel* channel = static_cast<CV32E40P_Channel*>(channel_);	
 
+  divider.rs2_data_ptr = channel->rs2_data;
+  
+  divider_u.rs2_data_ptr = channel->rs2_data;
+  
   regModel.rs1_ptr = channel->rs1;
   regModel.rs2_ptr = channel->rs2;
   regModel.rd_ptr = channel->rd;
@@ -42,7 +48,7 @@ void CV32E40P_Model::connectChannel(Channel* channel_)
   
 }
 
-std::string CV32E40P_Model::getPipelineStream(void)
+std::string CV32E40P_PerformanceModel::getPipelineStream(void)
 {
   std::stringstream ret_strs;
   
@@ -53,13 +59,13 @@ std::string CV32E40P_Model::getPipelineStream(void)
   return ret_strs.str();
 }
 
-std::string CV32E40P_Model::getPrintHeader(void)
+std::string CV32E40P_PerformanceModel::getPrintHeader(void)
 {
   std::stringstream ret_strs;
-
-  ret_strs << "IF";
-  ret_strs << "," << "ID";
-  ret_strs << "," << "EX";
-  ret_strs << "," << "WB";
+  
+  ret_strs << "IF_stage"; 
+  ret_strs << "," << "ID_stage";
+  ret_strs << "," << "EX_stage";
+  ret_strs << "," << "WB_stage";
   return ret_strs.str();
 }

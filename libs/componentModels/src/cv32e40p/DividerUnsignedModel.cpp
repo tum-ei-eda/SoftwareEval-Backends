@@ -14,33 +14,43 @@
  * limitations under the License.
  */
 
-#include "CV32E40P_Channel.h"
+#include "models/cv32e40p/DividerUnsignedModel.h"
 
-void *CV32E40P_Channel::getTraceValueHook(std::string trVal_)
+#include <cstdint>
+#include <stdbool.h>
+
+int DividerUnsignedModel::getDelay(void)
 {
-  if(trVal_ == "rs1")
+  uint64_t operand = rs2_data_ptr[getInstrIndex()];
+
+  int delay = 0;
+  if(!operand)
   {
-    return rs1;
+    delay = 31;
   }
-  if(trVal_ == "rs2")
+  else
   {
-    return rs2;
+    int index = findReverseOneIndex(operand);
+    delay = (index != 0) ? (index-1) : 31;
   }
-  if(trVal_ == "rd")
+  delay += 1;
+  delay += 3;
+  
+  return delay;
+}
+
+int DividerUnsignedModel::findReverseOneIndex(uint64_t op_)
+{
+  uint32_t op = op_;
+  int index = 0;
+  for(int i=0; i<32; i++)
   {
-    return rd;
+    op = op >> 1;
+    if(!op)
+    {
+      index = i;
+      break;
+    }
   }
-  if(trVal_ == "pc")
-  {
-    return pc;
-  }
-  if(trVal_ == "brTarget")
-  {
-    return brTarget;
-  }
-  if(trVal_ == "rs2_data")
-  {
-    return rs2_data;
-  }
-  return nullptr;
+  return (31 - index);
 }

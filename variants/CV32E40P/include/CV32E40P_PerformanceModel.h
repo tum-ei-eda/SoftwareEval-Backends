@@ -16,7 +16,7 @@
 
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
 
-#ifndef SWEVAL_BACKENDS_CV32E40P_PERFORMACNE_MODEL_H
+#ifndef SWEVAL_BACKENDS_CV32E40P_PERFORMANCE_MODEL_H
 #define SWEVAL_BACKENDS_CV32E40P_PERFORMANCE_MODEL_H
 
 #include <stdbool.h>
@@ -26,6 +26,8 @@
 #include "PerformanceModel.h"
 #include "Channel.h"
 
+#include "models/cv32e40p/DividerModel.h"
+#include "models/cv32e40p/DividerUnsignedModel.h"
 #include "models/common/StandardRegisterModel.h"
 #include "models/common/StaticBranchPredictModel.h"
 
@@ -60,18 +62,22 @@ public:
 
 extern InstructionModelSet* CV32E40P_InstrModelSet;
 
-class CV32E40P_Model : public PerformanceModel
+class CV32E40P_PerformanceModel : public PerformanceModel
 {
 public:
 
-  CV32E40P_Model() : PerformanceModel("CV32E40P", CV32E40P_InstrModelSet)
+  CV32E40P_PerformanceModel() : PerformanceModel("CV32E40P", CV32E40P_InstrModelSet)
     ,CV32E40P_pipeline()
+    ,divider(this)
+    ,divider_u(this)
     ,regModel(this)
     ,staBranchPredModel(this)
   {};
 
   CV32E40P_pipeline_Model CV32E40P_pipeline;
 
+  DividerModel divider;
+  DividerUnsignedModel divider_u;
 
   StandardRegisterModel regModel;
   StaticBranchPredictModel staBranchPredModel;
@@ -80,6 +86,7 @@ public:
   virtual uint64_t getCycleCount(void){ return CV32E40P_pipeline.getCycleCount(); };
   virtual std::string getPipelineStream(void);
   virtual std::string getPrintHeader(void);
+
 };
 
 #endif // SWEVAL_BACKENDS_CV32E40P_PERFORMANCE_MODEL_H

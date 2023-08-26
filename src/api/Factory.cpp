@@ -73,10 +73,10 @@ Backend* Factory::getPerformanceEstimator(int var_)
   switch((var_t)var_)
   {
     case CV32E40P:
-      perfModel = new CV32E40P_Model();
+      perfModel = new CV32E40P_PerformanceModel();
       break;
     case CVA6:
-      perfModel = new CVA6_Model();
+      perfModel = new CVA6_Model(); // TODO: Rename to CVA6_PerformanceModel
       break;
     default: perfModel = nullptr;
   }

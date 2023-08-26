@@ -20,7 +20,7 @@
 #include "Channel.h"
 
 #include "CV32E40P_Printer.h"
-   
+
 #include <sstream>
 #include <string>
 #include <iomanip>
@@ -34,11 +34,12 @@ static InstructionPrinter *instrPrinter_add = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -49,11 +50,12 @@ static InstructionPrinter *instrPrinter_sub = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -63,12 +65,13 @@ static InstructionPrinter *instrPrinter_xor = new InstructionPrinter(
   2,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -78,12 +81,13 @@ static InstructionPrinter *instrPrinter_or = new InstructionPrinter(
   3,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -93,12 +97,13 @@ static InstructionPrinter *instrPrinter_and = new InstructionPrinter(
   4,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -108,12 +113,13 @@ static InstructionPrinter *instrPrinter_slt = new InstructionPrinter(
   5,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -123,12 +129,13 @@ static InstructionPrinter *instrPrinter_sltu = new InstructionPrinter(
   6,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -138,12 +145,13 @@ static InstructionPrinter *instrPrinter_sll = new InstructionPrinter(
   7,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -153,12 +161,13 @@ static InstructionPrinter *instrPrinter_srl = new InstructionPrinter(
   8,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -168,12 +177,13 @@ static InstructionPrinter *instrPrinter_sra = new InstructionPrinter(
   9,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -183,12 +193,13 @@ static InstructionPrinter *instrPrinter_addi = new InstructionPrinter(
   10,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -198,12 +209,13 @@ static InstructionPrinter *instrPrinter_xori = new InstructionPrinter(
   11,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -213,12 +225,13 @@ static InstructionPrinter *instrPrinter_ori = new InstructionPrinter(
   12,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -228,12 +241,13 @@ static InstructionPrinter *instrPrinter_andi = new InstructionPrinter(
   13,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);    
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -244,11 +258,12 @@ static InstructionPrinter *instrPrinter_slti = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -259,11 +274,12 @@ static InstructionPrinter *instrPrinter_sltiu = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -274,11 +290,12 @@ static InstructionPrinter *instrPrinter_slli = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -289,11 +306,12 @@ static InstructionPrinter *instrPrinter_srli = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -304,11 +322,12 @@ static InstructionPrinter *instrPrinter_srai = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -319,11 +338,12 @@ static InstructionPrinter *instrPrinter_auipc = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -334,11 +354,12 @@ static InstructionPrinter *instrPrinter_lui = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -349,11 +370,12 @@ static InstructionPrinter *instrPrinter_mul = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -364,11 +386,12 @@ static InstructionPrinter *instrPrinter_mulh = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -379,11 +402,12 @@ static InstructionPrinter *instrPrinter_mulhu = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -394,11 +418,12 @@ static InstructionPrinter *instrPrinter_mulhsu = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -409,41 +434,44 @@ static InstructionPrinter *instrPrinter_div = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_divu = new InstructionPrinter(
-  CV32E40P_InstrPrinterSet,
-  "divu",
-  26,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2_data() << " | ";
     return ret_strs.str();
   }
 );
 static InstructionPrinter *instrPrinter_rem = new InstructionPrinter(
   CV32E40P_InstrPrinterSet,
   "rem",
+  26,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2_data() << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_divu = new InstructionPrinter(
+  CV32E40P_InstrPrinterSet,
+  "divu",
   27,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2_data() << " | ";
     return ret_strs.str();
   }
 );
@@ -454,11 +482,12 @@ static InstructionPrinter *instrPrinter_remu = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2_data() << " | ";
     return ret_strs.str();
   }
 );
@@ -469,11 +498,12 @@ static InstructionPrinter *instrPrinter_csrrw = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -484,11 +514,12 @@ static InstructionPrinter *instrPrinter_csrrs = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -499,11 +530,12 @@ static InstructionPrinter *instrPrinter_csrrc = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -514,11 +546,12 @@ static InstructionPrinter *instrPrinter_csrrwi = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -529,11 +562,12 @@ static InstructionPrinter *instrPrinter_csrrsi = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -544,11 +578,12 @@ static InstructionPrinter *instrPrinter_csrrci = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -559,11 +594,12 @@ static InstructionPrinter *instrPrinter_sb = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -574,11 +610,12 @@ static InstructionPrinter *instrPrinter_sh = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -589,11 +626,12 @@ static InstructionPrinter *instrPrinter_sw = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -604,11 +642,12 @@ static InstructionPrinter *instrPrinter_lw = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -619,11 +658,12 @@ static InstructionPrinter *instrPrinter_lh = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -634,11 +674,12 @@ static InstructionPrinter *instrPrinter_lhu = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -649,11 +690,12 @@ static InstructionPrinter *instrPrinter_lb = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -664,11 +706,12 @@ static InstructionPrinter *instrPrinter_lbu = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -679,11 +722,12 @@ static InstructionPrinter *instrPrinter_beq = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -694,11 +738,12 @@ static InstructionPrinter *instrPrinter_bne = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -709,11 +754,12 @@ static InstructionPrinter *instrPrinter_blt = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -724,11 +770,12 @@ static InstructionPrinter *instrPrinter_bge = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -739,11 +786,12 @@ static InstructionPrinter *instrPrinter_bltu = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -754,11 +802,12 @@ static InstructionPrinter *instrPrinter_bgeu = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -769,11 +818,12 @@ static InstructionPrinter *instrPrinter__def = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -784,11 +834,12 @@ static InstructionPrinter *instrPrinter_jal = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
@@ -799,11 +850,12 @@ static InstructionPrinter *instrPrinter_jalr = new InstructionPrinter(
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     return ret_strs.str();
   }
 );
