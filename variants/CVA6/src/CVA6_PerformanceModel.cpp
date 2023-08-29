@@ -75,6 +75,12 @@ void CVA6_Model::connectChannel(Channel* channel_)
   brPredModel.rs1_ptr = channel->rs1;
   brPredModel.rd_ptr = channel->rd;
   brPredModel.imm_ptr = channel->imm;  
+
+  divModel.rs1_data_ptr = channel->rs1_data;
+  divModel.rs2_data_ptr = channel->rs2_data;
+
+  divUModel.rs1_data_ptr = channel->rs1_data;
+  divUModel.rs2_data_ptr = channel->rs2_data;
 }
 
 std::string CVA6_Model::getPipelineStream(void)

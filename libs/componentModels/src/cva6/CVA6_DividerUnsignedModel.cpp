@@ -14,47 +14,37 @@
  * limitations under the License.
  */
 
-// TODO: Hand-written as a proof-of-concept
+#include "models/cva6/CVA6_DividerUnsignedModel.h"
 
-#include "CVA6_Channel.h"
+#include <cstdint>
 
-void *CVA6_Channel::getTraceValueHook(std::string trVal_)
+int CVA6_DividerUnsignedModel::getDelay(void)
 {
-  if(trVal_ == "rs1")
+  uint64_t op_a = rs1_data_ptr[getInstrIndex()];
+  uint64_t op_b = rs2_data_ptr[getInstrIndex()];
+  
+  if(!op_b)
   {
-    return rs1;
+    return 64;
   }
-  if(trVal_ == "rs2")
+  else
   {
-    return rs2;
+    int lzc_b = findLeadingZeroCnt(op_b);
+    int shift = lzc_b - (!op_a ? 64 : findLeadingZeroCnt(op_a));
+    return (shift < 0) ? 2 : shift + 3;
   }
-  if(trVal_ == "rd")
+}
+
+int CVA6_DividerUnsignedModel::findLeadingZeroCnt(uint64_t op_)
+{
+  int op_shift = op_;
+  for(int i=0; i<64; i++)
   {
-    return rd;
+    if(op_shift & 0x8000000000000000)
+    {
+      return i;
+    }
+    op_shift = op_shift << 1;
   }
-  if(trVal_ == "pc")
-  {
-    return pc;
-  }
-  if(trVal_ == "brTarget")
-  {
-    return brTarget;
-  }
-  if(trVal_ == "memAddr")
-  {
-    return memAddr;
-  }
-  if(trVal_ == "imm")
-  {
-    return imm;
-  }
-  if(trVal_ == "rs1_data")
-  {
-    return rs1_data;
-  }
-  if(trVal_ == "rs2_data")
-  {
-    return rs2_data;
-  }
-  return nullptr;
+  return 63;
 }

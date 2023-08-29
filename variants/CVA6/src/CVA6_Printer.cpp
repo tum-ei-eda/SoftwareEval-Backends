@@ -40,6 +40,8 @@ void CVA6_Printer::connectChannel(Channel* ch_)
   pc_ptr = channel->pc;
   brTarget_ptr = channel->brTarget;
   memAddr_ptr = channel->memAddr;
+  rs1_data_ptr = channel->rs1_data;
+  rs2_data_ptr = channel->rs2_data;
   
 }
 
@@ -52,6 +54,8 @@ std::string CVA6_Printer::getPrintHeader(void)
   caption_strs << std::setfill(' ') << std::setw(10) << std::left << "pc" << " | ";
   caption_strs << std::setfill(' ') << std::setw(10) << std::left << "brTarget" << " | ";
   caption_strs << std::setfill(' ') << std::setw(10) << std::left << "memAddr" << " | ";
-
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs1_data" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs2_data" << " | ";
+  
   return caption_strs.str();
 }

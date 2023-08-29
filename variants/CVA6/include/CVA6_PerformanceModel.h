@@ -28,11 +28,12 @@
 #include "Channel.h"
 
 #include "models/common/StandardRegisterModel.h"
-#include "models/common/StaticBranchPredictModel.h"
 #include "models/cva6/ClobberModel.h"
 #include "models/cva6/ICacheModel.h"
 #include "models/cva6/DCacheModel.h"
 #include "models/cva6/BranchPredictionModel.h"
+#include "models/cva6/CVA6_DividerModel.h"
+#include "models/cva6/CVA6_DividerUnsignedModel.h"
 
 class CVA6_PcGenStage_Model
 {
@@ -262,7 +263,9 @@ public:
     ,cbModel(this)
     ,iCacheModel(this)
     ,dCacheModel(this)
-    ,brPredModel(this)	 
+    ,brPredModel(this)
+    ,divModel(this)
+    ,divUModel(this)
   {};
 
   //CVA6_pipeline_Model CVA6_pipeline;
@@ -280,7 +283,9 @@ public:
   ICacheModel iCacheModel;
   DCacheModel dCacheModel;
   BranchPredictionModel brPredModel;
-
+  CVA6_DividerModel divModel;
+  CVA6_DividerUnsignedModel divUModel;
+  
   virtual void connectChannel(Channel*);
   virtual uint64_t getCycleCount(void){ return ComStage.get_leaveStage(); };
   virtual std::string getPipelineStream(void);

@@ -41,7 +41,9 @@ public:
   int get_pc(void){ return pc_ptr[instrIndex]; };
   int get_brTarget(void){ return brTarget_ptr[instrIndex]; };
   int get_memAddr(void){ return memAddr_ptr[instrIndex]; };
-
+  int get_rs1_data(void){ return rs1_data_ptr[instrIndex]; };
+  int get_rs2_data(void){ return rs2_data_ptr[instrIndex]; };
+  
 private:
   uint64_t* rs1_ptr;
   uint64_t* rs2_ptr;
@@ -49,6 +51,9 @@ private:
   uint64_t* pc_ptr;
   uint64_t* brTarget_ptr;
   uint64_t* memAddr_ptr;
+  uint64_t* rs1_data_ptr;
+  uint64_t* rs2_data_ptr;
+  
 };
 
 #endif // SWEVAL_BACKENDS_CVA6_PRINTER_H

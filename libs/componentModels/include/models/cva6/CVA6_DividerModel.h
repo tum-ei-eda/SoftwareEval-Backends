@@ -14,47 +14,27 @@
  * limitations under the License.
  */
 
-// TODO: Hand-written as a proof-of-concept
+#ifndef CVA6_DIVIDER_MODEL_H
+#define CVA6_DIVIDER_MODEL_H
 
-#include "CVA6_Channel.h"
+#include <cstdint>
 
-void *CVA6_Channel::getTraceValueHook(std::string trVal_)
+#include "PerformanceModel.h"
+
+class CVA6_DividerModel : public ResourceModel
 {
-  if(trVal_ == "rs1")
-  {
-    return rs1;
-  }
-  if(trVal_ == "rs2")
-  {
-    return rs2;
-  }
-  if(trVal_ == "rd")
-  {
-    return rd;
-  }
-  if(trVal_ == "pc")
-  {
-    return pc;
-  }
-  if(trVal_ == "brTarget")
-  {
-    return brTarget;
-  }
-  if(trVal_ == "memAddr")
-  {
-    return memAddr;
-  }
-  if(trVal_ == "imm")
-  {
-    return imm;
-  }
-  if(trVal_ == "rs1_data")
-  {
-    return rs1_data;
-  }
-  if(trVal_ == "rs2_data")
-  {
-    return rs2_data;
-  }
-  return nullptr;
-}
+public:
+  CVA6_DividerModel(PerformanceModel* parent_) : ResourceModel("CVA6_DividerModel", parent_) {};
+  
+  virtual int getDelay(void);
+
+  // Trace values
+  uint64_t* rs1_data_ptr;
+  uint64_t* rs2_data_ptr;
+
+private:
+  int findLeadingZeroCnt(uint64_t);
+
+};
+
+#endif // CVA6_DIVIDER_MODEL_H

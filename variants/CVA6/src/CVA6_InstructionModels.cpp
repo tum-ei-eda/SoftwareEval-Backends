@@ -214,10 +214,14 @@
   perfModel->regModel.setXd(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
 
-// TODO: Add dynamic delay for DIV?
-
 #define PE_TIMEFUNC_EX_STAGE_DIV uint64_t n_ex_done, n_ex_leave;\
-  n_ex_done = n_is_leave +5;\
+  n_ex_done = n_is_leave + perfModel->divModel.getDelay();\
+  perfModel->ExStage.set_leaveDiv(n_ex_done);\
+  perfModel->regModel.setXd(n_ex_done);\
+  PE_TIMEFUNC_EX_STAGE_LEAVE
+
+#define PE_TIMEFUNC_EX_STAGE_DIVU uint64_t n_ex_done, n_ex_leave;\
+  n_ex_done = n_is_leave + perfModel->divUModel.getDelay();\
   perfModel->ExStage.set_leaveDiv(n_ex_done);\
   perfModel->regModel.setXd(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
@@ -362,6 +366,17 @@
   PE_TIMEFUNC_ID_STAGE\
   PE_TIMEFUNC_IS_STAGE_DIV\
   PE_TIMEFUNC_EX_STAGE_DIV\
+  PE_TIMEFUNC_COM_STAGE_CB\
+}
+
+#define PE_TIMEFUNC_DIVU PE_TIMEFUNC_CALL {\
+  PE_TIMEFUNC_INIT\
+  PE_TIMEFUNC_PCGEN_STAGE\
+  PE_TIMEFUNC_IF_STAGE\
+  PE_TIMEFUNC_IQ_STAGE\
+  PE_TIMEFUNC_ID_STAGE\
+  PE_TIMEFUNC_IS_STAGE_DIV\
+  PE_TIMEFUNC_EX_STAGE_DIVU\
   PE_TIMEFUNC_COM_STAGE_CB\
 }
 
@@ -575,7 +590,7 @@ static InstructionModel *instrModel_divu = new InstructionModel(
   CVA6_InstrModelSet,
   "divu",
   26,
-  PE_TIMEFUNC_DIV
+  PE_TIMEFUNC_DIVU
 );
 
 static InstructionModel *instrModel_rem = new InstructionModel(
@@ -589,7 +604,7 @@ static InstructionModel *instrModel_remu = new InstructionModel(
   CVA6_InstrModelSet,
   "remu",
   28,
-  PE_TIMEFUNC_DIV
+  PE_TIMEFUNC_DIVU
 );
 
 static InstructionModel *instrModel_csrrw = new InstructionModel(
@@ -781,4 +796,67 @@ static InstructionModel *instrModel_addiw = new InstructionModel(
   "addiw",
   55,
   PE_TIMEFUNC_ARITH_RS1
+);
+
+static InstructionModel *instrModel_subw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "subw",
+  56,
+  PE_TIMEFUNC_ARITH_RS1_RS2
+);
+
+static InstructionModel *instrModel_addw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "addw",
+  57,
+  PE_TIMEFUNC_ARITH_RS1_RS2
+);
+
+static InstructionModel *instrModel_slliw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "slliw",
+  58,
+  PE_TIMEFUNC_ARITH_RS1
+);
+
+static InstructionModel *instrModel_sraiw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "sraiw",
+  59,
+  PE_TIMEFUNC_ARITH_RS1
+);
+
+static InstructionModel *instrModel_divw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "divw",
+  60,
+  PE_TIMEFUNC_DIV
+);
+
+static InstructionModel *instrModel_mulw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "mulw",
+  61,
+  PE_TIMEFUNC_MUL
+);
+
+static InstructionModel *instrModel_divuw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "divuw",
+  62,
+  PE_TIMEFUNC_DIVU
+);
+
+static InstructionModel *instrModel_remw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "remw",
+  63,
+  PE_TIMEFUNC_DIV
+);
+
+static InstructionModel *instrModel_remuw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "remuw",
+  64,
+  PE_TIMEFUNC_DIVU
 );
