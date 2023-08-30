@@ -16,36 +16,31 @@
 
 // TODO: Proof-of-concept model, taken from Robert (more or less)!
 
+#include <cstdint>
+
 #include "models/cva6/ICacheModel.h"
 
 int ICacheModel::getDelay(void)
 {
-    unsigned int pc = pc_ptr[getInstrIndex()];
+    uint64_t pc = pc_ptr[getInstrIndex()];
 
     isMiss = !inCache(pc);
 
-    if(notCachable(pc) | isMiss)
+    if(!cachable(pc) | isMiss)
     {
         return MEMORY_DELAY;
     }
     return CACHE_DELAY;
 }
 
-bool ICacheModel::inCache(unsigned int pc_)
+bool ICacheModel::inCache(uint64_t pc_)
 {
-    // tag calculation tag = addr[55:12]
-    // since we only consider 32 bit addresses (int) we can just remove the 12 lower bit
-    unsigned int tag = pc_ >> 12;
-
-    // index calculation index = addr[11:4], 8 bit wide, 256 bytes addressable
-    // remove the higher 21 bit, remove the lower 4 bit
-    //unsigned int index = (pc_<<(32-11))>>(32-11+4);
-    // TODO: Check if this line is corret!! Shouldn't it be:
-    unsigned int index = (pc_<<20)>>24;
+    uint64_t tag = (pc_ & 0x00FFFFFFFFFFF000) >> 12; // pc_[55:12]
+    uint64_t index = (pc_ & 0x0000000000000FF0) >> 4; // pc_[11:4]
 
     for(int way_i=0; way_i<4; way_i++)
     {
-        if(tag_cache[way_i][index] == tag)
+        if(tag_cache[way_i][index].tag == tag)
         {
             // Cache hit
             return true;
@@ -57,26 +52,32 @@ bool ICacheModel::inCache(unsigned int pc_)
     return false;
 }
 
-bool ICacheModel::notCachable(unsigned int pc_)
+void ICacheModel::updateCache(uint64_t tag_, uint64_t index_)
 {
-    if((0x80000000 <= pc_) && (pc_ < 0xC0000000))
+    int way = -1;
+
+    for(int i=0; i<4; i++)
     {
-        return false;
+      if(!tag_cache[i][index_].valid)
+      {
+	way = i;
+	break;
+      }
     }
-    return true;
+
+    if(way == -1)
+    {
+      way = lfsr();
+    }
+    
+    tag_cache[way][index_].tag = tag_;
+    tag_cache[way][index_].valid = true;
 }
 
-void ICacheModel::updateCache(unsigned int tag_, unsigned int index_)
+int ICacheModel::lfsr(void)
 {
-    // TODO: Only 4-bit LFSR implemented
-    static int lfsrState = 0xF;
-    if(lfsrState & 0x1)
-    {
-        lfsrState = (lfsrState >> 1) ^ 0xC;
-    }
-    else
-    {
-        lfsrState = (lfsrState >> 1);
-    }
-    tag_cache[lfsrState & 0x3][index_] = tag_;
+    static uint8_t shift_state = 0;
+    uint8_t shift_in = ~(((shift_state & 0x80) >> 7) ^ ((shift_state & 0x08) >> 3) ^ ((shift_state & 0x04) >> 2) ^ ((shift_state & 0x02) >> 1));
+    shift_state = (shift_state << 1) | shift_in;
+    return (shift_state & 0x03);
 }

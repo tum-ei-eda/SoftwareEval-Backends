@@ -20,14 +20,21 @@
 #define I_CACHE_MODEL_H
 
 #include <stdbool.h>
+#include <cstdint>
 
 #include "PerformanceModel.h"
+
+struct ICacheEntry
+{
+  uint64_t tag = 0;
+  bool valid = false;
+};
 
 class ICacheModel : public ResourceModel
 {
 public:
 
-  ICacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(1), MEMORY_DELAY(4) {};
+  ICacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(1), MEMORY_DELAY(5) {};
   virtual int getDelay(void);
   
   void setIc(uint64_t c_) { t_ic = isMiss ? c_ : 0; };
@@ -40,7 +47,7 @@ private:
   
   // Cache state
   // TODO: Associativity hard-coded to 4
-  unsigned int tag_cache[4][256] = {0};
+  ICacheEntry tag_cache[4][256];
   //bool valid_cache[4][256]= {false};
   bool isMiss = false;
 
@@ -52,9 +59,10 @@ private:
   const int MEMORY_DELAY;
 
   // Support functions
-  bool inCache(unsigned int);
-  bool notCachable(unsigned int);
-  void updateCache(unsigned int,  unsigned int);
+  bool inCache(uint64_t);
+  bool cachable(uint64_t pc_) { return ((0x80000000 <= pc_) && (pc_ < 0xC0000000)) ? true : false; };
+  void updateCache(uint64_t, uint64_t);
+  int lfsr(void);
 };
 
 #endif // I_CACHE_MODEL_H
