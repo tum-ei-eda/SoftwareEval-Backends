@@ -70,8 +70,6 @@
 
 // -- Iq-Stage
 
-// TODO: Add Buffer mechanism (Is this done?)
-
 #define PE_TIMEFUNC_IQ_STAGE uint64_t n_iq_1, n_iq_leave;\
   n_iq_1 = n_if_leave + 1;\
   perfModel->IqStage.set_leaveInsert(n_iq_1);\
@@ -86,8 +84,6 @@
   perfModel->IdStage.set_leaveStage(n_id_leave);
 
 // -- Is-Stage
-
-// Add RS1, RS2, CB connectors 
 
 #define PE_TIMEFUNC_IS_STAGE_DELAY n_is_1 = n_id_leave + 0;
 #define PE_TIMEFUNC_IS_STAGE_LEAVE perfModel->IsStage.set_leaveStage(n_is_leave);
@@ -225,8 +221,6 @@
   perfModel->ExStage.set_leaveDiv(n_ex_done);\
   perfModel->regModel.setXd(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
-
-// TODO: Add dynamic model for DCache!
 
 #define PE_TIMEFUNC_EX_STAGE_LOAD uint64_t n_ex_1, n_ex_2, n_ex_3, n_ex_4, n_ex_done, n_ex_leave;\
   n_ex_1 = n_is_leave +1;\

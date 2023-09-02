@@ -18,70 +18,71 @@
 
 #include "models/cva6/DCacheModel.h"
 
+#include <cstdint>
+
 int DCacheModel::getDelay(void)
 {
-    unsigned int addr = addr_ptr[getInstrIndex()];
+  uint64_t addr = addr_ptr[getInstrIndex()];
 
-    // TODO: Robert's model calculates an additional delay here if address is blocked by a preceding store!
+  // TODO: Robert's model calculates an additional delay here if address is blocked by a preceding store!
 
-    if(notCachable(addr))
-    {
-        return NOT_CACHABLE_DELAY;
-    }
-    if(inCache(addr))
-    {
-        return CACHE_DELAY;
-    }
-    return MEMORY_DELAY;
+  if(!cachable(addr))
+  {
+    return NOT_CACHABLE_DELAY;
+  }
+  if(inCache(addr))
+  {
+    return CACHE_DELAY;
+  }
+  return MEMORY_DELAY;
 }
 
-bool DCacheModel::inCache(unsigned int addr_)
+bool DCacheModel::inCache(uint64_t addr_)
 {
-    // tag calculation tag = addr[55:12]
-    // since we only consider 32 bit addresses (int) we can just remove the 12 lower bit
-    unsigned int tag = addr_ >> 12;
 
-    // index calculation index = addr[11:4], 8 bit wide, 256 bytes addressable
-    // remove the higher 21 bit, remove the lower 4 bit
-    //unsigned int index = (addr_<<(32-11))>>(32-11+4);
-    // TODO: Check if this line is corret!! Shouldn't it be:
-    unsigned int index = (addr_<<20)>>24;
-
-    // TODO: For DCache it seams logical to also check valid_cache. However, current model does never invalidate any index!?
-    for(int way_i=0; way_i<8; way_i++)
+  uint64_t tag = (addr_ & 0x00FFFFFFFFFFF000) >> 12; // pc_[55:12]
+  uint64_t index = (addr_ & 0x0000000000000FF0) >> 4; // pc_[11:4]
+  
+  for(int way_i=0; way_i<8; way_i++)
+  {
+    if(tag_cache[way_i][index].tag == tag)
     {
-        if(tag_cache[way_i][index] == tag)
-        {
-            // Cache hit
-            return true;
-        }
+      // Cache hit
+      return true;
     }
+  }
 
-    // Cache miss
-    updateCache(tag, index);
-    return false;
+  // Cache miss
+  updateCache(tag, index);
+  return false;
 }
 
-bool DCacheModel::notCachable(unsigned int addr_)
+void DCacheModel::updateCache(uint64_t tag_, uint64_t index_)
 {
-    if((0x80000000 <= addr_) && (addr_ < 0xC0000000))
+  int way = -1;
+
+  for(int way_i=0; way_i<8; way_i++)
+  {
+    if(!tag_cache[way_i][index_].valid)
     {
-        return false;
+      way = way_i;
+      break;
     }
-    return true;
+  }
+
+  if(way == -1)
+  {
+    way = lfsr();
+  }
+
+  tag_cache[way][index_].tag = tag_;
+  tag_cache[way][index_].valid = true;
 }
 
-void DCacheModel::updateCache(unsigned int tag_, unsigned int index_)
+int DCacheModel::lfsr(void)
 {
-    // TODO: Only 8-bit LFSR implemented
-    static int lfsrState = 0xFF;
-    if(lfsrState & 0x1)
-    {
-        lfsrState = (lfsrState >> 1) ^ 0xFA;
-    }
-    else
-    {
-        lfsrState = (lfsrState >> 1);
-    }
-    tag_cache[lfsrState & 0x7][index_] = tag_;
+    static uint8_t shift_state = 0;
+    uint8_t shift_in = ~(((shift_state & 0x80) >> 7) ^ ((shift_state & 0x08) >> 3) ^ ((shift_state & 0x04) >> 2) ^ ((shift_state & 0x02) >> 1));
+    shift_state = (shift_state << 1) | shift_in;
+    return (shift_state & 0x07);
 }

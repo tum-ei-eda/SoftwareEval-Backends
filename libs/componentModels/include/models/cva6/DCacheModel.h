@@ -20,36 +20,42 @@
 #define D_CACHE_MODEL_H
 
 #include <stdbool.h>
+#include <cstdint>
 
 #include "PerformanceModel.h"
 
+struct DCacheEntry
+{
+  uint64_t tag = 0;
+  bool valid = false;
+};
+
 class DCacheModel : public ResourceModel
 {
-    public:
+public:
 
-    // TODO: Check if delays are matching observations!
-    DCacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(1), MEMORY_DELAY(6), NOT_CACHABLE_DELAY(9) {};
-    virtual int getDelay(void);
+  // TODO: Check if delays are matching observations!
+  DCacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(1), MEMORY_DELAY(7), NOT_CACHABLE_DELAY(9) {};
+  virtual int getDelay(void);
+  
+  // Trace value
+  uint64_t* addr_ptr;
 
-    // Trace value
-    uint64_t* addr_ptr;
+private:
 
-    private:
+  // Cache state
+  DCacheEntry tag_cache[8][256];
+  
+  // Support functions
+  bool inCache(uint64_t);
+  bool cachable(uint64_t addr_) { return ((0x80000000 <= addr_) && (addr_ < 0xC0000000)) ? true : false; };
+  void updateCache(uint64_t, uint64_t);
+  int lfsr(void);
 
-    // Support functions
-    bool inCache(unsigned int);
-    bool notCachable(unsigned int);
-    void updateCache(unsigned int,  unsigned int);
-
-    // Cache state
-    // TODO: Associativity hard-coded to 8
-    unsigned int tag_cache[8][256] = {0};
-    //bool valid_cache[8][256]= {false};
-
-    // Constants
-    const int CACHE_DELAY;
-    const int MEMORY_DELAY;
-    const int NOT_CACHABLE_DELAY;
+  // Constants
+  const int CACHE_DELAY;
+  const int MEMORY_DELAY;
+  const int NOT_CACHABLE_DELAY;
 
 };
 
