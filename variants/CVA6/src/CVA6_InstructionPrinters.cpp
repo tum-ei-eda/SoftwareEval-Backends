@@ -1213,3 +1213,22 @@ static InstructionPrinter *instrPrinter_remuw = new InstructionPrinter(
     return ret_strs.str();
   }
 );
+
+static InstructionPrinter *instrPrinter_srliw = new InstructionPrinter(
+  CVA6_InstrPrinterSet,
+  "srliw",
+  65,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(8) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(10) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);

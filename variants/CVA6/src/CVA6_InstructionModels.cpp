@@ -47,6 +47,7 @@
   perfModel->IfStage.set_leaveICacheIn(n_if_3);\
   n_if_4 = n_if_3 + perfModel->iCacheModel.getDelay();\
   perfModel->iCacheModel.setIc(n_if_4);\
+  perfModel->IfStage.set_leaveICache(n_if_4);\
   n_if_5 = std::max({n_if_4, perfModel->IfStage.get_leaveStage()});\
   n_if_6 = n_if_5 + 1;
 
@@ -202,11 +203,20 @@
   n_ex_done = n_is_leave + 1;\
   perfModel->ExStage.set_leaveAlu(n_ex_done);\
   perfModel->brPredModel.setPc_c(n_ex_done);\
+  perfModel->regModel.setXd(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
 
-#define PE_TIMEFUNC_EX_STAGE_MUL uint64_t n_ex_done, n_ex_leave;\
-  n_ex_done = n_is_leave +2;\
-  perfModel->ExStage.set_leaveMul(n_ex_done);\
+//#define PE_TIMEFUNC_EX_STAGE_MUL uint64_t n_ex_done, n_ex_leave;\
+//  n_ex_done = n_is_leave +2;\
+//  perfModel->ExStage.set_leaveMul(n_ex_done);\
+//  perfModel->regModel.setXd(n_ex_done);\
+//  PE_TIMEFUNC_EX_STAGE_LEAVE
+
+#define PE_TIMEFUNC_EX_STAGE_MUL uint64_t n_ex_1, n_ex_done, n_ex_leave;\
+  n_ex_1 = n_is_leave +1;\
+  perfModel->ExStage.set_leaveMulI(n_ex_1);\
+  n_ex_done = n_is_leave +1;\
+  perfModel->ExStage.set_leaveMulO(n_ex_done);\
   perfModel->regModel.setXd(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
 
@@ -853,4 +863,11 @@ static InstructionModel *instrModel_remuw = new InstructionModel(
   "remuw",
   64,
   PE_TIMEFUNC_DIVU
+);
+
+static InstructionModel *instrModel_srliw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "srliw",
+  65,
+  PE_TIMEFUNC_ARITH_RS1
 );

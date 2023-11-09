@@ -20,6 +20,8 @@
 
 int CVA6_DividerModel::getDelay(void)
 {
+  int delay = 0;
+
   uint64_t op_a = rs1_data_ptr[getInstrIndex()];
   uint64_t op_b = rs2_data_ptr[getInstrIndex()];
 
@@ -28,19 +30,25 @@ int CVA6_DividerModel::getDelay(void)
   
   if(!op_b_inv)
   {
-    return 64;
+    //return 64;
+    delay = 64;
   }
   else
   {
+    int lzc_a = findLeadingZeroCnt(op_a_inv);
     int lzc_b = findLeadingZeroCnt(op_b_inv);
-    int shift = lzc_b - (!op_a_inv ? 64 : findLeadingZeroCnt(op_a_inv));
-    return (shift < 0) ? 2 : shift + 3;
+    //int shift = lzc_b - (!op_a_inv ? 64 : findLeadingZeroCnt(op_a_inv));
+    int shift = lzc_b - (!op_a_inv ? 64 : lzc_a);
+    //return (shift < 0) ? 2 : shift + 3;
+    delay = (shift < 0) ? 2 : shift + 3;
   }
+
+  return delay;
 }
 
 int CVA6_DividerModel::findLeadingZeroCnt(uint64_t op_)
 {
-  int op_shift = op_;
+  uint64_t op_shift = op_;
   for(int i=0; i<64; i++)
   {
     if(op_shift & 0x8000000000000000)

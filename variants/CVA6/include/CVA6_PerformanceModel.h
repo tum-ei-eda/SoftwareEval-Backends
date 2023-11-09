@@ -152,8 +152,10 @@ public:
   
   CVA6_ExStage_Model(){};
 
-  uint64_t get_backPressure_arith(void) { return std::max({get_leaveStage_i8(), get_leaveAlu(), get_leaveMul_i1(), get_leaveDiv()}); };
-  uint64_t get_backPressure_mul(void) { return std::max({get_leaveStage_i8(), get_leaveMul_i2(), get_leaveDiv()}); };
+  //uint64_t get_backPressure_arith(void) { return std::max({get_leaveStage_i8(), get_leaveAlu(), get_leaveMul_i1(), get_leaveDiv()}); };
+  uint64_t get_backPressure_arith(void) { return std::max({get_leaveStage_i8(), get_leaveAlu(), get_leaveMulO(), get_leaveDiv()}); };
+  //uint64_t get_backPressure_mul(void) { return std::max({get_leaveStage_i8(), get_leaveMul_i2(), get_leaveDiv()}); };
+  uint64_t get_backPressure_mul(void) { return std::max({get_leaveStage_i8(), get_leaveMulI(), get_leaveDiv()}); };
   uint64_t get_backPressure_div(void) { return std::max({get_leaveStage_i8(), get_leaveDiv()}); };
   uint64_t get_backPressure_load(void) { return std::max({get_leaveStage_i8(), get_leaveLCtrl()}); };
   uint64_t get_backPressure_store(void) { return std::max({get_leaveStage_i8(), get_leaveSCtrl()}); };
@@ -163,11 +165,17 @@ public:
   void set_leaveAlu(uint64_t c) { leaveAlu = c; };
   uint64_t get_leaveAlu(void) { return leaveAlu; };
 
-  //void set_leaveMul(uint64_t c) { leaveMul = c; };
-  void set_leaveMul(uint64_t);
-  uint64_t get_leaveMul_i2(void) { return leaveMul[mul_ptr_i2]; };
-  uint64_t get_leaveMul_i1(void) { return leaveMul[mul_ptr_i1]; };
+  ////void set_leaveMul(uint64_t c) { leaveMul = c; };
+  //void set_leaveMul(uint64_t);
+  //uint64_t get_leaveMul_i2(void) { return leaveMul[mul_ptr_i2]; };
+  //uint64_t get_leaveMul_i1(void) { return leaveMul[mul_ptr_i1]; };
 
+  void set_leaveMulI(uint64_t c) { leaveMulI = c; };
+  void set_leaveMulO(uint64_t c) { leaveMulO = c; };
+  
+  uint64_t get_leaveMulI(void) { return leaveMulI; };
+  uint64_t get_leaveMulO(void) { return leaveMulO; };
+  
   void set_leaveDiv(uint64_t c) { leaveDiv = c; };
   uint64_t get_leaveDiv(void) { return leaveDiv; };
 
@@ -195,7 +203,11 @@ public:
 private:
 
   uint64_t leaveDiv = 0;
-  uint64_t leaveMul[2] = { };
+
+  //uint64_t leaveMul[2] = { };
+  uint64_t leaveMulI = 0;
+  uint64_t leaveMulO = 0;
+
   uint64_t leaveAlu = 0; // TODO: Do we need to differentiate between ALU, BU and CSR?
   uint64_t leaveLCtrl = 0;
   uint64_t leaveDCache = 0;
@@ -204,8 +216,8 @@ private:
   uint64_t leaveSUnit = 0;
   uint64_t leaveStage[8] = { };
 
-  int mul_ptr_i2 = 0;
-  int mul_ptr_i1 = 1;
+  //int mul_ptr_i2 = 0;
+  //int mul_ptr_i1 = 1;
   int stage_ptr_i8 = 0;
   int stage_ptr_i1 = 7;
 
