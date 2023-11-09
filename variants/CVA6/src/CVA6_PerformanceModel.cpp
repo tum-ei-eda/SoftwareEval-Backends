@@ -34,12 +34,12 @@ void CVA6_IqStage_Model::set_leaveStage(uint64_t c)
   stage_ptr = (++stage_ptr)%7;
 }
 
-void CVA6_ExStage_Model::set_leaveMul(uint64_t c)
-{
-  leaveMul[mul_ptr_i2] = c;
-  mul_ptr_i2 = (++mul_ptr_i2)%2;
-  mul_ptr_i1 = (++mul_ptr_i1)%2;
-}
+//void CVA6_ExStage_Model::set_leaveMul(uint64_t c)
+//{
+//  leaveMul[mul_ptr_i2] = c;
+//  mul_ptr_i2 = (++mul_ptr_i2)%2;
+//  mul_ptr_i1 = (++mul_ptr_i1)%2;
+//}
 
 void CVA6_ExStage_Model::set_leaveStage(uint64_t c)
 {
@@ -114,6 +114,6 @@ std::string CVA6_Model::getPrintHeader(void)
   ret_strs << "," << "mispredict";
   ret_strs << "," << "taken";
   ret_strs << "," << "pc_pt";
-  
-  return ret_strs.str();
+  ret_strs << std::endl;
+ return ret_strs.str();
 }

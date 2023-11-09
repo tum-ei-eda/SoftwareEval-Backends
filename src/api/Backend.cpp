@@ -34,7 +34,6 @@ void Streamer::openStream(void)
   streamOpen = true;
 
   stream(printHeader);
-  stream("\n");
 }
 
 void Streamer::stream(std::string in_)
@@ -102,7 +101,6 @@ void Streamer::swapOutFile(void)
   fileIndex += 1;
   outFile.open(getFileName());
   stream(printHeader);
-  //stream("\n");
 }
 
 std::string Streamer::getFileName(void)

@@ -42,6 +42,7 @@ std::string AssemblyTrace_Printer::getPrintHeader(void)
   std::stringstream caption_strs;	
   caption_strs << std::setfill(' ') << std::setw(10) << std::left << "pc" << " ; ";
   caption_strs << std::setfill(' ') << std::setw(10) << std::left << "assembly" << " ; ";
-
+  caption_strs << std::endl;
+  
   return caption_strs.str();
 }

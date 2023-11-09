@@ -67,5 +67,6 @@ std::string CV32E40P_PerformanceModel::getPrintHeader(void)
   ret_strs << "," << "ID_stage";
   ret_strs << "," << "EX_stage";
   ret_strs << "," << "WB_stage";
+  ret_strs << std::endl;
   return ret_strs.str();
 }

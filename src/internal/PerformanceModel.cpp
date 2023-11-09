@@ -27,43 +27,33 @@
 
 PerformanceModel::PerformanceModel(std::string name_, InstructionModelSet* instrModelSet_) : name(name_), instrModelSet(instrModelSet_)
 {
-    std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
-    std::cout << "Creating performance model: " << name << "\n";
-    std::cout << " - Creating time-function map:\n";
+    //std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
+    //std::cout << "Creating performance model: " << name << "\n";
+    //std::cout << " - Creating time-function map:\n";
 
     instrModelSet->foreach([this](InstructionModel &instr)
     {
-        std::stringstream instrInfo_strs;
-        instrInfo_strs << instr.name << "[Type-ID: " << instr.typeId << "]";
+        //std::stringstream instrInfo_strs;
+        //instrInfo_strs << instr.name << "[Type-ID: " << instr.typeId << "]";
         
         auto typeId_it = instrTimeFunc_map.find(instr.typeId);
         if(typeId_it != instrTimeFunc_map.end())
         {
-	  std::cout << "\tERROR: Cannot add " << instrInfo_strs.str() << " to time-function map. Type-ID already assigned.\n";
+	  //std::cout << "\tERROR: Cannot add " << instrInfo_strs.str() << " to time-function map. Type-ID already assigned.\n";
 	  return;
         }
 
         instrTimeFunc_map[instr.typeId] = instr.timeFunc;
-        std::cout << "\tAdding " << instrInfo_strs.str() << " to time-function map.\n";
+        //std::cout << "\tAdding " << instrInfo_strs.str() << " to time-function map.\n";
 
     });
 
-    std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
+    //std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
 }
 
 void PerformanceModel::callInstrTimeFunc(int typeId_)
 {
-
   instrTimeFunc_map[typeId_](this);
-  //// TODO: Get rid of this check! Should be unnecessary after code-gen replaces default-instr. with real instructions
-  //if(instrTimeFunc_map[typeId_]) 
-  //{
-  //    instrTimeFunc_map[opc_][mask_](this);
-  //}
-  //else
-  //{
-  //    instrTimeFunc_map[0xffffffff][0x00000000](this);
-  //}
 }
 
 void InstructionModelSet::addInstructionModel(InstructionModel* instrModel)

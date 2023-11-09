@@ -55,7 +55,7 @@ void PerformanceEstimator::execute(void)
     if(streamer.isActive())
     {
       streamer.stream(perfModel_ptr->getPipelineStream());
-      streamer.stream("\n");
+      streamer.stream("\n"); // TODO: Move new line to function that creates the line!
     }
 
   }

@@ -51,6 +51,7 @@ std::string CV32E40P_Printer::getPrintHeader(void)
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "pc" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "brTarget" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs2_data" << " | ";
-
+  caption_strs << std::endl;
+  
   return caption_strs.str();
 }
