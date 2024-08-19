@@ -88,7 +88,8 @@ public:
   
   CVA6_IqStage_Model(){};
 
-  uint64_t get_backPressure(void) { return std::max({get_leaveStage(), get_leaveInsert()}); };
+  //uint64_t get_backPressure(void) { return std::max({get_leaveStage(), get_leaveInsert()}); };
+  uint64_t get_backPressure(void) { return get_leaveStage(); };
   
   void set_leaveInsert(uint64_t c) { leaveInsert = c ;};
   uint64_t get_leaveInsert(void) {return leaveInsert; };
