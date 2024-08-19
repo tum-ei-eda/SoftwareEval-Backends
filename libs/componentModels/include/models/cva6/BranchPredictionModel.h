@@ -110,7 +110,9 @@ public:
   // Used for model evaluation TODO: Delete?
   std::string getInfo_mispredict(void) { return std::to_string(isMispredict); };
   std::string getInfo_taken(void) { return std::to_string(isTaken); };
-  std::string getInfo_pc_pt(void) { return std::to_string(pc_pt); };
+  std::string getInfo_predictedTaken(void) { return std::to_string(branchPredictedTaken); };
+  std::string getInfo_pc_pt(void) { return std::to_string(t_pc_pt); };
+  std::string getInfo_pc_mp(void) { return std::to_string(t_pc_mp); };
   
   // Trace values
   uint64_t* pc_ptr;
