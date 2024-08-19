@@ -35,6 +35,9 @@
 #include "AssemblyTrace_Channel.h"
 #include "AssemblyTrace_Printer.h"
 
+#include "InstructionTrace_RV64_Channel.h"
+#include "InstructionTrace_RV64_Printer.h"
+
 namespace SwEvalBackends
 {
 
@@ -52,6 +55,10 @@ int Factory::getVariantHandle(std::string var_)
     {
         return AssemblyTrace;
     }
+    if(var_ == "InstructionTrace_RV64")
+    {
+        return InstructionTrace_RV64;
+    }
     return -1;
 }
 
@@ -62,6 +69,7 @@ Channel* Factory::getChannel(int var_)
     case CV32E40P: return new CV32E40P_Channel();
     case CVA6: return new CVA6_Channel();
     case AssemblyTrace: return new AssemblyTrace_Channel();
+    case InstructionTrace_RV64: return new InstructionTrace_RV64_Channel();
     default: return nullptr;
   }
 }
@@ -106,6 +114,9 @@ Backend* Factory::getTracePrinter(int var_)
       break;
     case AssemblyTrace:
       printer = new AssemblyTrace_Printer();
+      break;
+    case InstructionTrace_RV64:
+      printer = new InstructionTrace_RV64_Printer();
       break;
     default: printer = nullptr;
   }
