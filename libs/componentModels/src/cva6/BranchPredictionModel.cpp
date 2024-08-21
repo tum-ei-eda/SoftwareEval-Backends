@@ -191,11 +191,17 @@ uint64_t BranchPredictionModel::getPc_mp(void)
     }
   }
 
+  // Check if previous instr was jump with immediate base
+  else if(jump_flag)
+  {
+    isTaken = true; // used for info prints
+  }
+  
   // Check if previous instr was jump with register base
   else if(jumpR_flag)
   {
     // For a jump, branch is always taken
-    // isTaken = True; // But info not required?
+    isTaken = true; // Used for info print
     
     // Determine if branch was mispredicted
     uint64_t curPc = pc_ptr[getInstrIndex()];

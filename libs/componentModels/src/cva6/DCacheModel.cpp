@@ -28,12 +28,15 @@ int DCacheModel::getDelay(void)
 
   if(!cachable(addr))
   {
+    isMiss = true;
     return NOT_CACHABLE_DELAY;
   }
   if(inCache(addr))
   {
+    isMiss = false;
     return CACHE_DELAY;
   }
+  isMiss = true;
   return MEMORY_DELAY;
 }
 

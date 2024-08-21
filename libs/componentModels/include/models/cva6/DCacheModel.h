@@ -37,10 +37,13 @@ public:
   // TODO: Check if delays are matching observations!
   DCacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(1), MEMORY_DELAY(7), NOT_CACHABLE_DELAY(9) {};
   virtual int getDelay(void);
+
+  // Info print
+  std::string getInfo_miss(void) { return std::to_string(isMiss); };
   
   // Trace value
   uint64_t* addr_ptr;
-
+  
 private:
 
   // Cache state
@@ -52,6 +55,9 @@ private:
   void updateCache(uint64_t, uint64_t);
   int lfsr(void);
 
+  // Miss flag. Currently only used for info print
+  bool isMiss = false;
+  
   // Constants
   const int CACHE_DELAY;
   const int MEMORY_DELAY;

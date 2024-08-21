@@ -39,6 +39,8 @@ public:
   
   void setIc(uint64_t c_) { t_ic = isMiss ? c_ : 0; };
   uint64_t getIc(void) { return t_ic; };
+
+  std::string getInfo_miss(void) { return std::to_string(isMiss); };
   
   // Trace value
   uint64_t* pc_ptr;

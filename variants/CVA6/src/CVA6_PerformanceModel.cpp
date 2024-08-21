@@ -94,11 +94,13 @@ std::string CVA6_Model::getPipelineStream(void)
   ret_strs << "," << IsStage.getStageInfo();
   ret_strs << "," << ExStage.getStageInfo();
   ret_strs << "," << ComStage.getStageInfo();
-  ret_strs << "," << brPredModel.getInfo_mispredict();
+  ret_strs << "," << iCacheModel.getInfo_miss();
+  ret_strs << "," << dCacheModel.getInfo_miss();
   ret_strs << "," << brPredModel.getInfo_taken();
-  ret_strs << "," << brPredModel.getInfo_predictedTaken();
-  ret_strs << "," << brPredModel.getInfo_pc_pt();
-  ret_strs << "," << brPredModel.getInfo_pc_mp();
+  ret_strs << "," << brPredModel.getInfo_mispredict();
+  //ret_strs << "," << brPredModel.getInfo_predictedTaken();
+  //ret_strs << "," << brPredModel.getInfo_pc_pt();
+  //ret_strs << "," << brPredModel.getInfo_pc_mp();
   return ret_strs.str();
 }
 
@@ -113,11 +115,13 @@ std::string CVA6_Model::getPrintHeader(void)
   ret_strs << "," << "IS";
   ret_strs << "," << "EX";
   ret_strs << "," << "COM";
-  ret_strs << "," << "mispredict";
-  ret_strs << "," << "taken";
-  ret_strs << "," << "predictedTaken";
-  ret_strs << "," << "cyc_pc_pt";
-  ret_strs << "," << "cyc_pc_mp";
+  ret_strs << "," << "iCache:miss";
+  ret_strs << "," << "dCache:miss";
+  ret_strs << "," << "branch:taken";
+  ret_strs << "," << "branch:mispredict";
+  //ret_strs << "," << "predictedTaken";
+  //ret_strs << "," << "cyc_pc_pt";
+  //ret_strs << "," << "cyc_pc_mp";
   ret_strs << std::endl;
  return ret_strs.str();
 }
