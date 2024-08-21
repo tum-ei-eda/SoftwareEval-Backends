@@ -59,6 +59,7 @@ std::string InstructionTrace_RV64_Printer::getPrintHeader(void)
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "jump_pc" << " , ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "csr" << " , ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "mem_addr" << " , ";
-
+  caption_strs << std::endl;
+  
   return caption_strs.str();
 }
