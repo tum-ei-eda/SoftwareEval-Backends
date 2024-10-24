@@ -28,6 +28,8 @@
 #include <iomanip>
 #include <fstream>
 
+#define CONFIG_PATH "plugin.perfEst.memory"
+
 // define to enable/disable logging of cache performance statistics
 #define OUTPUT_STATISTICS
 
@@ -80,14 +82,14 @@ std::ostream& operator<<(std::ostream& s, std::map<K, V, R...> const& t)
 }
 
 template<typename T>
-bool loadFromConfig(etiss::Configuration& config, std::string const& path, T& value, T const& default_ = {})
+bool loadFromConfig(etiss::Configuration& config, std::string const& path, T& value, T const& invalid = {})
 {
-    value = config.get<size_t>(path, T{});
+    value = config.get<size_t>(path, {});
     if (value == T{})
     {
         std::cout << "WARNING: configuration '" << path
                   << "' not defined!" << std::endl;
-        value = default_;
+        value = invalid;
         return false;
     }
     return true;
@@ -177,19 +179,9 @@ cmm::TagMemory::resize(size_type ways, size_type blocks, size_type blockSize)
               << ", offset-bits: " << m_offsetBits <<  ")" << std::endl;
 }
 
-cmm::Cache::Cache(std::string name,
-                  TagMemory memory,
-                  CacheDelays delays,
-                  EvictionStrategy evictionStrategy,
-                  UpdateStrategy updateStrategy) :
-    m_name(std::move(name)),
-    m_delays(std::move(delays)),
-    m_tagMemory(std::move(memory)),
-    m_evictStrategy(std::move(evictionStrategy)),
-    m_updateStrategy(std::move(updateStrategy))
-{
-    assert(m_evictStrategy);
-}
+cmm::Cache::Cache(std::string name) :
+    m_name(std::move(name))
+{}
 
 cmm::Cache::~Cache()
 {
@@ -325,42 +317,71 @@ cmm::Cache::replace(CacheBlock block,
     entry.data = 0x0;
 }
 
-ConfigurableMemoryModel::ConfigurableMemoryModel(PerformanceModel* parent_) :
-    ResourceModel("ConfigurableMemoryModel", parent_)
-{ }
-
-int
-ConfigurableMemoryModel::getDelay()
+bool
+cmm::Cache::applyConfig(etiss::Configuration& config,
+                        std::string const& configPath)
 {
-    uint64_t addr = addr_ptr[getInstrIndex()];
+    size_t nsets = 0, nways = 0, llineSize = 0;
 
-    // not cachable
-    if (!m_addrSpace.isCachable(addr))
+    bool success = true;
+    // not critical
+    loadFromConfig(config, configPath + ".lineSize", llineSize, (size_t)1);
+    success &= loadFromConfig(config, configPath + ".nsets", nsets);
+    success &= loadFromConfig(config, configPath + ".nways", nways);
+    success &= loadFromConfig(config, configPath + ".delay.miss", m_delays.miss);
+    success &= loadFromConfig(config, configPath + ".delay.hit",  m_delays.hit);
+    if (!success)
     {
-        return m_notCachableDelay;
+        std::cout << "ERROR: Cache specifications are invalid!" << std::endl;
+        return false;
     }
 
-    int delay = 0;
+    // allocate tag memory
+    m_tagMemory.resize(nways, nsets, llineSize);
 
-    // iterate through all caches
-    for (cmm::Cache& cache : m_caches)
-    {
-        bool hit = cache.fetch(addr, delay);
-        if (hit) break; // exit on hit
-    }
-    return delay;
+    // strategies
+    m_evictStrategy = eviction_strategy::lfsr(m_tagMemory);
+    m_updateStrategy =  update_strategy::default_(m_tagMemory);
+
+    assert(m_evictStrategy);
+    return true;
 }
 
 void
-ConfigurableMemoryModel::applyConfig(etiss::Configuration& config)
+cmm::MemoryRegion::fetch(uint64_t addr, int& delay)
 {
+    // iterate through all caches
+    size_t idx = 0;
+    for (cmm::Cache* cache : m_caches)
+    {
+        bool hit = cache->fetch(addr, delay);
+        if (hit) break; // exit on hit
+        idx++;
+    }
+    if (idx == m_caches.size()) delay += m_notCachableDelay;
+}
+
+bool
+cmm::MemoryRegion::applyConfig(etiss::Configuration& config,
+                               std::string const& configPath,
+                               std::vector<cmm::Cache>& caches)
+{
+    loadFromConfig(config, configPath + ".start", m_addrSpace.lower, (uint64_t)0x0);
+    loadFromConfig(config, configPath + ".end",   m_addrSpace.upper, std::numeric_limits<uint64_t>::max());
+
+    if (m_addrSpace.lower > m_addrSpace.upper)
+    {
+        std::stringstream ss;
+        ss << "invalid address space: 0x" << std::hex
+           << m_addrSpace.lower << " - 0x" << m_addrSpace.upper;
+        throw std::runtime_error(ss.str());
+    }
+
     // separator used to parase string list in config file
     constexpr char SEPARATOR = ' ';
 
-    std::cout << "Memory config: " << config.config() << std::endl;
-
     // parse list of memory levels
-    std::string levels = config.get<std::string>("plugin.perfEst.memory.layout", {});
+    std::string levels = config.get<std::string>(configPath + ".hierarchy", {});
 
     auto iter = levels.begin();
     auto end = levels.end();
@@ -373,78 +394,93 @@ ConfigurableMemoryModel::applyConfig(etiss::Configuration& config)
         // create substring until separator
         std::string cacheName{iter, substrEnd};
 
-        iter = substrEnd;
-
         // iter points to separator -> advance
+        iter = substrEnd;
         while (iter != end && *iter == SEPARATOR) iter++;
 
-        if (!registerCache(config, cacheName))
+        if (loadFromConfig(config, CONFIG_PATH ".instance." + cacheName + ".delay.access", m_notCachableDelay, 1))
         {
-            throw std::runtime_error("Failed to register cache '" + cacheName + "'");
+            std::cout << "INFO: setup access delay for memory '" << cacheName << "'..." << std::endl;
+            break;
+        }
+
+        // add cache
+        std::cout << "INFO: configuring cache '" << cacheName << "'..." << std::endl;
+
+        auto iter = std::find_if(caches.begin(), caches.end(), [&cacheName](cmm::Cache& cache){
+            return cache.name() == cacheName;
+        });
+
+        if (iter == caches.end())
+        {
+            Cache cache{cacheName};
+            bool success = cache.applyConfig(config, CONFIG_PATH ".instance." + cacheName);
+            if (!success)
+            {
+                std::stringstream ss;
+                ss << "Failed to configure cache '" << cacheName << "'!";
+                throw std::runtime_error(ss.str());
+            }
+            caches.push_back(std::move(cache));
+            iter = caches.end() - 1;
+        }
+        m_caches.push_back(&*iter);
+    }
+
+    return true;
+}
+
+int
+ConfigurableMemoryModel::getDelay()
+{
+    uint64_t addr = addr_ptr[getInstrIndex()];
+
+    // check memory hierarchy associated with memory region
+    for (auto& region : m_regions)
+    {
+        if (region.addressSpace().contains(addr))
+        {
+            int delay = 0;
+            region.fetch(addr, delay);
+            return delay;
         }
     }
+    assert(!"address not covered by memory regions!");
+    return 1;
+}
 
-    // no cache added -> use default constructed memory level
-    if (m_caches.empty())
-    {
-        std::cout << "WARNING: no caches were registered!" << std::endl;
-    }
+ConfigurableMemoryModel::ConfigurableMemoryModel(PerformanceModel* parent_) :
+    ResourceModel("ConfigurableMemoryModel", parent_)
+{ }
 
-    loadFromConfig(config, "plugin.perfEst.memory.addrspace.lower", m_addrSpace.lower, (uint64_t)0x0);
-    loadFromConfig(config, "plugin.perfEst.memory.addrspace.upper", m_addrSpace.upper, std::numeric_limits<uint64_t>::max());
-    loadFromConfig(config, "plugin.perfEst.memory.delay.notCachable", m_notCachableDelay);
+void
+ConfigurableMemoryModel::applyConfig(etiss::Configuration& config)
+{
+    std::cout << "INFO: Memory config: " << config.config() << std::endl;
 
-    if (m_addrSpace.lower > m_addrSpace.upper)
+    size_t nregions = 0;
+    if (!loadFromConfig(config, CONFIG_PATH ".regions", nregions))
     {
         std::stringstream ss;
-        ss << "invalid address space: 0x" << std::hex
-           << m_addrSpace.lower << " - 0x" << m_addrSpace.upper;
-
+        ss << "Failed to configure memory regions!";
         throw std::runtime_error(ss.str());
     }
 
-    std::cout << std::endl;
-}
-
-bool
-ConfigurableMemoryModel::registerCache(etiss::Configuration& config,
-                                       std::string const& cacheName)
-{
-    std::cout << "Registering cache '" << cacheName << "'..." << std::endl;
-
-    std::string configPath = "plugin.perfEst.memory." + cacheName;
-
-    size_t nblocks = 0, nways = 0, blockSize = 0;
-
-    bool success = true;
-    // not critical
-    loadFromConfig(config, configPath + ".blockSize", blockSize, (size_t)1);
-    success &= loadFromConfig(config, configPath + ".nblocks", nblocks);
-    success &= loadFromConfig(config, configPath + ".nways", nways);
-
-    cmm::CacheDelays delays;
-    success &= loadFromConfig(config, configPath + ".delay.cacheMiss", delays.miss);
-    success &= loadFromConfig(config, configPath + ".delay.cacheHit", delays.hit);
-
-    if (!success)
+    // setup memory regions
+    for (size_t idx = 0; idx < nregions; idx++)
     {
-        std::cout << "ERROR: Cache specifications are invalid!" << std::endl;
-        return false;
+        std::cout << "INFO: configuring memory region no. " << idx << "..." << std::endl;
+
+        cmm::MemoryRegion region;
+        bool success = region.applyConfig(config, CONFIG_PATH ".region." + std::to_string(idx), m_caches);
+        if (!success)
+        {
+            std::stringstream ss;
+            ss << "Failed to configure memory region no. " << idx << "!";
+            throw std::runtime_error(ss.str());
+        }
+        m_regions.push_back(std::move(region));
     }
 
-    // allocate tag memory
-    cmm::TagMemory tagMemory;
-    tagMemory.resize(nways, nblocks, blockSize);
-
-    // strategies
-    auto evictionStrat = eviction_strategy::lfsr(tagMemory);
-    auto updateStrat   = update_strategy::default_(tagMemory);
-
-    // append cache
-    m_caches.emplace_back(cacheName,
-                          std::move(tagMemory),
-                          std::move(delays),
-                          std::move(evictionStrat),
-                          std::move(updateStrat));
-    return true;
+    std::cout << std::endl;
 }

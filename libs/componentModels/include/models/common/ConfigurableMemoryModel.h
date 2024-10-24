@@ -187,8 +187,8 @@ struct AddressSpace
     uint64_t lower = 0x0; // inclusive
     uint64_t upper = 0x0; // not inclusive
 
-    /// Returns whether the address is cachable
-    inline bool isCachable(uint64_t addr) const
+    /// Returns whether the address is contained in the address space
+    inline bool contains(uint64_t addr) const
     {
         return addr >= lower && addr < upper;
     }
@@ -211,12 +211,12 @@ public:
     using EvictionStrategy = std::function<cmm::CacheEntry*(cmm::CacheBlock&)>;
     using UpdateStrategy   = std::function<void(cmm::CacheBlock&, cmm::CacheEntry&)>;
 
-    Cache(std::string name,
-          TagMemory memory,
-          CacheDelays delays,
-          EvictionStrategy evictionStrategy,
-          UpdateStrategy updateStrategy);
+    Cache(std::string name);
     ~Cache();
+
+    bool applyConfig(etiss::Configuration& config,
+                     std::string const& configPath);
+
 
     /**
      * @brief Performs a fetch and updates the delay parameter as required.
@@ -265,6 +265,27 @@ private:
     uint32_t t_hits = 0, t_misses = 0, t_evictions = 0;
 };
 
+class MemoryRegion
+{
+public:
+
+    bool applyConfig(etiss::Configuration& config,
+                     std::string const& configPath,
+                     std::vector<cmm::Cache>& caches);
+
+    void fetch(uint64_t addr, int& delay);
+
+    AddressSpace const& addressSpace() const { return m_addrSpace; }
+
+private:
+
+    AddressSpace m_addrSpace{};
+
+    std::vector<Cache*> m_caches;
+
+    int m_notCachableDelay = 0;
+};
+
 } // namespace cmm
 
 /**
@@ -294,19 +315,9 @@ public:
 
 private:
 
-    /// cachable address space
-    cmm::AddressSpace m_addrSpace{};
-    /// Memory levels
     std::vector<cmm::Cache> m_caches;
-    /// delay for accessing non cachable memory addresses
-    int m_notCachableDelay = 0;
 
-    /**
-     * @brief Registers a memory level and applies its configuration
-     * @param config
-     * @param cacheName
-     */
-    bool registerCache(etiss::Configuration& config, std::string const& cacheName);
+    std::vector<cmm::MemoryRegion> m_regions;
 };
 
 #endif //CONFIGURABLE_MEMORY_MODEL_H
