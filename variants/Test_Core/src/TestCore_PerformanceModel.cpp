@@ -121,5 +121,6 @@ TestCore_PerformanceModel::getPrintHeader(void)
 void
 TestCore_PerformanceModel::applyConfig(etiss::Configuration& config)
 {
+    iCacheModel.applyConfig(config);
     dCacheModel.applyConfig(config);
 }

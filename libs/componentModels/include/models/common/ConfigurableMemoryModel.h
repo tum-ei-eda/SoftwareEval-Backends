@@ -273,7 +273,7 @@ public:
                      std::string const& configPath,
                      std::vector<cmm::Cache>& caches);
 
-    void fetch(uint64_t addr, int& delay);
+    void fetch(uint64_t addr, int& delay, bool& hit);
 
     AddressSpace const& addressSpace() const { return m_addrSpace; }
 
@@ -304,10 +304,17 @@ public:
     void applyConfig(etiss::Configuration& config) override;
 
     /**
-     * @brief Delay for accessing the current address
+     * @brief Delay for accessing the current address. Updates the cache
+     * and update `hadHit` property
      * @return Delay
      */
     int getDelay(void) override;
+
+    /**
+     * @brief Returns whether last access was a hit or miss
+     * @return Whether last access was a hit or miss
+     */
+    bool cacheHit(void) const { return m_hit; }
 
     /// pointer to memory
     /// TODO: more fitting name? Keeping API compatiblity to DCacheModel
@@ -315,9 +322,14 @@ public:
 
 private:
 
+    /// cache instances
     std::vector<cmm::Cache> m_caches;
 
+    /// memory regions
     std::vector<cmm::MemoryRegion> m_regions;
+
+    /// wether the lass cache access resulted in a hit or miss
+    bool m_hit = false;
 };
 
 #endif //CONFIGURABLE_MEMORY_MODEL_H

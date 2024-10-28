@@ -22,7 +22,6 @@
 
 #include <stdbool.h>
 #include <string>
-#include <algorithm>
 #include <cstdint>
 
 #include "PerformanceModel.h"
@@ -32,6 +31,31 @@
 #include "CVA6_PerformanceModel.h"
 
 class Channel;
+
+
+// replaces ICacheModel of CVA6
+class TestCore_ICacheModel : public ConfigurableMemoryModel
+{
+public:
+    TestCore_ICacheModel(PerformanceModel* parent_) :
+        ConfigurableMemoryModel(parent_),
+        pc_ptr(ConfigurableMemoryModel::addr_ptr)
+    { }
+
+    int getDelay(void) override { return ConfigurableMemoryModel::getDelay(); }
+
+    // to keep compatibility to ICacheModel
+    void setIc(uint64_t c_) { t_ic = cacheHit() ? c_ : 0; };
+    uint64_t getIc(void) { return t_ic; };
+
+    // alias for addr_ptr to keep compatibility to ICacheModel
+    uint64_t*& pc_ptr;
+
+private:
+
+    // Time when ICache relaeses block on miss
+    uint64_t t_ic = 0;
+};
 
 class TestCore_PerformanceModel : public PerformanceModel
 {
@@ -64,7 +88,8 @@ public:
 
     StandardRegisterModel regModel;
     ClobberModel cbModel;
-    ICacheModel iCacheModel;
+    // ICacheModel iCacheModel;
+    TestCore_ICacheModel iCacheModel;
     // replaced DCacheModel
     ConfigurableMemoryModel dCacheModel;
     BranchPredictionModel brPredModel;
@@ -82,5 +107,7 @@ public:
      */
     void applyConfig(etiss::Configuration& config) override;
 };
+
+
 
 #endif // SWEVAL_BACKENDS_TEST_CORE_PERFORMANCE_MODEL_H

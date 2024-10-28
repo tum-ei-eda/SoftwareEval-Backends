@@ -375,13 +375,13 @@ cmm::Cache::applyConfig(etiss::Configuration& config,
 }
 
 void
-cmm::MemoryRegion::fetch(uint64_t addr, int& delay)
+cmm::MemoryRegion::fetch(uint64_t addr, int& delay, bool& hit)
 {
     // iterate through all caches
     size_t idx = 0;
     for (cmm::Cache* cache : m_caches)
     {
-        bool hit = cache->fetch(addr, delay);
+        hit = cache->fetch(addr, delay);
         if (hit) break; // exit on hit
         idx++;
     }
@@ -468,7 +468,7 @@ ConfigurableMemoryModel::getDelay()
         if (region.addressSpace().contains(addr))
         {
             int delay = 0;
-            region.fetch(addr, delay);
+            region.fetch(addr, delay, m_hit);
             return delay;
         }
     }
