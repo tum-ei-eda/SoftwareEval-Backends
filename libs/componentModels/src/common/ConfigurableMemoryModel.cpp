@@ -358,7 +358,7 @@ cmm::MemoryRegion::fetch(uint64_t addr, int& delay)
         if (hit) break; // exit on hit
         idx++;
     }
-    if (idx == m_caches.size()) delay += m_notCachableDelay;
+    if (idx == m_caches.size()) delay += m_memoryDelay;
 }
 
 bool
@@ -398,7 +398,7 @@ cmm::MemoryRegion::applyConfig(etiss::Configuration& config,
         iter = substrEnd;
         while (iter != end && *iter == SEPARATOR) iter++;
 
-        if (loadFromConfig(config, CONFIG_PATH ".instance." + cacheName + ".delay.access", m_notCachableDelay, 1))
+        if (loadFromConfig(config, CONFIG_PATH ".instance." + cacheName + ".delay.access", m_memoryDelay, 1))
         {
             std::cout << "INFO: setup access delay for memory '" << cacheName << "'..." << std::endl;
             break;

@@ -283,7 +283,7 @@ private:
 
     std::vector<Cache*> m_caches;
 
-    int m_notCachableDelay = 0;
+    int m_memoryDelay = 0;
 };
 
 } // namespace cmm
