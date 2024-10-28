@@ -84,7 +84,7 @@ std::ostream& operator<<(std::ostream& s, std::map<K, V, R...> const& t)
 template<typename T>
 bool loadFromConfig(etiss::Configuration& config, std::string const& path, T& value, T const& invalid = {})
 {
-    value = config.get<size_t>(path, {});
+    value = config.get<T>(path, {});
     if (value == T{})
     {
         std::cout << "WARNING: configuration '" << path
@@ -332,18 +332,45 @@ cmm::Cache::applyConfig(etiss::Configuration& config,
     success &= loadFromConfig(config, configPath + ".delay.hit",  m_delays.hit);
     if (!success)
     {
-        std::cout << "ERROR: Cache specifications are invalid!" << std::endl;
+        std::cout << "ERROR: cache specifications are invalid!" << std::endl;
         return false;
     }
 
     // allocate tag memory
     m_tagMemory.resize(nways, nsets, llineSize);
 
-    // strategies
-    m_evictStrategy = eviction_strategy::lfsr(m_tagMemory);
-    m_updateStrategy =  update_strategy::default_(m_tagMemory);
+    // replacement strategy
+    std::string replacementStrategy;
+    if (!loadFromConfig(config, configPath + ".replacement_strategy", replacementStrategy))
+    {
+        replacementStrategy = "LFSR";
+    }
+
+    std::cout << "INFO: using replacement strategy '" << replacementStrategy << "'" << std::endl;
+
+    m_updateStrategy = update_strategy::default_(m_tagMemory);
+
+    if (replacementStrategy == "LFSR")
+    {
+        m_evictStrategy = eviction_strategy::lfsr(m_tagMemory);
+    }
+    else if (replacementStrategy == "RANDOM")
+    {
+        m_evictStrategy = eviction_strategy::random(m_tagMemory);
+    }
+    else if (replacementStrategy == "LFU")
+    {
+        m_evictStrategy  = eviction_strategy::lfu(m_tagMemory);
+        m_updateStrategy = update_strategy::lfu(m_tagMemory);
+    }
+    else
+    {
+        std::cout << "ERROR: unkown replacement strategy!" << std::endl;
+        return false;
+    }
 
     assert(m_evictStrategy);
+
     return true;
 }
 
