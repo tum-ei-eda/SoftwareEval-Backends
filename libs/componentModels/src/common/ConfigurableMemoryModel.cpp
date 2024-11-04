@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Chair of EDA, Technical University of Munich
+ * Copyright 2024 Chair of EDA, Technical University of Munich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,11 @@
 
 #include "models/common/ConfigurableMemoryModel.h"
 
+#include "models/common/ConfigurableMemoryModel/CacheStrategies.h"
+
 #include "etiss/Misc.h"
 
 #include <string>
-#include <cmath>
-#include <cassert>
-#include <random>
 
 #include <unistd.h>
 #include <iostream>
@@ -29,15 +28,6 @@
 #include <fstream>
 
 #define CONFIG_PATH "plugin.perfEst.memory"
-
-// define to enable/disable logging of cache performance statistics
-#define OUTPUT_STATISTICS
-
-#ifdef OUTPUT_STATISTICS
-#define STATISTICS_ONLY(STATEMENT) STATEMENT
-#else
-#define STATISTICS_ONLY(STATEMENT)
-#endif
 
 namespace
 {
@@ -97,98 +87,11 @@ bool loadFromConfig(etiss::Configuration& config, std::string const& path, T& va
 
 } // namespace
 
-namespace eviction_strategy
-{
-
-/// linear feedback shift register (adopted from DCacheModel)
-inline auto lfsr(const cmm::TagMemory& tagMemory)
-{
-    // evict strategy
-    uint8_t shift_state = 0;
-    const size_t ways = tagMemory.ways() - 1;
-
-    return [shift_state, ways](cmm::CacheBlock& block) mutable -> cmm::CacheEntry* {
-        uint8_t shift_in = ~(((shift_state & 0x80) >> 7) ^
-                             ((shift_state & 0x08) >> 3) ^
-                             ((shift_state & 0x04) >> 2) ^
-                             ((shift_state & 0x02) >> 1));
-        shift_state = (shift_state << 1) | shift_in;
-        return block[shift_state & ways];
-    };
-}
-
-/// chose a random way to evict
-inline auto random(const cmm::TagMemory& tagMemory)
-{
-    const size_t ways = tagMemory.ways();
-    return [ways](cmm::CacheBlock& block) -> cmm::CacheEntry* {
-        return block[rand() % ways];
-    };
-}
-
-/// least frequently used
-inline auto lfu(const cmm::TagMemory& tagMemory)
-{
-    return [](cmm::CacheBlock& block) -> cmm::CacheEntry* {
-        return &*std::max_element(block.begin(), block.end(),
-                                [](cmm::CacheEntry& smallest,
-                                   cmm::CacheEntry& entry){
-            // data = number of accesses
-            return entry.data < smallest.data;
-        });
-    };
-}
-
-} // namespace eviction_strategy
-
-namespace update_strategy
-{
-
-inline auto default_(const cmm::TagMemory&) { return cmm::Cache::UpdateStrategy{}; }
-
-/// least frequently used update strategy
-inline auto lfu(const cmm::TagMemory& tagMemory)
-{
-    return [](cmm::CacheBlock& block, cmm::CacheEntry& entry) {
-        // data = number of accesses
-        entry.data += 1;
-    };
-}
-
-} // namespace update_strategy
-
-void
-cmm::TagMemory::resize(size_type ways, size_type blocks, size_type blockSize)
-{
-    constexpr size_t wordSize = 4; // in bytes
-
-    m_ways = ways;
-    m_blocks = blocks;
-    m_blockSize = blockSize;
-
-    m_data.resize(ways * blocks);
-
-    m_offsetBits = ceil(log2(wordSize)) +   // offset to index byte in a word
-                   ceil(log2(m_blockSize)); // offset to index word in block
-    m_indexBits  = ceil(log2(m_blocks));    // index for blocks
-
-    std::cout << "INFO: "
-              << "allocated tag memory: " << blocks
-              << " lines x " << ways << " ways"
-              << " (index-bits: " << m_indexBits
-              << ", offset-bits: " << m_offsetBits <<  ")" << std::endl;
-}
-
-cmm::Cache::Cache(std::string name) :
-    m_name(std::move(name))
-{}
-
-cmm::Cache::~Cache()
-{
 #ifdef OUTPUT_STATISTICS
     // output statistics
     constexpr unsigned width = 6, precision = 4;
     unsigned total = t_hits + t_misses;
+
 
     if (total == 0) return;
 
@@ -230,9 +133,9 @@ cmm::Cache::~Cache()
     fs << "index," "ways-used," "hits," "evictions\n";
 
     // data
-    for (size_t idx = 0; idx < m_tagMemory.blocks(); idx++)
+    for (size_t idx = 0; idx < m_tagMemory.sets(); idx++)
     {
-        CacheBlock block = m_tagMemory.getBlock(idx);
+        CacheBlock block = m_tagMemory.getCacheSet(CacheIndex{idx});
         // accumulate statistics of all ways
         uint32_t hits = 0, evictions = 0, waysUsed = 0;
         for (size_t way = 0; way < m_tagMemory.ways(); way++)
@@ -249,74 +152,8 @@ cmm::Cache::~Cache()
     fs << std::endl;
     fs.close();
 #endif
-}
 
-bool
-cmm::Cache::fetch(uint64_t addr, int& delay)
-{
-    const uint64_t tag   = m_tagMemory.getTag(addr);
-    const uint64_t index = m_tagMemory.getBlockIndex(addr);
-
-    CacheBlock block = m_tagMemory.getBlock(index);
-
-    CacheEntry* entry = block.findEntry(tag);
-
-    const bool hit = entry && entry->isValid();
-    if (hit) // cache hit
-    {
-        delay += m_delays.hit;
-        STATISTICS_ONLY(t_hits++);
-        STATISTICS_ONLY(entry->t_hits++);
-
-        update(block, *entry);
-        return hit;
-    }
-    else // cache miss
-    {
-        delay += m_delays.miss;
-        STATISTICS_ONLY(t_misses++);
-
-        if (!entry) // find entry to replace
-        {
-            entry = block.findInvalidEntry();
-            if (!entry) // evict valid entry
-            {
-                entry = m_evictStrategy(block);
-
-                STATISTICS_ONLY(t_evictions++);
-                STATISTICS_ONLY(entry->t_evictions++);
-            }
-        }
-    }
-
-    assert(entry);
-
-    // replace entry
-    replace(block, *entry, tag);
-    update(block, *entry);
-    return hit;
-}
-
-void
-cmm::Cache::update(CacheBlock block,
-                   CacheEntry& entry)
-{
-    // TODO: update cache entry/block? (e.g. access time)
-    if (m_updateStrategy) m_updateStrategy(block, entry);
-}
-
-void
-cmm::Cache::replace(CacheBlock block,
-                    CacheEntry& entry,
-                    uint64_t tag)
-{
-    // replace entry
-    entry.tag = tag;
-    entry.setFlag(Invalid, false);
-    // move to separate replacement strategy?
-    entry.data = 0x0;
-}
-
+#if 0
 bool
 cmm::Cache::applyConfig(etiss::Configuration& config,
                         std::string const& configPath)
@@ -369,23 +206,13 @@ cmm::Cache::applyConfig(etiss::Configuration& config,
         return false;
     }
 
-    assert(m_evictStrategy);
+    CacheMemory memory;
+    Cache c("bla", memory,
+            eviction_strategy::lfsr(memory),
+            update_strategy::lfu(memory),
+            Delay{1}, Delay{1});
 
     return true;
-}
-
-void
-cmm::MemoryRegion::fetch(uint64_t addr, int& delay, bool& hit)
-{
-    // iterate through all caches
-    size_t idx = 0;
-    for (cmm::Cache* cache : m_caches)
-    {
-        hit = cache->fetch(addr, delay);
-        if (hit) break; // exit on hit
-        idx++;
-    }
-    if (idx == m_caches.size()) delay += m_memoryDelay;
 }
 
 bool
@@ -440,21 +267,38 @@ cmm::MemoryRegion::applyConfig(etiss::Configuration& config,
 
         if (iter == caches.end())
         {
-            Cache cache{cacheName};
-            bool success = cache.applyConfig(config, CONFIG_PATH ".instance." + cacheName);
-            if (!success)
-            {
-                std::stringstream ss;
-                ss << "Failed to configure cache '" << cacheName << "'!";
-                throw std::runtime_error(ss.str());
-            }
-            caches.push_back(std::move(cache));
-            iter = caches.end() - 1;
+            // Cache cache{cacheName};
+            // bool success = cache.applyConfig(config, CONFIG_PATH ".instance." + cacheName);
+            // if (!success)
+            // {
+            //     std::stringstream ss;
+            //     ss << "Failed to configure cache '" << cacheName << "'!";
+            //     throw std::runtime_error(ss.str());
+            // }
+            // caches.push_back(std::move(cache));
+            // iter = caches.end() - 1;
+            continue;
         }
         m_caches.push_back(&*iter);
     }
 
     return true;
+}
+
+void
+cmm::MemoryRegion::fetch(uint64_t addr, int& delay, bool& hit)
+{
+    Delay d;
+    // iterate through all caches
+    size_t idx = 0;
+    for (cmm::Cache* cache : m_caches)
+    {
+        hit = cache->fetch(addr, d);
+        if (hit) break; // exit on hit
+        idx++;
+    }
+    delay += d;
+    if (idx == m_caches.size()) delay += m_memoryDelay;
 }
 
 int
@@ -475,6 +319,7 @@ ConfigurableMemoryModel::getDelay()
     assert(!"address not covered by memory regions!");
     return 1;
 }
+#endif
 
 ConfigurableMemoryModel::ConfigurableMemoryModel(PerformanceModel* parent_) :
     ResourceModel("ConfigurableMemoryModel", parent_)
@@ -485,29 +330,29 @@ ConfigurableMemoryModel::applyConfig(etiss::Configuration& config)
 {
     std::cout << "INFO: Memory config: " << config.config() << std::endl;
 
-    size_t nregions = 0;
-    if (!loadFromConfig(config, CONFIG_PATH ".regions", nregions))
-    {
-        std::stringstream ss;
-        ss << "Failed to configure memory regions!";
-        throw std::runtime_error(ss.str());
-    }
+    // size_t nregions = 0;
+    // if (!loadFromConfig(config, CONFIG_PATH ".regions", nregions))
+    // {
+    //     std::stringstream ss;
+    //     ss << "Failed to configure memory regions!";
+    //     throw std::runtime_error(ss.str());
+    // }
 
-    // setup memory regions
-    for (size_t idx = 0; idx < nregions; idx++)
-    {
-        std::cout << "INFO: configuring memory region no. " << idx << "..." << std::endl;
+    // // setup memory regions
+    // for (size_t idx = 0; idx < nregions; idx++)
+    // {
+    //     std::cout << "INFO: configuring memory region no. " << idx << "..." << std::endl;
 
-        cmm::MemoryRegion region;
-        bool success = region.applyConfig(config, CONFIG_PATH ".region." + std::to_string(idx), m_caches);
-        if (!success)
-        {
-            std::stringstream ss;
-            ss << "Failed to configure memory region no. " << idx << "!";
-            throw std::runtime_error(ss.str());
-        }
-        m_regions.push_back(std::move(region));
-    }
+    //     cmm::MemoryRegion region;
+    //     bool success = region.applyConfig(config, CONFIG_PATH ".region." + std::to_string(idx), m_caches);
+    //     if (!success)
+    //     {
+    //         std::stringstream ss;
+    //         ss << "Failed to configure memory region no. " << idx << "!";
+    //         throw std::runtime_error(ss.str());
+    //     }
+    //     m_regions.push_back(std::move(region));
+    // }
 
     std::cout << std::endl;
 }
