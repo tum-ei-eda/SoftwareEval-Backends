@@ -29,7 +29,7 @@
 
 #include <iostream> // TODO: For debug. Remove
 
-// forward declrations
+// forward declarations
 namespace etiss { class Configuration; }
 
 struct stage

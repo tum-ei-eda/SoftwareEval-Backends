@@ -17,27 +17,22 @@
 #ifndef CONFIGURABLE_MEMORY_MODEL_H
 #define CONFIGURABLE_MEMORY_MODEL_H
 
-#include "ConfigurableMemoryModel/CacheInstance.h"
-#include "ConfigurableMemoryModel/MemoryInstance.h"
 #include "PerformanceModel.h"
 
+#include "ConfigurableMemoryModel/MemoryInstanceManager.h"
+
 #include <vector>
-#include <functional>
-#include <algorithm>
+#include <memory>
 
 class ConfigurableMemoryModel : public ResourceModel
 {
 public:
 
     using MemoryInstance = cmm::MemoryInstance;
+    using MemoryInstanceManager = cmm::MemoryInstanceManager;
+    using MemoryPath = MemoryInstanceManager::MemoryPath;
 
-    struct MemoryPath
-    {
-        uint64_t endAddress = 0x0; // end of address space (not inclusive)
-        std::vector<cmm::MemoryInstance*> m_memoryLevels;
-    };
-
-    ConfigurableMemoryModel(PerformanceModel* parent_);
+    ConfigurableMemoryModel(std::string id, PerformanceModel* parent_);
 
     /**
      * @brief Applies memory model configuration
@@ -56,7 +51,7 @@ public:
      * @brief Returns whether last access was a hit or miss
      * @return Whether last access was a hit or miss
      */
-    bool cacheHit(void) const { return m_hit; }
+    inline bool cacheHit(void) const { return m_hit; }
 
     /// pointer to memory
     /// TODO: more fitting name? Keeping API compatiblity to DCacheModel
@@ -66,6 +61,8 @@ private:
 
     /// memory paths
     std::vector<MemoryPath> m_memoryPaths;
+    /// handle to instance manager
+    std::shared_ptr<MemoryInstanceManager> m_handle;
 
     /// wether the lass cache access resulted in a hit or miss
     bool m_hit = false;

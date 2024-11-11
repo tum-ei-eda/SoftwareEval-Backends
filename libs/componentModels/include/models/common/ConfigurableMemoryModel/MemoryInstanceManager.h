@@ -14,23 +14,43 @@
  * limitations under the License.
  */
 
-#ifndef CONFIGURABLE_MEMORY_MODEL_MEMORY_HIERARCHY_MANAGER_H
-#define CONFIGURABLE_MEMORY_MODEL_MEMORY_HIERARCHY_MANAGER_H
+#ifndef CONFIGURABLE_MEMORY_MODEL_MEMORY_INSTANCE_MANAGER_H
+#define CONFIGURABLE_MEMORY_MODEL_MEMORY_INSTANCE_MANAGER_H
 
 #include "./CacheInstance.h"
 #include "./MemoryInstance.h"
 
 #include <vector>
+#include <memory>
+
+// forward declarations
+namespace etiss { class Configuration; }
 
 namespace cmm
 {
 
-class MemoryHierarchyManagher
+class MemoryInstance;
+class MemoryInstanceManager
 {
 public:
 
+    struct MemoryPath
+    {
+        uint64_t endAddress = 0x0;
+        std::vector<cmm::MemoryInstance*> m_memoryLevels;
+    };
+
+    static std::shared_ptr<MemoryInstanceManager> instance();
+
+    bool applyConfig(etiss::Configuration& config,
+                     std::vector<MemoryPath>& memoryPaths,
+                     std::string const& id);
+
+    void generateMemoryAccessStatistics() const;
 
 private:
+
+    MemoryInstanceManager() = default;
 
     std::vector<CacheInstance> m_cacheInstances;
     std::vector<MemoryInstance> m_memoryInstances;
@@ -43,4 +63,4 @@ private:
 
 } // namespace cmm
 
-#endif // CONFIGURABLE_MEMORY_MODEL_MEMORY_HIERARCHY_MANAGER_H
+#endif // CONFIGURABLE_MEMORY_MODEL_MEMORY_INSTANCE_MANAGER_H
