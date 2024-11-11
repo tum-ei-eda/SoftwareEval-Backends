@@ -68,25 +68,31 @@ std::ostream& operator<<(std::ostream& s, std::map<K, V, R...> const& t)
     return s;
 }
 
+/// logs std::map to console
+template<typename T, typename... R>
+std::ostream& operator<<(std::ostream& s, std::vector<T, R...> const& t)
+{
+    logIter(s, t.begin(), t.end(), "( ", ")", ", ");
+    return s;
+}
+
 template<typename T>
-bool loadFromConfig(etiss::Configuration& config, std::string const& path, T& value, T const& invalid = {})
+bool loadFromConfig(etiss::Configuration& config, std::string const& path, T& value)
 {
     value = config.get<T>(path, {});
     if (value == T{})
     {
         std::cout << "WARNING: configuration '" << path
                   << "' not defined!" << std::endl;
-        value = invalid;
+//        value = invalid;
         return false;
     }
     return true;
 }
 
-std::vector<std::string>
-readListFromConfig(etiss::Configuration& config, std::string const& path)
+template<>
+bool loadFromConfig(etiss::Configuration& config, std::string const& path, std::vector<std::string>& list)
 {
-    std::vector<std::string> entries;
-
     // parse list of memory levels
     std::string configString = config.get<std::string>(path, {});
 
@@ -95,22 +101,21 @@ readListFromConfig(etiss::Configuration& config, std::string const& path)
 
     while (iter != end)
     {
-        auto substrEnd = std::find_if(iter, end, [](char c){ return std::isspace(c); });
+        auto substrEnd = std::find_if(iter, end, [](char c){ return std::isspace(c, std::locale()); });
         if (iter == substrEnd) break;
 
         // create substring until separator
-        entries.emplace_back(iter, substrEnd);
+        list.emplace_back(iter, substrEnd);
 
         // iter points to separator -> advance
         iter = substrEnd;
-        while (iter != end && std::isspace(*iter)) iter++;
+        while (iter != end && std::isspace(*iter, std::locale())) iter++;
     }
 
-    return entries;
+    return true;
 }
 
 } // namespace
-
 
 
 std::shared_ptr<cmm::MemoryInstanceManager>
@@ -135,6 +140,10 @@ cmm::MemoryInstanceManager::applyConfig(etiss::Configuration& config,
 {
     std::cout << "INFO: config " << config.listFullConfiguration() << std::endl;
 
+    std::vector<std::string> ids;
+    loadFromConfig(config, CONFIG_PATH ".region.1.path.I", ids);
+
+    std::cout << "PATH: " << ids << std::endl;
 
     return true;
 }
