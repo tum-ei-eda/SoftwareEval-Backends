@@ -112,6 +112,9 @@ public:
         return CacheSet{begin + baseIdx, begin + baseIdx + m_ways};
     }
 
+    inline uint64_t indexBits() const { return m_indexBits; }
+    inline uint64_t offsetBits() const { return m_offsetBits; }
+
 private:
     /// number of cache lines per set (= cache associativity)
     size_type m_ways = 1;

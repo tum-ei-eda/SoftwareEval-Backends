@@ -37,14 +37,14 @@ public:
     struct MemoryPath
     {
         uint64_t endAddress = 0x0;
-        std::vector<cmm::MemoryInstance*> m_memoryLevels;
+        std::vector<cmm::MemoryComponent*> components;
     };
 
     static std::shared_ptr<MemoryInstanceManager> instance();
 
     bool applyConfig(etiss::Configuration& config,
                      std::vector<MemoryPath>& memoryPaths,
-                     std::string const& id);
+                     std::string const& portId);
 
     void generateMemoryAccessStatistics() const;
 
@@ -59,6 +59,15 @@ private:
     std::string m_name{};
     /// access delay
     Delay m_accessDelay{1};
+
+    MemoryComponent* generateComponent(etiss::Configuration& config,
+                                       std::string const& componentName);
+
+    CacheInstance* generateCacheInstance(etiss::Configuration& config,
+                                         std::string const& name);
+
+    MemoryInstance* generateMemoryInstance(etiss::Configuration& config,
+                                           std::string const& name);
 };
 
 } // namespace cmm

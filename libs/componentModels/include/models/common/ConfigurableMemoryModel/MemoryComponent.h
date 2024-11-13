@@ -20,6 +20,7 @@
 #include "./Utilities.h"
 
 #include <stdint.h>
+#include <string>
 
 namespace cmm
 {
@@ -40,9 +41,16 @@ class MemoryComponent
 {
 public:
 
+    explicit MemoryComponent(std::string name_) :
+        name(std::move(name_))
+    {}
+
     virtual ~MemoryComponent() = default;
 
     virtual AccessDetails readAccess(uint64_t address) = 0;
+
+    /// name of component
+    const std::string name{};
 };
 
 

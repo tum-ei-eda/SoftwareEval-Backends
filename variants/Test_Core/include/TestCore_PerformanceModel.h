@@ -38,7 +38,7 @@ class TestCore_ICacheModel : public ConfigurableMemoryModel
 {
 public:
     TestCore_ICacheModel(PerformanceModel* parent_) :
-        ConfigurableMemoryModel("I", parent_),
+        ConfigurableMemoryModel("IPort", parent_),
         pc_ptr(ConfigurableMemoryModel::addr_ptr)
     { }
 
@@ -72,7 +72,7 @@ public:
         ,regModel(this)
         ,cbModel(this)
         ,iCacheModel(this)
-        ,dCacheModel("D", this)
+        ,dCacheModel("DPort", this)
         ,brPredModel(this)
         ,divModel(this)
         ,divUModel(this)

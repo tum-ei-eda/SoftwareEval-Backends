@@ -31,7 +31,7 @@ public:
     ~MemoryInstance() override = default;
 
     MemoryInstance(std::string name, Delay accessDelay) :
-        m_name(std::move(name)),
+        MemoryComponent(std::move(name)),
         m_accessDelay(accessDelay)
     { }
 
@@ -40,13 +40,8 @@ public:
         return AccessDetails::makeHit(m_accessDelay);
     }
 
-    /// Returns the name of the cache
-    inline std::string const& name() const { return m_name; }
-
 private:
 
-    /// name of cache level
-    std::string m_name{};
     /// access delay
     Delay m_accessDelay{1};
 };

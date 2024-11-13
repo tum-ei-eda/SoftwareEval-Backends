@@ -15,6 +15,7 @@
  */
 
 #include "models/common/ConfigurableMemoryModel/MemoryInstanceManager.h"
+#include "models/common/ConfigurableMemoryModel/CacheStrategies.h"
 
 #include "etiss/Misc.h"
 
@@ -23,8 +24,6 @@
 #include <iomanip>
 #include <fstream>
 #include <unistd.h>
-
-#define CONFIG_PATH "plugin.perfEst.memory"
 
 namespace
 {
@@ -68,33 +67,36 @@ std::ostream& operator<<(std::ostream& s, std::map<K, V, R...> const& t)
     return s;
 }
 
-/// logs std::map to console
+/// logs std::vector to console
 template<typename T, typename... R>
 std::ostream& operator<<(std::ostream& s, std::vector<T, R...> const& t)
 {
-    logIter(s, t.begin(), t.end(), "( ", ")", ", ");
+    logIter(s, t.begin(), t.end(), "(", ")", ", ");
     return s;
 }
 
+/// checks if the config path exists and reads the value of type `T`
 template<typename T>
 bool loadFromConfig(etiss::Configuration& config, std::string const& path, T& value)
 {
-    value = config.get<T>(path, {});
-    if (value == T{})
+    if (!config.isSet(path))
     {
         std::cout << "WARNING: configuration '" << path
                   << "' not defined!" << std::endl;
-//        value = invalid;
         return false;
     }
+
+    value = config.get<T>(path, T{});
     return true;
 }
 
+/// checks if the config path exists and reads multiple strings from the config entry
 template<>
 bool loadFromConfig(etiss::Configuration& config, std::string const& path, std::vector<std::string>& list)
 {
     // parse list of memory levels
-    std::string configString = config.get<std::string>(path, {});
+    std::string configString;
+    if (!loadFromConfig(config, path, configString)) return false;
 
     auto iter = configString.begin();
     auto end = configString.end();
@@ -109,6 +111,8 @@ bool loadFromConfig(etiss::Configuration& config, std::string const& path, std::
 
         // iter points to separator -> advance
         iter = substrEnd;
+
+        // skip white spaces
         while (iter != end && std::isspace(*iter, std::locale())) iter++;
     }
 
@@ -123,10 +127,13 @@ cmm::MemoryInstanceManager::instance()
 {
     static std::weak_ptr<cmm::MemoryInstanceManager> self{};
     auto lock = self.lock();
-    // construct single instance if object is uninitialized or was instance was deleted
+    // construct single instance if object is uninitialized or the instance was deleted
     if (!lock)
     {
         lock = std::shared_ptr<MemoryInstanceManager>{new MemoryInstanceManager()};
+        // TODO: avoid dangling pointers by avoiding resizing of vectors
+        lock->m_memoryInstances.reserve(20);
+        lock->m_cacheInstances.reserve(20);
         self = lock;
     }
     assert(lock);
@@ -136,16 +143,219 @@ cmm::MemoryInstanceManager::instance()
 bool
 cmm::MemoryInstanceManager::applyConfig(etiss::Configuration& config,
                                         std::vector<MemoryPath>& memoryPaths,
-                                        const std::string& id)
+                                        std::string const& portId)
 {
-    std::cout << "INFO: config " << config.listFullConfiguration() << std::endl;
+    static auto log_once = [&config](){
+        std::cout << "INFO: configuration: " << config.listFullConfiguration() << std::endl;
+        return 0;
+    }();
 
-    std::vector<std::string> ids;
-    loadFromConfig(config, CONFIG_PATH ".region.1.path.I", ids);
+    std::cout << "INFO: configuring port '" << portId << "'..." << std::endl;
 
-    std::cout << "PATH: " << ids << std::endl;
+    std::string configPath =  "plugin.perfEst.memory." + portId;
+
+    int nregions = -1;
+    if (!loadFromConfig(config, configPath + ".nregions", nregions) || nregions <= 0)
+    {
+        throw std::logic_error("'" + configPath + ".nregions' is not defined!");
+    }
+
+    memoryPaths.reserve(nregions);
+
+    for (int idx = 0; idx < nregions; idx++)
+    {
+        std::string regionConfigPath = configPath + ".region" + std::to_string(idx);
+
+        uint64_t endAddress = 0x0;
+        if (!loadFromConfig(config, regionConfigPath + ".end", endAddress) || endAddress <= 0x0)
+        {
+            throw std::logic_error("'" + regionConfigPath + ".end' is not defined!");
+        }
+
+        std::vector<std::string> instances;
+        if (!loadFromConfig(config, regionConfigPath + ".path", instances) || instances.empty())
+        {
+            throw std::logic_error("'" + regionConfigPath + ".path' is not defined!");
+        }
+
+        std::cout << "INFO: instantiating memory path (components: "
+                  << instances << ", address space: 0x"
+                  << std::hex << endAddress << std::dec << ")"
+                  << std::endl;
+
+        MemoryPath path;
+        path.endAddress = endAddress;
+        for (std::string const& instanceName : instances)
+        {
+            path.components.push_back(generateComponent(config, instanceName));
+        }
+
+        memoryPaths.push_back(path);
+    }
+
+    std::cout << std::endl;
 
     return true;
+}
+
+cmm::MemoryComponent*
+cmm::MemoryInstanceManager::generateComponent(etiss::Configuration& config,
+                                              std::string const& componentName)
+{
+    auto findComponentByName = [&componentName](MemoryComponent const& component){
+        return component.name == componentName;
+    };
+
+    auto cIter = std::find_if(m_cacheInstances.begin(), m_cacheInstances.end(), findComponentByName);
+    if (cIter != m_cacheInstances.end())
+    {
+        MemoryComponent* instance = &(*cIter);
+        std::cout << "INFO:  using cache instance: " << (void*)instance << std::endl;
+        return instance;
+    }
+
+    auto mIter = std::find_if(m_memoryInstances.begin(), m_memoryInstances.end(), findComponentByName);
+    if (mIter != m_memoryInstances.end())
+    {
+        MemoryComponent* instance = &(*mIter);
+        std::cout << "INFO:  using memory instance: " << (void*)instance << std::endl;
+        return instance;
+    }
+
+    std::string configPath = "plugin.perfEst.memory.instance." + componentName;
+
+    std::string typeString;
+    if (!loadFromConfig(config, configPath + ".type", typeString))
+    {
+        throw std::logic_error("'" + configPath + ".type' is not defined!");
+    }
+
+    enum Type { Cache, Memory };
+
+    Type type;
+    if (typeString == "cache") type = Cache;
+    else if (typeString == "memory") type = Memory;
+    else throw std::logic_error("'" + configPath + ".type' is unkown: " + typeString);
+
+    switch (type)
+    {
+    case Cache:
+        return generateCacheInstance(config, componentName);
+    case Memory:
+        return generateMemoryInstance(config, componentName);
+    }
+
+    throw std::logic_error(std::string(__FUNCTION__) + ": Unreachable path!");
+}
+
+cmm::CacheInstance*
+cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
+                                                  std::string const& name)
+{
+    std::cout << "INFO:  generating cache instance '" << name << "'..." << std::endl;
+
+    size_t nsets = 0, nways = 0, lineSize = 0;
+    int missDelay = 0, hitDelay = 0;
+
+    std::string configPath = "plugin.perfEst.memory.instance." + name;
+
+    bool success = true;
+    success &= loadFromConfig(config, configPath + ".lineSize", lineSize);
+    success &= loadFromConfig(config, configPath + ".nsets", nsets);
+    success &= loadFromConfig(config, configPath + ".nways", nways);
+
+    success &= loadFromConfig(config, configPath + ".delay.miss", missDelay);
+    success &= loadFromConfig(config, configPath + ".delay.hit",  hitDelay);
+    if (!success)
+    {
+        throw std::logic_error("cache specifications of '" + name + "' are invalid!");
+    }
+
+    std::cout << "INFO:   allocating cache memory with " << nsets << " entries x " << nways << " ways..." << std::endl;
+
+    // allocate tag memory
+    CacheMemory tagMemory;
+    tagMemory.resize(nways, nsets, lineSize);
+
+    std::cout << "INFO:   "
+              << tagMemory.indexBits()  << " index bits, "
+              << tagMemory.offsetBits() << " offset bits" << std::endl;
+
+    // replacement strategy
+    std::string replacementStrategy;
+    if (!loadFromConfig(config, configPath + ".replacement_strategy", replacementStrategy))
+    {
+        throw std::logic_error("'" + configPath + ".type' is not defined!");
+    }
+
+    std::cout << "INFO:   using replacement strategy '" << replacementStrategy << "'" << std::endl;
+
+    CacheInstance::EvictionStrategyFunctor evictionStrategy{};
+    CacheInstance::UpdateStrategyFunctor updateStrategy = update_strategy::default_(tagMemory);
+
+    if (replacementStrategy == "LFSR")
+    {
+        evictionStrategy = eviction_strategy::lfsr(tagMemory);
+    }
+    else if (replacementStrategy == "RANDOM")
+    {
+        evictionStrategy = eviction_strategy::random(tagMemory);
+    }
+    else if (replacementStrategy == "LFU")
+    {
+        evictionStrategy  = eviction_strategy::lfu(tagMemory);
+        updateStrategy = update_strategy::lfu(tagMemory);
+    }
+    else
+    {
+        throw std::logic_error(std::string(__FUNCTION__) +
+                               "Replacement strategy '" + replacementStrategy + "' is unkown!");
+    }
+
+    m_cacheInstances.emplace_back(
+        name,
+        std::move(tagMemory),
+        std::move(evictionStrategy),
+        std::move(updateStrategy),
+        Delay{hitDelay},
+        Delay{missDelay}
+    );
+
+    CacheInstance* instance = &m_cacheInstances.back();
+
+    std::cout << "INFO:   instance: " << (void*)instance << std::endl;
+
+    return instance;
+}
+
+cmm::MemoryInstance*
+cmm::MemoryInstanceManager::generateMemoryInstance(etiss::Configuration& config,
+                                                   std::string const& name)
+{
+    std::cout << "INFO:  generating memory instance '" << name << "'..." << std::endl;
+
+    int accessDelay = 0;
+
+    std::string configPath = "plugin.perfEst.memory.instance." + name;
+
+    bool success = true;
+    success &= loadFromConfig(config, configPath + ".delay.access", accessDelay);
+
+    if (!success)
+    {
+        throw std::logic_error("memory specifications of '" + name + "' are invalid!");
+    }
+
+    m_memoryInstances.emplace_back(
+        name,
+        Delay{accessDelay}
+    );
+
+    MemoryInstance* instance = &m_memoryInstances.back();
+
+    std::cout << "INFO:   instance: " << (void*)instance << std::endl;
+
+    return instance;
 }
 
 void

@@ -46,18 +46,15 @@ public:
                   UpdateStrategyFunctor updateStrategy,
                   Delay hit,
                   Delay miss) :
-        m_name(std::move(name)),
+        MemoryComponent(std::move(name)),
         m_tagMemory(std::move(tagMemory)),
-        m_evictStrategy(std::move(evictionStrategy)),
+        m_evictionStrategy(std::move(evictionStrategy)),
         m_updateStrategy(std::move(updateStrategy)),
         m_hitDelay(hit),
         m_missDelay(miss)
     {
         assert(m_evictionStrategy);
     }
-
-    /// Returns the name of the cache
-    inline std::string const& name() const { return m_name; }
 
     /**
      * @brief Performs a fetch and updates the delay parameter as required.
@@ -100,7 +97,7 @@ public:
             if (!entry)
             {
                 // evict valid entry
-                entry = m_evictStrategy(cacheSet);
+                entry = m_evictionStrategy(cacheSet);
 
                 CMM_STATISTICS_ONLY(
                     t_evictions++;
@@ -120,12 +117,10 @@ public:
 
 private:
 
-    /// name of cache level
-    std::string m_name{};
     /// tag memory of cache
     CacheMemory m_tagMemory{};
     /// strategy to evict an entry of a cache cacheSet
-    EvictionStrategyFunctor m_evictStrategy{};
+    EvictionStrategyFunctor m_evictionStrategy{};
     /// strategy to update status of an entry or cache cacheSet
     UpdateStrategyFunctor m_updateStrategy{};
     /// delay if address was cached

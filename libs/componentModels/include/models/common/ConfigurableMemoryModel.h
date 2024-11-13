@@ -28,7 +28,7 @@ class ConfigurableMemoryModel : public ResourceModel
 {
 public:
 
-    using MemoryInstance = cmm::MemoryInstance;
+    using MemoryComponent = cmm::MemoryComponent;
     using MemoryInstanceManager = cmm::MemoryInstanceManager;
     using MemoryPath = MemoryInstanceManager::MemoryPath;
 
