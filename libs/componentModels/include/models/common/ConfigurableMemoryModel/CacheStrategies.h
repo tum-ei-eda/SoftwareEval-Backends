@@ -66,6 +66,15 @@ inline auto lfu(const CacheMemory& tagMemory)
     };
 }
 
+/// choses the cache line that was least recently used
+inline auto lru(const CacheMemory& tagMemory)
+{
+    return [](CacheSet& set) -> CacheLine* {
+        // assumes set is sorted according to LRU -> use last entry
+        return set[set.size()-1];
+    };
+}
+
 } // namespace eviction_strategy
 
 namespace update_strategy
@@ -89,6 +98,21 @@ inline auto lfu(const CacheMemory& tagMemory)
     return [](CacheSet& set, CacheLine& entry) -> void {
         // data = number of accesses
         entry.data += 1;
+    };
+}
+
+/// updates the cache line and set according to the least frequently used
+/// replacement strategy
+inline auto lru(const CacheMemory& tagMemory)
+{
+    return [](CacheSet& set, CacheLine& entry) -> void {
+        // get index of current entry
+        auto iter = std::find_if(set.begin(), set.end(), [&entry](CacheLine& other){
+            return &other == &entry;
+        });
+        assert(iter != set.end());
+        size_t index = std::distance(set.begin(), iter);
+        // TODO: implement
     };
 }
 
