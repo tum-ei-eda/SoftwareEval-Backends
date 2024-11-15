@@ -37,16 +37,37 @@ public:
     struct MemoryPath
     {
         uint64_t endAddress = 0x0;
-        std::vector<cmm::MemoryComponent*> components;
+        std::vector<MemoryComponent*> components;
+
+        constexpr inline bool contains(uint64_t addr) const { return addr < endAddress; }
     };
 
+    ~MemoryInstanceManager();
+
     static std::shared_ptr<MemoryInstanceManager> instance();
+
+    /**
+     * @brief Searches for a cache instance with the given name
+     * @param name Name of instance
+     * @return Cache instance
+     */
+    CacheInstance* findCacheInstance(std::string const& name);
+    /**
+     * @brief Searches for a memory instance with the given name
+     * @param name Name of instance
+     * @return Memory instance
+     */
+    MemoryInstance* findMemoryInstance(std::string const& name);
 
     bool applyConfig(etiss::Configuration& config,
                      std::vector<MemoryPath>& memoryPaths,
                      std::string const& portId);
 
-    void generateMemoryAccessStatistics() const;
+    void generateAccessStatistics() const;
+
+    void outputGeneralAccessStatistics() const;
+
+
 
 private:
 
@@ -54,11 +75,6 @@ private:
 
     std::vector<CacheInstance> m_cacheInstances;
     std::vector<MemoryInstance> m_memoryInstances;
-
-    /// name of cache level
-    std::string m_name{};
-    /// access delay
-    Delay m_accessDelay{1};
 
     MemoryComponent* generateComponent(etiss::Configuration& config,
                                        std::string const& componentName);

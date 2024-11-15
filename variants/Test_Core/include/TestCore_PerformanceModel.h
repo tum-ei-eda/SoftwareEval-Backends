@@ -34,32 +34,31 @@ class Channel;
 
 
 // replaces ICacheModel of CVA6
-class TestCore_ICacheModel : public ConfigurableMemoryModel
+class TestCore_IMemoryPort : public IMemoryPort
 {
-public:
-    TestCore_ICacheModel(PerformanceModel* parent_) :
-        ConfigurableMemoryModel("IPort", parent_),
-        pc_ptr(ConfigurableMemoryModel::addr_ptr)
+  public:
+    TestCore_IMemoryPort(PerformanceModel* parent_) :
+        IMemoryPort(parent_)
     { }
 
-    int getDelay(void) override { return ConfigurableMemoryModel::getDelay(); }
-
-    // to keep compatibility to ICacheModel
-    void setIc(uint64_t c_) { t_ic = cacheHit() ? c_ : 0; };
+    void setIc(uint64_t c_)
+    {
+        // TODO: t_ic = isMiss ? c_ : 0; (see ICacheModel)
+        t_ic = 0;
+    };
     uint64_t getIc(void) { return t_ic; };
-
-    // alias for addr_ptr to keep compatibility to ICacheModel
-    uint64_t*& pc_ptr;
 
 private:
 
-    // Time when ICache relaeses block on miss
+    // Time when ICache releases block on miss
     uint64_t t_ic = 0;
 };
 
 class TestCore_PerformanceModel : public PerformanceModel
 {
 public:
+
+    using TestCore_DMemoryPort = DMemoryPort;
 
     /**
      * @brief Instantiates the instruction set of this class once needed (lazy). 
@@ -72,7 +71,7 @@ public:
         ,regModel(this)
         ,cbModel(this)
         ,iCacheModel(this)
-        ,dCacheModel("DPort", this)
+        ,dCacheModel(this)
         ,brPredModel(this)
         ,divModel(this)
         ,divUModel(this)
@@ -89,9 +88,9 @@ public:
     StandardRegisterModel regModel;
     ClobberModel cbModel;
     // ICacheModel iCacheModel;
-    TestCore_ICacheModel iCacheModel;
+    TestCore_IMemoryPort iCacheModel;
     // replaced DCacheModel
-    ConfigurableMemoryModel dCacheModel;
+    TestCore_DMemoryPort dCacheModel;
     BranchPredictionModel brPredModel;
     CVA6_DividerModel divModel;
     CVA6_DividerUnsignedModel divUModel;

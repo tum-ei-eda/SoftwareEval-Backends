@@ -30,21 +30,22 @@ namespace cmm
 /// by the associativity of the cache). This is a lightweight wrapper around
 /// a range of CacheLines (must be in contiguous memory). Does not store
 /// acutal data
-struct CacheSet
+template<typename CacheLine_t>
+struct CacheSet_t
 {
     /// start of range
-    CacheLine* begin_{};
+    CacheLine_t* begin_{};
     /// end of range (points one element past the actual range)
-    CacheLine* end_{};
+    CacheLine_t* end_{};
 
     /// begin iterator
     /// (c++ iterators, used for range-based for loops and std algorithms)
-    CacheLine* begin() { return begin_; }
+    CacheLine_t* begin() const { return begin_; }
     /// end iterator
-    CacheLine* end() { return end_; }
+    CacheLine_t* end() const { return end_; }
 
     /// []-operator to behave like a vector/array
-    CacheLine* operator[](size_t idx) { return begin() + idx; }
+    CacheLine_t* operator[](size_t idx) { return begin() + idx; }
 
     /// Returns size of range
     size_t size() const { return end_ - begin_; }
@@ -53,9 +54,9 @@ struct CacheSet
      * @brief Attempts to find a cache line with the given tag
      * @return Cache line with the given tag (may be null)
      */
-    inline CacheLine* find(uint64_t tag)
+    inline CacheLine_t* find(uint64_t tag) const
     {
-        auto iter = std::find_if(begin(), end(), [tag](const CacheLine& e){
+        auto iter = std::find_if(begin(), end(), [tag](CacheLine_t const& e){
             return e.tag == tag;
         });
 
@@ -67,9 +68,9 @@ struct CacheSet
      * @brief Attempts to find a cache line that is invalid (= free/empty)
      * @return Cache line that is invalid (may be null)
      */
-    inline CacheLine* findInvalid()
+    inline CacheLine_t* findInvalid() const
     {
-        auto iter = std::find_if(begin(), end(), [](const CacheLine& e){
+        auto iter = std::find_if(begin(), end(), [](CacheLine_t const& e){
             return !e.isValid();
         });
 
@@ -78,7 +79,7 @@ struct CacheSet
     }
 };
 
-using CacheBlock [[deprecated("Use CacheLine instead")]] = CacheSet;
+using CacheSet = CacheSet_t<CacheLine>;
 
 } // namespace cmm
 

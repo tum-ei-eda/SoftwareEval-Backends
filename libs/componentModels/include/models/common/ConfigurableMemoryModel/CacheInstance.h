@@ -63,57 +63,9 @@ public:
      * @param delay Delay in clock cycles
      * @return Cache hit (true) or miss (false)
      */
-    inline AccessDetails readAccess(uint64_t address) override
-    {
-        const CacheTag tag   = m_tagMemory.getTag(address);
-        const CacheIndex index = m_tagMemory.getIndex(address);
+    AccessDetails readAccess(uint64_t address) override;
 
-        CacheSet cacheSet = m_tagMemory.getCacheSet(index);
-
-        CacheLine* entry = cacheSet.find(tag);
-
-        const bool hit = entry && entry->isValid();
-        if (hit) // cache hit
-        {
-            CMM_STATISTICS_ONLY(
-                t_hits++;
-                entry->t_hits++;
-            )
-
-            update(cacheSet, *entry);
-
-            return AccessDetails::makeHit(m_hitDelay);
-        }
-
-        // cache miss
-        CMM_STATISTICS_ONLY(
-            t_misses++;
-        )
-
-        if (!entry)
-        {
-            // find entry to replace
-            entry = cacheSet.findInvalid();
-            if (!entry)
-            {
-                // evict valid entry
-                entry = m_evictionStrategy(cacheSet);
-
-                CMM_STATISTICS_ONLY(
-                    t_evictions++;
-                    entry->t_evictions++;
-                )
-            }
-        }
-
-        assert(entry);
-
-        // replace entry
-        replace(cacheSet, *entry, tag);
-        update(cacheSet, *entry);
-
-        return AccessDetails::makeMiss(m_missDelay);
-    }
+    CacheMemory const& cacheMemory() const { return m_tagMemory; }
 
 private:
 
@@ -133,11 +85,7 @@ private:
      * @param cacheSet Cache cacheSet that holds the accessed entry
      * @param entry Entry that was accessed
      */
-    inline void update(CacheSet cacheSet, CacheLine& entry)
-    {
-        // TODO: update cache entry/block? (e.g. access time)
-        if (m_updateStrategy) m_updateStrategy(cacheSet, entry);
-    }
+    void update(CacheSet cacheSet, CacheLine& entry);
 
     /**
      * @brief Replaces the entry of the cache set.
@@ -145,19 +93,12 @@ private:
      * @param entry Entry to replace
      * @param tag Tag to store in cache entry
      */
-    inline void replace(CacheSet cacheSet, CacheLine& entry, CacheTag tag)
-    {
-        // replace entry
-        entry.tag = tag;
-        entry.setFlag(CacheLine::Invalid, false);
-        // move to separate replacement strategy?
-        entry.data = 0x0;
-    }
+    void replace(CacheSet cacheSet, CacheLine& entry, CacheTag tag);
 
 public:
 
     CMM_STATISTICS_ONLY(
-        // variables solely used for debugging/statistical purpose)
+        // variables solely used for debugging/statistical purpose
         uint32_t t_hits = 0;
         uint32_t t_misses = 0;
         uint32_t t_evictions = 0;

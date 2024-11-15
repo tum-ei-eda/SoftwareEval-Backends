@@ -122,6 +122,12 @@ bool loadFromConfig(etiss::Configuration& config, std::string const& path, std::
 } // namespace
 
 
+cmm::MemoryInstanceManager::~MemoryInstanceManager()
+{
+    outputGeneralAccessStatistics();
+    generateAccessStatistics();
+}
+
 std::shared_ptr<cmm::MemoryInstanceManager>
 cmm::MemoryInstanceManager::instance()
 {
@@ -138,6 +144,28 @@ cmm::MemoryInstanceManager::instance()
     }
     assert(lock);
     return lock;
+}
+
+cmm::CacheInstance*
+cmm::MemoryInstanceManager::findCacheInstance(std::string const& name)
+{
+    auto iter = std::find_if(m_cacheInstances.begin(), m_cacheInstances.end(),
+                             [&name](CacheInstance& instance){
+        return instance.name == name;
+    });
+    if (iter == m_cacheInstances.end()) return nullptr;
+    return &*iter;
+}
+
+cmm::MemoryInstance*
+cmm::MemoryInstanceManager::findMemoryInstance(std::string const& name)
+{
+    auto iter = std::find_if(m_memoryInstances.begin(), m_memoryInstances.end(),
+                             [&name](MemoryInstance& instance){
+                                 return instance.name == name;
+                             });
+    if (iter == m_memoryInstances.end()) return nullptr;
+    return &*iter;
 }
 
 bool
@@ -202,24 +230,15 @@ cmm::MemoryComponent*
 cmm::MemoryInstanceManager::generateComponent(etiss::Configuration& config,
                                               std::string const& componentName)
 {
-    auto findComponentByName = [&componentName](MemoryComponent const& component){
-        return component.name == componentName;
-    };
-
-    auto cIter = std::find_if(m_cacheInstances.begin(), m_cacheInstances.end(), findComponentByName);
-    if (cIter != m_cacheInstances.end())
+    if (CacheInstance* cache = findCacheInstance(componentName))
     {
-        MemoryComponent* instance = &(*cIter);
-        std::cout << "INFO:  using cache instance: " << (void*)instance << std::endl;
-        return instance;
+        std::cout << "INFO:  using cache instance: " << (void*)cache << std::endl;
+        return cache;
     }
-
-    auto mIter = std::find_if(m_memoryInstances.begin(), m_memoryInstances.end(), findComponentByName);
-    if (mIter != m_memoryInstances.end())
+    if (MemoryInstance* memory = findMemoryInstance(componentName))
     {
-        MemoryComponent* instance = &(*mIter);
-        std::cout << "INFO:  using memory instance: " << (void*)instance << std::endl;
-        return instance;
+        std::cout << "INFO:  using memory instance: " << (void*)memory << std::endl;
+        return memory;
     }
 
     std::string configPath = "plugin.perfEst.memory.instance." + componentName;
@@ -359,73 +378,96 @@ cmm::MemoryInstanceManager::generateMemoryInstance(etiss::Configuration& config,
 }
 
 void
-cmm::MemoryInstanceManager::generateMemoryAccessStatistics() const
+cmm::MemoryInstanceManager::outputGeneralAccessStatistics() const
 {
+#ifdef CMM_OUTPUT_STATISTICS
+    constexpr unsigned width = 6, precision = 4;
+
+    std::cout << "\nCache Performance:\n";
+
+    for (CacheInstance const& cache : m_cacheInstances)
+    {
+        // output statistics
+        unsigned total = cache.t_hits + cache.t_misses;
+
+        // basic statistics
+        std::cout << " " << cache.name << ":\n  "
+                  << std::setw(width) << std::right <<  cache.t_hits                                << " cache hits ("
+                  << std::setprecision(precision)   << (cache.t_hits * 100.0) / total               << "%) and" "\n  "
+                  << std::setw(width) << std::right <<  cache.t_misses                              << " cache misses ("
+                  << std::setprecision(precision)   << (cache.t_misses * 100.0) / total             << "%) with" "\n  "
+                  << std::setw(width) << std::right <<  cache.t_evictions                           << " evictions ("
+                  << std::setprecision(precision)   << (cache.t_evictions * 100.0) / cache.t_misses << "%)"
+                  << std::endl;
+    }
+
+    std::cout << "\nMemory Statistics:\n";
+
+    for (MemoryInstance const& memory : m_memoryInstances)
+    {
+        // basic statistics
+        std::cout << " " << memory.name << ":\n  "
+                  << std::setw(width) << std::right <<  memory.t_accesses << " memory accesses"
+                  << std::endl;
+    }
+#endif
+}
+
+void
+cmm::MemoryInstanceManager::generateAccessStatistics() const
+{
+#ifdef CMM_OUTPUT_STATISTICS
     // TODO: implement
 
-#if 0
-    // output statistics
-    constexpr unsigned width = 6, precision = 4;
-    unsigned total = t_hits + t_misses;
-
-
-    if (total == 0) return;
-
-           // basic statistics
-    std::cout << "\n"
-              << m_name << " Cache Performance:" "\n "
-              << std::setw(width) << std::right <<  t_hits                          << " cache hits ("
-              << std::setprecision(precision)   << (t_hits * 100.0) / total         << "%) and" "\n "
-              << std::setw(width) << std::right <<  t_misses                        << " cache misses ("
-              << std::setprecision(precision)   << (t_misses * 100.0) / total       << "%) with" "\n "
-              << std::setw(width) << std::right <<  t_evictions                     << " evictions ("
-              << std::setprecision(precision)   << (t_evictions * 100.0) / t_misses << "%)"
-              << std::endl;
-
-           // find path to exe
+    // find path to exe
     char cwd[256];
     size_t len = readlink("/proc/self/exe", cwd, sizeof(cwd));
     if (len < 0 || len > sizeof(cwd)) return;
 
-    std::string filePath;
     // find directory
     auto rbegin = std::make_reverse_iterator(cwd + len);
     auto rend = std::make_reverse_iterator(cwd);
     auto directory = std::find(rbegin, rend, '/');
     if (directory == rend) return;
 
-    std::copy(cwd, directory.base(), std::back_inserter(filePath));
-    filePath += "histogram-" + name() + ".csv";
-
-    std::cout << "creating cache histogram at " << filePath << std::endl;
-
-           // detailed cache statistics
-    std::ofstream fs;
-    fs.open(filePath, std::ios::out);
-
-    if (!fs.is_open()) return;
-
-           // header
-    fs << "index," "ways-used," "hits," "evictions\n";
-
-           // data
-    for (size_t idx = 0; idx < m_tagMemory.sets(); idx++)
+    for (CacheInstance const& cache : m_cacheInstances)
     {
-        CacheBlock block = m_tagMemory.getCacheSet(CacheIndex{idx});
-        // accumulate statistics of all ways
-        uint32_t hits = 0, evictions = 0, waysUsed = 0;
-        for (size_t way = 0; way < m_tagMemory.ways(); way++)
+        std::string filePath;
+        std::copy(cwd, directory.base(), std::back_inserter(filePath));
+        filePath += "histogram-" + cache.name + ".csv";
+
+        std::cout << "creating cache histogram at " << filePath << std::endl;
+
+        // detailed cache statistics
+        std::ofstream fs;
+        fs.open(filePath, std::ios::out);
+
+        if (!fs.is_open()) continue;
+
+        // header
+        fs << "index," "ways-used," "hits," "evictions\n";
+
+        CacheMemory const& cacheMemory = cache.cacheMemory();
+
+        // data
+        for (size_t idx = 0; idx < cacheMemory.sets(); idx++)
         {
-            auto* entry = block[way];
-            if (entry->t_hits > 0) waysUsed  += 1;
+            auto cacheSet = cacheMemory.getCacheSet(CacheIndex{idx});
+            // accumulate statistics of all ways
+            uint32_t hits = 0, evictions = 0, waysUsed = 0;
+            for (size_t way = 0; way < cacheMemory.ways(); way++)
+            {
+                auto* entry = cacheSet[way];
+                if (entry->t_hits > 0) waysUsed  += 1;
 
-            hits  += entry->t_hits;
-            evictions += entry->t_evictions;
+                hits  += entry->t_hits;
+                evictions += entry->t_evictions;
+            }
+            fs << std::hex << idx << std::dec << "," << waysUsed << "," << hits << "," << evictions << "\n";
         }
-        fs << std::hex << idx << std::dec << "," << waysUsed << "," << hits << "," << evictions << "\n";
-    }
 
-    fs << std::endl;
-    fs.close();
+        fs << std::endl;
+        fs.close();
+    }
 #endif
 }

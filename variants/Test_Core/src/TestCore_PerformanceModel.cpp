@@ -28,6 +28,7 @@
 #include <string>
 #include <sstream>
 #include <cstdint>
+#include <chrono>
 
 InstructionModelSet*
 TestCore_PerformanceModel::instructionSet()
@@ -121,6 +122,10 @@ TestCore_PerformanceModel::getPrintHeader(void)
 void
 TestCore_PerformanceModel::applyConfig(etiss::Configuration& config)
 {
+    auto start = std::chrono::high_resolution_clock::now();
     iCacheModel.applyConfig(config);
     dCacheModel.applyConfig(config);
+    auto end = std::chrono::high_resolution_clock::now();
+    auto duration = end - start;
+    std::cout << "INFO: applying configuration took " << std::chrono::duration_cast<std::chrono::microseconds>(duration).count() / 1000.0 << " ms" << std::endl << std::endl;
 }

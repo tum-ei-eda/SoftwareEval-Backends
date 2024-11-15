@@ -24,7 +24,7 @@
 #include <vector>
 #include <memory>
 
-class ConfigurableMemoryModel : public ResourceModel
+class ConfigurableMemoryPort : public ResourceModel
 {
 public:
 
@@ -32,7 +32,7 @@ public:
     using MemoryInstanceManager = cmm::MemoryInstanceManager;
     using MemoryPath = MemoryInstanceManager::MemoryPath;
 
-    ConfigurableMemoryModel(std::string id, PerformanceModel* parent_);
+    ConfigurableMemoryPort(std::string portId, PerformanceModel* parent_);
 
     /**
      * @brief Applies memory model configuration
@@ -42,19 +42,13 @@ public:
 
     /**
      * @brief Delay for accessing the current address. Updates the cache
-     * and update `cacheHit` property
+     * and updates `cacheHit` property
      * @return Delay
      */
     int getDelay(void) override;
 
-    /**
-     * @brief Returns whether last access was a hit or miss
-     * @return Whether last access was a hit or miss
-     */
-    inline bool cacheHit(void) const { return m_hit; }
-
     /// pointer to memory
-    /// TODO: more fitting name? Keeping API compatiblity to DCacheModel
+    // TODO: more fitting name?
     uint64_t* addr_ptr = nullptr;
 
 private:
@@ -63,9 +57,30 @@ private:
     std::vector<MemoryPath> m_memoryPaths;
     /// handle to instance manager
     std::shared_ptr<MemoryInstanceManager> m_handle;
-
-    /// wether the lass cache access resulted in a hit or miss
-    bool m_hit = false;
 };
+
+class DMemoryPort : public ConfigurableMemoryPort
+{
+public:
+
+    DMemoryPort(PerformanceModel* parent_) :
+        ConfigurableMemoryPort("DPort", parent_)
+    { }
+
+};
+
+class IMemoryPort : public ConfigurableMemoryPort
+{
+public:
+
+    IMemoryPort(PerformanceModel* parent_) :
+        ConfigurableMemoryPort("IPort", parent_),
+        pc_ptr(ConfigurableMemoryPort::addr_ptr)
+    { }
+
+    // alias for addr_ptr
+    uint64_t*& pc_ptr;
+};
+
 
 #endif //CONFIGURABLE_MEMORY_MODEL_H

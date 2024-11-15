@@ -37,6 +37,9 @@ public:
 
     inline AccessDetails readAccess(uint64_t address) override
     {
+        CMM_STATISTICS_ONLY(
+            t_accesses++;
+        )
         return AccessDetails::makeHit(m_accessDelay);
     }
 
@@ -44,6 +47,13 @@ private:
 
     /// access delay
     Delay m_accessDelay{1};
+
+public:
+
+    CMM_STATISTICS_ONLY(
+        // variables solely used for debugging/statistical purpose
+        uint32_t t_accesses = 0;
+    )
 };
 
 } // namespace cmm

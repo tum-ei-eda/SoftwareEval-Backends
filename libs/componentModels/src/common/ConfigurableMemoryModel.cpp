@@ -22,15 +22,15 @@
 
 #include <string>
 
-ConfigurableMemoryModel::ConfigurableMemoryModel(std::string id, PerformanceModel* parent_) :
-    ResourceModel(std::move(id), parent_),
+ConfigurableMemoryPort ::ConfigurableMemoryPort(std::string portId, PerformanceModel* parent_) :
+    ResourceModel(std::move(portId), parent_),
     m_handle(MemoryInstanceManager::instance())
 {
     assert(m_handle);
 }
 
 int
-ConfigurableMemoryModel::getDelay()
+ConfigurableMemoryPort::getDelay()
 {
     uint64_t address = addr_ptr[getInstrIndex()];
 
@@ -39,13 +39,12 @@ ConfigurableMemoryModel::getDelay()
     // assumes sorted memory paths
     for (MemoryPath& path : m_memoryPaths)
     {
-        if (address > path.endAddress) continue;
+        if (!path.contains(address)) continue;
 
         // traverse memory path
         for (MemoryComponent* component : path.components)
         {
             assert(component);
-
             cmm::AccessDetails access = component->readAccess(address);
             delay += access.delay;
             if (access.hit) break;
@@ -57,7 +56,7 @@ ConfigurableMemoryModel::getDelay()
 }
 
 void
-ConfigurableMemoryModel::applyConfig(etiss::Configuration& config)
+ConfigurableMemoryPort::applyConfig(etiss::Configuration& config)
 {
     std::string const& id = name;
     m_handle->applyConfig(config, m_memoryPaths, id);
