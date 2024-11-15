@@ -45,7 +45,7 @@ struct CacheSet_t
     CacheLine_t* end() const { return end_; }
 
     /// []-operator to behave like a vector/array
-    CacheLine_t* operator[](size_t idx) { return begin() + idx; }
+    CacheLine_t& operator[](size_t idx) { return *(begin() + idx); }
 
     /// Returns size of range
     size_t size() const { return end_ - begin_; }

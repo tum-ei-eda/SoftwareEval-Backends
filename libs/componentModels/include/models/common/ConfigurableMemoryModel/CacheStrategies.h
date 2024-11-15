@@ -28,19 +28,19 @@ namespace eviction_strategy
 {
 
 /// selects pseudo-random cache line using a linear feedback shift register
-/// (adopted from DCacheModel)
+/// (adopted from DCacheModel and wikipedia)
 inline auto lfsr(const CacheMemory& tagMemory)
 {
-    uint8_t shift_state = 0;
-    const size_t ways = tagMemory.ways() - 1;
+    uint8_t shift_state = 0xAC; // seed
+    const size_t maxIdx = tagMemory.ways() - 1;
 
-    return [shift_state, ways](CacheSet& set) mutable -> CacheLine* {
+    return [shift_state, maxIdx](CacheSet& set) mutable -> CacheLine* {
         uint8_t shift_in = ~(((shift_state & 0x80) >> 7) ^
                              ((shift_state & 0x08) >> 3) ^
                              ((shift_state & 0x04) >> 2) ^
                              ((shift_state & 0x02) >> 1));
-        shift_state = (shift_state << 1) | shift_in;
-        return set[shift_state & ways];
+        shift_state = (shift_state >> 1) | (shift_in << 7);
+        return &set[shift_state & maxIdx];
     };
 }
 
@@ -49,7 +49,7 @@ inline auto random(const CacheMemory& tagMemory)
 {
     const size_t ways = tagMemory.ways();
     return [ways](CacheSet& block) -> CacheLine* {
-        return block[rand() % ways];
+        return &block[rand() % ways];
     };
 }
 
@@ -70,8 +70,9 @@ inline auto lfu(const CacheMemory& tagMemory)
 inline auto lru(const CacheMemory& tagMemory)
 {
     return [](CacheSet& set) -> CacheLine* {
-        // assumes set is sorted according to LRU -> use last entry
-        return set[set.size()-1];
+        // assumes set is sorted according to most recently used first
+        // -> use last entry
+        return &set[set.size() - 1];
     };
 }
 
@@ -101,18 +102,32 @@ inline auto lfu(const CacheMemory& tagMemory)
     };
 }
 
-/// updates the cache line and set according to the least frequently used
-/// replacement strategy
+/// moves the most recently used entry to the top of the set, thus sorting
+/// the set according to least recently used
 inline auto lru(const CacheMemory& tagMemory)
 {
     return [](CacheSet& set, CacheLine& entry) -> void {
-        // get index of current entry
-        auto iter = std::find_if(set.begin(), set.end(), [&entry](CacheLine& other){
-            return &other == &entry;
-        });
-        assert(iter != set.end());
-        size_t index = std::distance(set.begin(), iter);
-        // TODO: implement
+        size_t index = 0;
+        for (CacheLine& other : set)
+        {
+            if (&other == &entry) break;
+            index++;
+        }
+
+        // sort `set` and move `entry` to the top
+        while (index > 0)
+        {
+            // e.g. `entry` is the third in the range `set`
+            //  1. swap entry no. 3 (which is equal to `entry`) and entry no. 2
+            //  2. swap entry no. 2 (which is now `entry`) and entry no. 1
+            // -> done
+            // now the entry is at the top of the set whereas the other entries
+            // have moved down a place
+            cmm::CacheLine& before  = set[index - 1];
+            cmm::CacheLine& current = set[index];
+            std::swap(before, current);
+            index--;
+        }
     };
 }
 

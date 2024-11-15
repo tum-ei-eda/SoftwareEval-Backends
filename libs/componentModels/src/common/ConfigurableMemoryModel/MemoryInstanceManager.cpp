@@ -316,6 +316,11 @@ cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
     {
         evictionStrategy = eviction_strategy::lfsr(tagMemory);
     }
+    else if (replacementStrategy == "LRU")
+    {
+        evictionStrategy = eviction_strategy::lru(tagMemory);
+        updateStrategy = update_strategy::lru(tagMemory);
+    }
     else if (replacementStrategy == "RANDOM")
     {
         evictionStrategy = eviction_strategy::random(tagMemory);
@@ -457,11 +462,11 @@ cmm::MemoryInstanceManager::generateAccessStatistics() const
             uint32_t hits = 0, evictions = 0, waysUsed = 0;
             for (size_t way = 0; way < cacheMemory.ways(); way++)
             {
-                auto* entry = cacheSet[way];
-                if (entry->t_hits > 0) waysUsed  += 1;
+                auto entry = cacheSet[way];
+                if (entry.t_hits > 0) waysUsed  += 1;
 
-                hits  += entry->t_hits;
-                evictions += entry->t_evictions;
+                hits  += entry.t_hits;
+                evictions += entry.t_evictions;
             }
             fs << std::hex << idx << std::dec << "," << waysUsed << "," << hits << "," << evictions << "\n";
         }
