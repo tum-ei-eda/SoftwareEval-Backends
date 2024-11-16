@@ -415,12 +415,16 @@ cmm::MemoryInstanceManager::outputGeneralAccessStatistics() const
 
         // basic statistics
         std::cout << " " << cache.name << ":\n  "
-                  << std::setw(width) << std::right <<  cache.t_hits                                << " cache hits ("
-                  << std::setprecision(precision)   << (cache.t_hits * 100.0) / total               << "%) and" "\n  "
-                  << std::setw(width) << std::right <<  cache.t_misses                              << " cache misses ("
-                  << std::setprecision(precision)   << (cache.t_misses * 100.0) / total             << "%) with" "\n  "
-                  << std::setw(width) << std::right <<  cache.t_evictions                           << " evictions ("
-                  << std::setprecision(precision)   << (cache.t_evictions * 100.0) / cache.t_misses << "%)"
+                  << std::setw(width) << std::right <<  cache.t_hits                      << " cache hits ("
+                  << std::setprecision(precision)   << (cache.t_hits * 100.0) / total     << "%) and" "\n  "
+                  << std::setw(width) << std::right <<  cache.t_misses                    << " cache misses ("
+                  << std::setprecision(precision)   << (cache.t_misses * 100.0) / total   << "%) with" "\n  "
+                  << std::setw(width) << std::right <<  cache.t_compulsoryMisses          << " compulsory misses ("
+                  << std::setprecision(precision)   << (cache.t_compulsoryMisses * 100.0)
+                                                        / cache.t_misses                  << "%) and" "\n  "
+                  << std::setw(width) << std::right <<  cache.t_evictions                 << " evictions ("
+                  << std::setprecision(precision)   << (cache.t_evictions * 100.0)
+                                                        / cache.t_misses                  << "%)"
                   << std::endl;
     }
 

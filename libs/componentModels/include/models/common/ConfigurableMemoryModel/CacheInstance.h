@@ -102,6 +102,7 @@ public:
         uint32_t t_hits = 0;
         uint32_t t_misses = 0;
         uint32_t t_evictions = 0;
+        uint32_t t_compulsoryMisses = 0;
     )
 };
 

@@ -34,6 +34,8 @@ struct CacheLine
         NoFlag = 0,
         /// cache entry is invalid -> entry must be fetched to access
         Invalid = 1 << 0,
+        /// cache entry is cold (used to detect compulsory misses)
+        Uninitialized = 1 << 1,
         // TODO: Dirty Flag? Coherency Flags?
     };
     using StatusFlags = uint32_t;
@@ -41,7 +43,7 @@ struct CacheLine
     /// tag part of all cache entries
     uint64_t tag  = 0x0;
     /// status flags
-    StatusFlags flags = Invalid;
+    StatusFlags flags = Invalid | Uninitialized;
     /// custom data (ccan be used for update/replacement strategy)
     uint32_t data = 0x0;
 

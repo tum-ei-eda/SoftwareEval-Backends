@@ -60,6 +60,12 @@ cmm::CacheInstance::readAccess(uint64_t address)
                 entry->t_evictions++;
             )
         }
+        CMM_STATISTICS_ONLY(
+            else if (entry->flags & CacheLine::Uninitialized)
+            {
+                t_compulsoryMisses++;
+            }
+        )
     }
 
     assert(entry);
