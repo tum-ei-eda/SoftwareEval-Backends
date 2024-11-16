@@ -314,16 +314,34 @@ cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
 
     if (replacementStrategy == "LFSR")
     {
-        evictionStrategy = eviction_strategy::lfsr(tagMemory);
+        evictionStrategy = eviction_strategy::lfsr8bit(tagMemory);
+    }
+    else if (replacementStrategy == "RANDOM")
+    {
+        evictionStrategy = eviction_strategy::random(tagMemory);
     }
     else if (replacementStrategy == "LRU")
     {
         evictionStrategy = eviction_strategy::lru(tagMemory);
         updateStrategy = update_strategy::lru(tagMemory);
     }
-    else if (replacementStrategy == "RANDOM")
+    else if (replacementStrategy == "MRU")
     {
-        evictionStrategy = eviction_strategy::random(tagMemory);
+        evictionStrategy = eviction_strategy::mru(tagMemory);
+        updateStrategy = update_strategy::mru(tagMemory);
+    }
+    else if (replacementStrategy == "PLRU")
+    {
+        evictionStrategy = eviction_strategy::plru(tagMemory);
+        updateStrategy = update_strategy::plru(tagMemory);
+    }
+    else if (replacementStrategy == "FIFO")
+    {
+        evictionStrategy = eviction_strategy::fifo(tagMemory);
+    }
+    else if (replacementStrategy == "LIFO")
+    {
+        evictionStrategy = eviction_strategy::lifo(tagMemory);
     }
     else if (replacementStrategy == "LFU")
     {

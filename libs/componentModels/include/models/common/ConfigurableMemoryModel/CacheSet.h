@@ -20,7 +20,6 @@
 #include "./CacheLine.h"
 
 #include <cstddef>
-#include <algorithm>
 
 /// namespace for configurable memory model
 namespace cmm
@@ -45,23 +44,37 @@ struct CacheSet_t
     CacheLine_t* end() const { return end_; }
 
     /// []-operator to behave like a vector/array
-    CacheLine_t& operator[](size_t idx) { return *(begin() + idx); }
+    CacheLine_t& operator[](size_t idx) const { return *(begin() + idx); }
 
     /// Returns size of range
     size_t size() const { return end_ - begin_; }
 
+    /// Returns first entry
+    CacheLine_t& first() const { return operator[](0); }
+    /// Returns last entry
+    CacheLine_t& last() const { return operator[](size() - 1); }
+
+    inline size_t indexOf(CacheLine* entry) const
+    {
+        size_t index = 0; // index of entry
+        for (CacheLine& other : (*this))
+        {
+            if (&other == entry) break;
+            index++;
+        }
+        return index;
+    }
     /**
      * @brief Attempts to find a cache line with the given tag
      * @return Cache line with the given tag (may be null)
      */
     inline CacheLine_t* find(uint64_t tag) const
     {
-        auto iter = std::find_if(begin(), end(), [tag](CacheLine_t const& e){
-            return e.tag == tag;
-        });
-
-        if (iter == end()) return nullptr;
-        return &*iter;
+        for (CacheLine_t& e : (*this))
+        {
+            if (e.tag == tag) return &e;
+        }
+        return nullptr;
     }
 
     /**
@@ -70,12 +83,11 @@ struct CacheSet_t
      */
     inline CacheLine_t* findInvalid() const
     {
-        auto iter = std::find_if(begin(), end(), [](CacheLine_t const& e){
-            return !e.isValid();
-        });
-
-        if (iter == end()) return nullptr;
-        return &*iter;
+        for (CacheLine_t& e : (*this))
+        {
+            if (!e.isValid()) return &e;
+        }
+        return nullptr;
     }
 };
 

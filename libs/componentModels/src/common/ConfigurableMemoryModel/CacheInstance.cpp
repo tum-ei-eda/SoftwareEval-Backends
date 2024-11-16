@@ -84,6 +84,4 @@ cmm::CacheInstance::replace(CacheSet cacheSet, CacheLine &entry, CacheTag tag)
     // replace entry
     entry.tag = tag;
     entry.setFlag(CacheLine::Invalid, false);
-    // move to separate replacement strategy?
-    entry.data = 0x0;
 }
