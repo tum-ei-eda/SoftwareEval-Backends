@@ -437,6 +437,8 @@ cmm::MemoryInstanceManager::outputGeneralAccessStatistics() const
                   << std::setw(width) << std::right <<  memory.t_accesses << " memory accesses"
                   << std::endl;
     }
+
+    std::cout << std::endl;
 #endif
 }
 

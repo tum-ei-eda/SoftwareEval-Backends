@@ -61,7 +61,7 @@ cmm::CacheInstance::readAccess(uint64_t address)
             )
         }
         CMM_STATISTICS_ONLY(
-            else if (entry->flags & CacheLine::Uninitialized)
+            else if (entry->hasFlag(CacheLine::Uninitialized))
             {
                 t_compulsoryMisses++;
             }
@@ -89,5 +89,5 @@ cmm::CacheInstance::replace(CacheSet cacheSet, CacheLine &entry, CacheTag tag)
 {
     // replace entry
     entry.tag = tag;
-    entry.setFlag(CacheLine::Invalid, false);
+    entry.setFlag(CacheLine::Invalid | CacheLine::Uninitialized, false);
 }

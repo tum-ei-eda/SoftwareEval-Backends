@@ -51,10 +51,10 @@ struct CacheLine
     constexpr inline bool isValid() const { return !hasFlag(Invalid); }
 
     /// checks whether the flag is set
-    constexpr inline bool hasFlag(StatusFlag flag) const { return flags & flag; }
+    constexpr inline bool hasFlag(StatusFlags flag) const { return flags & flag; }
 
     /// sets the given flag for the cache line
-    constexpr inline void setFlag(StatusFlag flag, bool enable = true)
+    constexpr inline void setFlag(StatusFlags flag, bool enable = true)
     {
         enable ? flags |=  flag : flags &= ~flag;
     }
