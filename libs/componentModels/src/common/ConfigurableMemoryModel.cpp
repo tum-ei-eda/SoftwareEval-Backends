@@ -30,7 +30,7 @@ ConfigurableMemoryPort ::ConfigurableMemoryPort(std::string portId, PerformanceM
 }
 
 int
-ConfigurableMemoryPort::getDelay()
+ConfigurableMemoryPort::readDelay()
 {
     uint64_t address = addr_ptr[getInstrIndex()];
 
@@ -46,6 +46,32 @@ ConfigurableMemoryPort::getDelay()
         {
             assert(component);
             cmm::AccessDetails access = component->readAccess(address);
+            delay += access.delay;
+            if (access.hit) break;
+        }
+        break;
+    }
+
+    return delay;
+}
+
+int
+ConfigurableMemoryPort::writeDelay()
+{
+    uint64_t address = addr_ptr[getInstrIndex()];
+
+    int delay = 0;
+
+    // assumes sorted memory paths
+    for (MemoryPath& path : m_memoryPaths)
+    {
+        if (!path.contains(address)) continue;
+
+        // traverse memory path
+        for (MemoryComponent* component : path.components)
+        {
+            assert(component);
+            cmm::AccessDetails access = component->writeAccess(address);
             delay += access.delay;
             if (access.hit) break;
         }

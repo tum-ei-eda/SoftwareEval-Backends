@@ -49,6 +49,8 @@ public:
 
     virtual AccessDetails readAccess(uint64_t address) = 0;
 
+    virtual AccessDetails writeAccess(uint64_t address) = 0;
+
     /// name of component
     const std::string name{};
 };

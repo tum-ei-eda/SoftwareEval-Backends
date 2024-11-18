@@ -34,8 +34,10 @@ struct CacheLine
         NoFlag = 0,
         /// cache entry is invalid -> entry must be fetched to access
         Invalid = 1 << 0,
+        /// cache entry is dirty -> must be written back before replacement
+        Dirty = 1 << 1,
         /// cache entry is cold (used to detect compulsory misses)
-        Uninitialized = 1 << 1,
+        Uninitialized = 1 << 2,
         // TODO: Dirty Flag? Coherency Flags?
     };
     using StatusFlags = uint32_t;

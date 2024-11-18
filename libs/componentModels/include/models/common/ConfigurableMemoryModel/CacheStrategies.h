@@ -185,12 +185,10 @@ inline auto lifo(const CacheMemory& tagMemory)
 namespace update_strategy
 {
 
-/// default update strategy (does nothing)
+/// default update strategy (null function pointer)
 inline auto default_(const CacheMemory&)
 {
-    return [](CacheSet& set, CacheLine& entry) -> void {
-        // nothing to do here
-    };
+    return nullptr; // nothing to do here
 }
 
 /// updates the cache line and set according to the least frequently used

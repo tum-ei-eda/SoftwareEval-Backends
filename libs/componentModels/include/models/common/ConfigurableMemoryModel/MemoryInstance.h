@@ -43,6 +43,14 @@ public:
         return AccessDetails::makeHit(m_accessDelay);
     }
 
+    inline AccessDetails writeAccess(uint64_t address) override
+    {
+        CMM_STATISTICS_ONLY(
+            t_writes++;
+        )
+        return AccessDetails::makeHit(m_accessDelay);
+    }
+
 private:
 
     /// access delay
@@ -53,6 +61,7 @@ public:
     CMM_STATISTICS_ONLY(
         // variables solely used for debugging/statistical purpose
         uint32_t t_accesses = 0;
+        uint32_t t_writes = 0;
     )
 };
 

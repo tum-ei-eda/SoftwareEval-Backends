@@ -45,7 +45,11 @@ public:
      * and updates `cacheHit` property
      * @return Delay
      */
-    int getDelay(void) override;
+    int getDelay() override { return readDelay(); }
+
+    int readDelay();
+
+    int writeDelay();
 
     /// pointer to memory
     // TODO: more fitting name?
@@ -65,6 +69,16 @@ public:
 
     DMemoryPort(PerformanceModel* parent_) :
         ConfigurableMemoryPort("DPort", parent_)
+    { }
+
+};
+
+class DMemoryWritePort : public ConfigurableMemoryPort
+{
+public:
+
+    DMemoryWritePort(PerformanceModel* parent_) :
+        ConfigurableMemoryPort("DWPort", parent_)
     { }
 
 };

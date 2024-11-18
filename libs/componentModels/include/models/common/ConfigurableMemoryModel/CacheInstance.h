@@ -65,6 +65,8 @@ public:
      */
     AccessDetails readAccess(uint64_t address) override;
 
+    AccessDetails writeAccess(uint64_t address) override;
+
     CacheMemory const& cacheMemory() const { return m_tagMemory; }
 
 private:
@@ -79,6 +81,10 @@ private:
     const Delay m_hitDelay{1};
     /// delay if address was not cached
     const Delay m_missDelay{1};
+
+    const Delay m_writeBackDelay{1};
+
+    bool m_writeBack{true};
 
     /**
      * @brief Updates the status of the cache entry/cacheSet (e.g. access times)
@@ -99,10 +105,12 @@ public:
 
     CMM_STATISTICS_ONLY(
         // variables solely used for debugging/statistical purpose
-        uint32_t t_hits = 0;
-        uint32_t t_misses = 0;
+        uint32_t t_readHits = 0;
+        uint32_t t_readMisses = 0;
         uint32_t t_evictions = 0;
         uint32_t t_compulsoryMisses = 0;
+        uint32_t t_writeHits = 0;
+        uint32_t t_writeMisses = 0;
     )
 };
 

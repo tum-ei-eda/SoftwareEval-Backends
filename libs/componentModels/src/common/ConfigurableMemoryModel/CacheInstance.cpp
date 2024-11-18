@@ -32,7 +32,7 @@ cmm::CacheInstance::readAccess(uint64_t address)
     if (hit) // cache hit
     {
         CMM_STATISTICS_ONLY(
-            t_hits++;
+            t_readHits++;
             entry->t_hits++;
         )
 
@@ -43,7 +43,7 @@ cmm::CacheInstance::readAccess(uint64_t address)
 
     // cache miss
     CMM_STATISTICS_ONLY(
-        t_misses++;
+        t_readMisses++;
     )
 
     if (!entry)
@@ -77,10 +77,93 @@ cmm::CacheInstance::readAccess(uint64_t address)
     return AccessDetails::makeMiss(m_missDelay);
 }
 
+cmm::AccessDetails
+cmm::CacheInstance::writeAccess(uint64_t address)
+{
+    // write-allocate vs no write-allocate polcies & instructions
+    const CacheTag tag     = m_tagMemory.getTag(address);
+    const CacheIndex index = m_tagMemory.getIndex(address);
+
+    CacheSet cacheSet = m_tagMemory.getCacheSet(index);
+
+    CacheLine* entry = cacheSet.find(tag);
+
+    const bool hit = entry && entry->isValid();
+    if (hit) // cache hit -> update entry
+    {
+        CMM_STATISTICS_ONLY(
+            t_writeHits++;
+            entry->t_hits++; // TODO: write hits
+        )
+
+        Delay delay = m_hitDelay;
+
+        if (m_writeBack)
+        {
+            entry->setFlag(CacheEntry::Dirty, true);
+        }
+        else
+        {
+            delay += m_writeBackDelay;
+        }
+
+        update(cacheSet, *entry);
+
+        return AccessDetails::makeHit(delay);
+    }
+
+    // cache miss
+    CMM_STATISTICS_ONLY(
+        t_writeMisses++;
+    )
+
+    if (!entry)
+    {
+        // find entry to replace
+        entry = cacheSet.findInvalid();
+        if (!entry)
+        {
+            // evict valid entry
+            entry = m_evictionStrategy(cacheSet);
+
+            CMM_STATISTICS_ONLY(
+                t_evictions++;
+                entry->t_evictions++;
+            )
+        }
+        CMM_STATISTICS_ONLY(
+            else if (entry->hasFlag(CacheLine::Uninitialized))
+            {
+                t_compulsoryMisses++;
+            }
+        )
+    }
+
+    assert(entry);
+
+    Delay delay = m_missDelay;
+
+    // perform write back
+    if (entry->hasFlag(CacheLine::Dirty))
+    {
+        delay += m_writeBackDelay;
+    }
+
+    // replace entry
+    replace(cacheSet, *entry, tag);
+    update(cacheSet, *entry);
+
+    if (m_writeBack)
+    {
+        entry->setFlag(CacheEntry::Dirty, true);
+    }
+
+    return AccessDetails::makeMiss(m_missDelay);
+}
+
 void
 cmm::CacheInstance::update(CacheSet cacheSet, CacheLine &entry)
 {
-    // TODO: update cache entry/block? (e.g. access time)
     if (m_updateStrategy) m_updateStrategy(cacheSet, entry);
 }
 
