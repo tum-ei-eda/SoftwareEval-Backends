@@ -53,7 +53,7 @@ moveToTop(CacheSet& set, size_t index)
         //  1. swap entry no. 3 (which is equal to `entry`) and entry no. 2
         //  2. swap entry no. 2 (which is now `entry`) and entry no. 1
         // -> done
-        // now the entry is at the top of the set whereas the other entries
+        // now `entry` is at the top of the set whereas the other entries
         // have moved down a place
         cmm::CacheLine& moveUp   = set[index];
         cmm::CacheLine& moveDown = set[index - 1];
