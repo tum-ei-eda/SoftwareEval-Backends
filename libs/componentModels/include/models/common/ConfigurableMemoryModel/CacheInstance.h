@@ -71,6 +71,8 @@ public:
 
 private:
 
+    struct Impl;
+
     /// tag memory of cache
     CacheMemory m_tagMemory{};
     /// strategy to evict an entry of a cache cacheSet
@@ -85,21 +87,6 @@ private:
     const Delay m_writeBackDelay{1};
 
     bool m_writeBack{true};
-
-    /**
-     * @brief Updates the status of the cache entry/cacheSet (e.g. access times)
-     * @param cacheSet Cache cacheSet that holds the accessed entry
-     * @param entry Entry that was accessed
-     */
-    void update(CacheSet cacheSet, CacheLine& entry);
-
-    /**
-     * @brief Replaces the entry of the cache set.
-     * @param set Set that contains the entry to replace
-     * @param entry Entry to replace
-     * @param tag Tag to store in cache entry
-     */
-    void replace(CacheSet cacheSet, CacheLine& entry, CacheTag tag);
 
 public:
 
