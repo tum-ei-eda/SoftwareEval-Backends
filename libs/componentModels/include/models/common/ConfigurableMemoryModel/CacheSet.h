@@ -92,6 +92,7 @@ struct CacheSet_t
 };
 
 using CacheSet = CacheSet_t<CacheLine>;
+using ConstCacheSet = CacheSet_t<CacheLine const>;
 
 } // namespace cmm
 

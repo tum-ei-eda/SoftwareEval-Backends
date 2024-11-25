@@ -40,7 +40,7 @@ public:
         CMM_STATISTICS_ONLY(
             t_accesses++;
         )
-        return AccessDetails::makeHit(m_accessDelay);
+        return AccessDetails(m_accessDelay);
     }
 
     inline AccessDetails writeAccess(uint64_t address) override
@@ -48,7 +48,7 @@ public:
         CMM_STATISTICS_ONLY(
             t_writes++;
         )
-        return AccessDetails::makeHit(m_accessDelay);
+        return AccessDetails(m_accessDelay);
     }
 
 private:

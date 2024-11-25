@@ -30,11 +30,29 @@ using Delay = NamedType<int, struct Delay_>;
 
 struct AccessDetails
 {
-    Delay delay{0};
-    bool hit = false;
+    explicit AccessDetails(Delay delay_) : delay(delay_) {}
 
-    static constexpr inline AccessDetails makeHit(Delay delay)  { return {delay, true }; }
-    static constexpr inline AccessDetails makeMiss(Delay delay) { return {delay, false}; }
+    Delay delay{0};
+
+    bool finishedAccess = false;
+    bool updateSuccessors = false;
+    bool invalidateSuccessors = false;
+
+    constexpr inline AccessDetails& setFinishedAccess(bool value)
+    {
+        finishedAccess = value;
+        return *this;
+    }
+    constexpr inline AccessDetails& setUpdateSuccessors(bool value)
+    {
+        updateSuccessors = value;
+        return *this;
+    }
+    constexpr inline AccessDetails& setInvalidateSuccessors(bool value)
+    {
+        invalidateSuccessors = value;
+        return *this;
+    }
 };
 
 class MemoryComponent

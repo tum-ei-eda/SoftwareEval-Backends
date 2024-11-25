@@ -104,7 +104,7 @@ public:
      * @param index Index part
      * @return Cache block (#entries-per-block = #ways)
      */
-    inline CacheSet_t<CacheLine> getCacheSet(const CacheIndex index)
+    inline CacheSet getCacheSet(const CacheIndex index)
     {
         CacheLine* begin = (&*m_data.begin());
         const size_t baseIdx = index * m_ways;
@@ -112,7 +112,7 @@ public:
         return {begin + baseIdx, begin + baseIdx + m_ways};
     }
     /// const overload
-    inline CacheSet_t<CacheLine const> getCacheSet(const CacheIndex index) const
+    inline ConstCacheSet getCacheSet(const CacheIndex index) const
     {
         CacheLine const* begin = (&*m_data.begin());
         const size_t baseIdx = index * m_ways;

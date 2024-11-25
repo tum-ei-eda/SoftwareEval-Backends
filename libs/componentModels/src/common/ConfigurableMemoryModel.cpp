@@ -47,7 +47,7 @@ ConfigurableMemoryPort::readDelay()
             assert(component);
             cmm::AccessDetails access = component->readAccess(address);
             delay += access.delay;
-            if (access.hit) break;
+            if (access.finishedAccess) break;
         }
         break;
     }
@@ -73,7 +73,7 @@ ConfigurableMemoryPort::writeDelay()
             assert(component);
             cmm::AccessDetails access = component->writeAccess(address);
             delay += access.delay;
-            if (access.hit) break;
+            if (access.finishedAccess) break;
         }
         break;
     }

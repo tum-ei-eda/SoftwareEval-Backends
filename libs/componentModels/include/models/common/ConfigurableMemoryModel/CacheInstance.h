@@ -87,6 +87,7 @@ private:
     const Delay m_writeBackDelay{1};
 
     bool m_writeBack{true};
+    bool m_writeAllocate{true};
 
 public:
 

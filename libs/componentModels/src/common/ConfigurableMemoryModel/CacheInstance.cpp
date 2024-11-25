@@ -20,11 +20,11 @@
 
 struct cmm::CacheInstance::Impl
 {
-    static inline cmm::CacheEntry&
-    choseEntryToReplace(cmm::CacheInstance& cache, CacheSet cacheSet)
+    static inline cmm::CacheLine&
+    selectEntryForReplacement(cmm::CacheInstance& cache, CacheSet cacheSet)
     {
         // find empty entry
-        CacheEntry* entry = cacheSet.findInvalid();
+        CacheLine* entry = cacheSet.findInvalid();
         if (entry)
         {
             CMM_STATISTICS_ONLY(
@@ -51,8 +51,8 @@ struct cmm::CacheInstance::Impl
     }
 
     template <bool IsWrite>
-    static inline Delay
-    performHit(cmm::CacheInstance& cache, CacheSet cacheSet, CacheEntry& entry)
+    static inline AccessDetails
+    performHit(cmm::CacheInstance& cache, CacheSet cacheSet, CacheLine& entry)
     {
         CMM_STATISTICS_ONLY(
             if (IsWrite)
@@ -67,14 +67,16 @@ struct cmm::CacheInstance::Impl
             }
         )
 
+        bool const writeThrough = cache.m_writeBack;
+
         Delay delay = cache.m_hitDelay;
 
         if (IsWrite)
         {
             // mark as dirty
-            entry.setFlag(CacheEntry::Dirty, cache.m_writeBack);
+            entry.setFlag(CacheLine::Dirty, cache.m_writeBack);
             // write through
-            if (!cache.m_writeBack)
+            if (writeThrough)
             {
                 delay += cache.m_writeBackDelay;
             }
@@ -83,40 +85,63 @@ struct cmm::CacheInstance::Impl
         // update entry status
         if (cache.m_updateStrategy) cache.m_updateStrategy(cacheSet, entry);
 
-        return delay;
+        return AccessDetails{delay}
+            .setFinishedAccess(true) // = hit
+            .setUpdateSuccessors(writeThrough);
     }
 
     template <bool IsWrite>
-    static inline Delay
+    static inline AccessDetails
     performMiss(cmm::CacheInstance& cache, CacheSet cacheSet, CacheTag tag)
     {
+        if (!cache.m_writeAllocate)
+        {
+            // do not write entry into cache
+            return AccessDetails(cache.m_missDelay)
+                .setFinishedAccess(false); // = miss
+        }
+
         CMM_STATISTICS_ONLY(
             IsWrite ? cache.t_writeMisses++ :
                       cache.t_readMisses++;
         )
 
-        CacheEntry& entry = Impl::choseEntryToReplace(cache, cacheSet);
+        CacheLine& entry = Impl::selectEntryForReplacement(cache, cacheSet);
 
         Delay delay = cache.m_missDelay;
 
-        // perform write back
+        // old entry is dirty -> perform write back
         if (entry.hasFlag(CacheLine::Dirty))
         {
             delay += cache.m_writeBackDelay;
+            // TODO: invalidate old entry
         }
 
         // replace entry
         entry.tag = tag;
         entry.setFlag(CacheLine::Invalid | CacheLine::Uninitialized, false);
         // mark as dirty
-        entry.setFlag(CacheEntry::Dirty, cache.m_writeBack);
+        entry.setFlag(CacheLine::Dirty, cache.m_writeBack);
 
         // update entry status
         if (cache.m_updateStrategy) cache.m_updateStrategy(cacheSet, entry);
 
-        return delay;
+        return AccessDetails{delay}
+            .setFinishedAccess(false) // = miss
+            .setInvalidateSuccessors(cache.m_writeBack); // = write-back policy requires invalidation
+
+        // TODO: invalidation of parents should not remove entry entirely
     }
 
+    /**
+     * @brief Performs a read/write access to the given address.
+     * @param cache CacheInstance
+     * @param address Address to read form/write to
+     * @tparam IsWrite Flag indicating whether the function call is a read or
+     * write. The idea is to reduce code duplication and give the compiler a
+     * hand to optimize away the if-else conditions by using a value parameter.
+     * @return Access details
+     */
     template <bool IsWrite>
     static inline AccessDetails
     performAccess(cmm::CacheInstance& cache, uint64_t address)
@@ -125,33 +150,28 @@ struct cmm::CacheInstance::Impl
         const CacheIndex index = cache.m_tagMemory.getIndex(address);
 
         CacheSet cacheSet = cache.m_tagMemory.getCacheSet(index);
+        CacheLine* entry  = cacheSet.find(tag);
 
-        CacheLine* entry = cacheSet.find(tag);
+        // if entry was found it should be valid aswell
+        assert (!(entry && !entry->isValid()));
+
 
         const bool hit = entry && entry->isValid();
-        if (hit) // cache hit
-        {
-            Delay delay = Impl::performHit<IsWrite>(cache, cacheSet, *entry);
-            return AccessDetails::makeHit(delay);
-        }
-
-        // cache miss
-        assert (!entry);
-
-        Delay delay = performMiss<IsWrite>(cache, cacheSet, tag);
-        return AccessDetails::makeMiss(delay);
+        return hit ? Impl::performHit<IsWrite>(cache, cacheSet, *entry) :
+                     Impl::performMiss<IsWrite>(cache, cacheSet, tag);
     }
 };
 
 cmm::AccessDetails
 cmm::CacheInstance::readAccess(uint64_t address)
 {
-    return Impl::performAccess<false>(*this, address);
+    constexpr bool IsWrite = false;
+    return Impl::performAccess<IsWrite>(*this, address);
 }
 
 cmm::AccessDetails
 cmm::CacheInstance::writeAccess(uint64_t address)
 {
-    // write-allocate vs no write-allocate polcies & instructions
-    return Impl::performAccess<true>(*this, address);
+    constexpr bool IsWrite = true;
+    return Impl::performAccess<IsWrite>(*this, address);
 }
