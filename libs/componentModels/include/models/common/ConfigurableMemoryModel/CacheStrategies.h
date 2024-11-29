@@ -69,10 +69,10 @@ namespace eviction_strategy
 {
 
 /// selects pseudo-random cache line using a 8 bit linear feedback shift
-/// register (adopted from DCacheModel and wikipedia)
+/// register (adopted from DCacheModel)
 inline auto lfsr8bit(const CacheMemory& tagMemory)
 {
-    uint8_t shift_state = 0xAC; // seed
+    uint8_t shift_state = 0x00; // seed
     const size_t ways = tagMemory.ways() - 1;
 
     return [shift_state, ways](CacheSet& set) mutable -> CacheLine* {
@@ -80,7 +80,7 @@ inline auto lfsr8bit(const CacheMemory& tagMemory)
                              ((shift_state & 0x08) >> 3) ^
                              ((shift_state & 0x04) >> 2) ^
                              ((shift_state & 0x02) >> 1));
-        shift_state = (shift_state >> 1) | (shift_in << 7);
+        shift_state = (shift_state << 1) | (shift_in & 0x01);
         return &set[shift_state & ways];
     };
 }
