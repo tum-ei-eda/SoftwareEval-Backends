@@ -67,7 +67,8 @@ public:
 
     void outputGeneralAccessStatistics() const;
 
-
+    std::vector<CacheInstance>& caches() /*const*/ { return m_cacheInstances; }
+    std::vector<MemoryInstance> const& memories() const { return m_memoryInstances; }
 
 private:
 

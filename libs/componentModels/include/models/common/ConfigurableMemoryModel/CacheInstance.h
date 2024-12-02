@@ -69,6 +69,8 @@ public:
 
     CacheMemory const& cacheMemory() const { return m_tagMemory; }
 
+    void invalidate(uint64_t startAddress, size_t blockSize);
+
 private:
 
     struct Impl;
@@ -83,11 +85,19 @@ private:
     const Delay m_hitDelay{1};
     /// delay if address was not cached
     const Delay m_missDelay{1};
-
+    /// delay for writeback of dirty entry to next cache
     const Delay m_writeBackDelay{1};
+
+    std::vector<CacheInstance*> m_siblings;
 
     bool m_writeBack{true};
     bool m_writeAllocate{true};
+
+    void invalidateOtherCaches(uint64_t startAddress);
+
+    void makeDirty(CacheLine& entry, uint64_t address);
+
+    Delay writeBack(uint64_t address);
 
 public:
 
@@ -99,6 +109,8 @@ public:
         uint32_t t_compulsoryMisses = 0;
         uint32_t t_writeHits = 0;
         uint32_t t_writeMisses = 0;
+        uint32_t t_writeBacks = 0;
+        uint32_t t_makeDirty = 0;
     )
 };
 

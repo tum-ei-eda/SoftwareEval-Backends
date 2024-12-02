@@ -45,7 +45,7 @@ public:
      * and updates `cacheHit` property
      * @return Delay
      */
-    int getDelay() override { return readDelay(); }
+    int getDelay() override { return writeDelay(); }//(rand() % 1) == 0 ? writeDelay() : readDelay(); }
 
     int readDelay();
 
@@ -81,6 +81,7 @@ public:
         ConfigurableMemoryPort("DWPort", parent_)
     { }
 
+    int getDelay() override { return writeDelay(); }
 };
 
 class IMemoryPort : public ConfigurableMemoryPort
@@ -91,6 +92,8 @@ public:
         ConfigurableMemoryPort("IPort", parent_),
         pc_ptr(ConfigurableMemoryPort::addr_ptr)
     { }
+
+    int getDelay() override { return readDelay(); }
 
     // alias for addr_ptr
     uint64_t*& pc_ptr;

@@ -412,20 +412,26 @@ cmm::MemoryInstanceManager::outputGeneralAccessStatistics() const
     for (CacheInstance const& cache : m_cacheInstances)
     {
         // output statistics
-        unsigned total = cache.t_readHits + cache.t_readMisses;
+        size_t totalHits   = cache.t_readHits + cache.t_writeHits;
+        size_t totalMisses = cache.t_readMisses + cache.t_writeMisses;
+
+        size_t total = totalHits + totalMisses;
+
 
         // basic statistics
         std::cout << " " << cache.name << ":\n  "
-                  << std::setw(width) << std::right <<  cache.t_readHits                      << " cache hits ("
-                  << std::setprecision(precision)   << (cache.t_readHits * 100.0) / total     << "%) and" "\n  "
-                  << std::setw(width) << std::right <<  cache.t_readMisses                    << " cache misses ("
-                  << std::setprecision(precision)   << (cache.t_readMisses * 100.0) / total   << "%) with" "\n  "
-                  << std::setw(width) << std::right <<  cache.t_compulsoryMisses          << " compulsory misses ("
+                  << std::setw(width) << std::right << totalHits                              << " cache hits ("
+                  << std::setprecision(precision)   << (totalHits * 100.0) / total            << "%) and" "\n  "
+                  << std::setw(width) << std::right <<  totalMisses                           << " cache misses ("
+                  << std::setprecision(precision)   << (totalMisses * 100.0) / total          << "%) with" "\n  "
+                  << std::setw(width) << std::right <<  cache.t_compulsoryMisses              << " compulsory misses ("
                   << std::setprecision(precision)   << (cache.t_compulsoryMisses * 100.0)
-                                                        / cache.t_readMisses                  << "%) and" "\n  "
-                  << std::setw(width) << std::right <<  cache.t_evictions                 << " evictions ("
+                                                        / totalMisses                         << "%) and" "\n  "
+                  << std::setw(width) << std::right <<  cache.t_evictions                     << " evictions ("
                   << std::setprecision(precision)   << (cache.t_evictions * 100.0)
-                                                        / cache.t_readMisses                  << "%)"
+                                                        / totalMisses                         << "%)" "\n  "
+                  << std::setw(width) << std::right <<  cache.t_makeDirty                     << " dirty writes and " "\n  "
+                  << std::setw(width) << std::right <<  cache.t_writeBacks                    << " write backs"
                   << std::endl;
     }
 

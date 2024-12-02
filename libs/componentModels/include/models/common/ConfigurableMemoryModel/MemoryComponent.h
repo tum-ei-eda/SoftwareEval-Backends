@@ -34,18 +34,21 @@ struct AccessDetails
 
     Delay delay{0};
 
-    bool finishedAccess = false;
-    bool updateSuccessors = false;
-    bool invalidateSuccessors = false;
+    bool wasEntryFound = false; // hit or miss in cache
+    bool performWriteBack = false; // whether to perform write back on next level
+    bool invalidateSuccessors = false; // whether to invalidate next levels
 
-    constexpr inline AccessDetails& setFinishedAccess(bool value)
+    uint64_t writeBackAddress = 0x0;
+
+    constexpr inline AccessDetails& setEntryFound(bool value)
     {
-        finishedAccess = value;
+        wasEntryFound = value;
         return *this;
     }
-    constexpr inline AccessDetails& setUpdateSuccessors(bool value)
+    constexpr inline AccessDetails& setPerformWriteBack(bool value, uint64_t address = 0x0)
     {
-        updateSuccessors = value;
+        performWriteBack = value;
+        writeBackAddress = address;
         return *this;
     }
     constexpr inline AccessDetails& setInvalidateSuccessors(bool value)

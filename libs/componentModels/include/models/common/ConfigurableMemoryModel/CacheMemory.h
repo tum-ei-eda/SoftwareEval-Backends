@@ -23,13 +23,15 @@
 #include <vector>
 #include <cmath>
 #include <cassert>
+#include <limits>
 
 namespace cmm
 {
 
 // stongly named types for tag and index part of an address
-using CacheTag   = NamedType<uint64_t, struct Tag_>;
-using CacheIndex = NamedType<uint64_t, struct Index_>;
+using CacheTag    = NamedType<uint64_t, struct Tag_>;
+using CacheIndex  = NamedType<uint64_t, struct Index_>;
+using CacheOffset = NamedType<uint64_t, struct Offset_>;
 
 /// Implements a tag memory of a cache and provides simple access to
 /// cache sets and their cache lines.
@@ -99,6 +101,11 @@ public:
         return CacheIndex{(addr >> m_offsetBits) & ~(getTag(addr) << m_indexBits)};
     }
 
+    // inline CacheOffset getOffset(const uint64_t addr) const
+    // {
+    //     return CacheOffset{addr & ~(std::numeric_limits<uint64_t>::max() << m_offsetBits)};
+    // }
+
     /**
      * @brief Returns the cache set of the given block index
      * @param index Index part
@@ -118,6 +125,18 @@ public:
         const size_t baseIdx = index * m_ways;
 
         return {begin + baseIdx, begin + baseIdx + m_ways};
+    }
+
+    inline uint64_t getStartAddress(uint64_t address) const
+    {
+        return (getTag(address) << m_indexBits << m_offsetBits) | (getIndex(address) << m_offsetBits);
+    }
+    inline uint64_t getStartAddress(CacheSet cacheSet, CacheLine& entry) const
+    {
+        size_t rawIndex = cacheSet.begin() -  &(*m_data.begin());
+        CacheIndex index{rawIndex / m_ways};
+
+        return (entry.tag << m_indexBits << m_offsetBits) | (index << m_offsetBits);
     }
 
     inline uint64_t indexBits() const { return m_indexBits; }
