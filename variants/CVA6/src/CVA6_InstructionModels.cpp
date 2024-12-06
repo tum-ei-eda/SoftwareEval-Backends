@@ -215,7 +215,7 @@
 #define PE_TIMEFUNC_EX_STAGE_MUL uint64_t n_ex_1, n_ex_done, n_ex_leave;\
   n_ex_1 = n_is_leave +1;\
   perfModel->ExStage.set_leaveMulI(n_ex_1);\
-  n_ex_done = n_is_leave +1;\
+  n_ex_done = n_ex_1 +1;\
   perfModel->ExStage.set_leaveMulO(n_ex_done);\
   perfModel->regModel.setXd(n_ex_done);\
   PE_TIMEFUNC_EX_STAGE_LEAVE
@@ -870,4 +870,25 @@ static InstructionModel *instrModel_srliw = new InstructionModel(
   "srliw",
   65,
   PE_TIMEFUNC_ARITH_RS1
+);
+
+static InstructionModel *instrModel_sllw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "sllw",
+  66,
+  PE_TIMEFUNC_ARITH_RS1_RS2
+);
+
+static InstructionModel *instrModel_srlw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "srlw",
+  67,
+  PE_TIMEFUNC_ARITH_RS1_RS2
+);
+
+static InstructionModel *instrModel_sraw = new InstructionModel(
+  CVA6_InstrModelSet,
+  "sraw",
+  68,
+  PE_TIMEFUNC_ARITH_RS1_RS2
 );
