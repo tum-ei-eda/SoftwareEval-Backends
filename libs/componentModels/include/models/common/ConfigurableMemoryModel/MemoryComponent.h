@@ -19,6 +19,7 @@
 
 #include "./Utilities.h"
 
+#include <cassert>
 #include <stdint.h>
 #include <string>
 
@@ -58,6 +59,7 @@ struct AccessDetails
     }
 };
 
+struct ComponentRange;
 class MemoryComponent
 {
 public:
@@ -68,14 +70,45 @@ public:
 
     virtual ~MemoryComponent() = default;
 
-    virtual AccessDetails readAccess(uint64_t address) = 0;
+    virtual AccessDetails readAccess(uint64_t address, ComponentRange range) = 0;
 
-    virtual AccessDetails writeAccess(uint64_t address) = 0;
+    virtual AccessDetails writeAccess(uint64_t address, ComponentRange range) = 0;
 
     /// name of component
     const std::string name{};
 };
 
+struct ComponentRange
+{
+    MemoryComponent** b{};
+    MemoryComponent** e{};
+
+    MemoryComponent** begin() const { return b; }
+    MemoryComponent** end() const { return e; }
+
+    inline bool hasNextComponent() const { return begin() != end(); }
+
+    inline void advance()
+    {
+        assert(hasNextComponent());
+        ++b;
+    }
+
+    inline MemoryComponent* nextComponent() const
+    {
+        assert(hasNextComponent());
+        return *begin();
+    }
+
+    inline ComponentRange nextRange() const
+    {
+        ComponentRange cpy{*this};
+        cpy.advance();
+        return cpy;
+    }
+};
+
+using ComponentHierarchy = ComponentRange;
 
 } // namespace cmm
 

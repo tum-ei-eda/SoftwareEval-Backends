@@ -17,7 +17,7 @@
 #ifndef CONFIGURABLE_MEMORY_MODEL_CACHE_STRATEGIES_H
 #define CONFIGURABLE_MEMORY_MODEL_CACHE_STRATEGIES_H
 
-#include "./CacheMemory.h"
+#include "./CacheInstance.h"
 
 #include <random>
 #include <algorithm>
@@ -147,6 +147,8 @@ inline auto plru(const CacheMemory& tagMemory)
     };
 }
 
+// TODO: implement PLRU (pseudo LRU with binary tree)
+
 /// evicts the entries in the order they were added
 /// NOTE: assumes that no entry is invalidated in between as
 ///       this would require reordering (e.g. due to writeback)
@@ -173,8 +175,6 @@ inline auto lifo(const CacheMemory& tagMemory)
         return &set.last();
     };
 }
-
-// TODO: implement PLRU (pseudo LRU with binary tree)
 
 } // namespace eviction_strategy
 
@@ -246,6 +246,82 @@ inline auto plru(const CacheMemory& tagMemory)
 }
 
 } // namespace update_strategy
+
+namespace write_strategy
+{
+
+// TODO: brief
+inline auto writeThrough()
+{
+    return [](CacheInstance& cache,
+              CacheSet cacheSet,
+              CacheLine& entry,
+              ComponentHierarchy hierarchy,
+              uint64_t address,
+              bool isMiss) -> Delay {
+        // invalidate address on same level
+        cache.emitInvalidation(address);
+        // writeback to next component
+        return cache.writeBackToNextLevel(hierarchy, address);
+    };
+}
+
+// TODO: brief
+/// Assuming:
+/// 1. cache is "alone" on its level no invalidations are
+///    necessary to other caches
+/// 2. next level is not accessed without prior access to this
+///    cache
+inline auto writeBack()
+{
+    return [](CacheInstance& cache,
+              CacheSet cacheSet,
+              CacheLine& entry,
+              ComponentHierarchy hierarchy,
+              uint64_t address,
+              bool isMiss) -> Delay {
+        // mark as dirty
+        cache.makeEntryDirty(entry);
+        return Delay{0};
+    };
+}
+
+}
+
+namespace replacement_strategy
+{
+
+// TODO: brief
+inline auto default_()
+{
+    return [](CacheInstance& cache,
+              CacheSet cacheSet,
+              ComponentHierarchy hierarchy,
+              uint64_t address,
+              CacheTag tag,
+              bool isWrite) -> std::pair<Delay, CacheLine*> {
+        Delay delay{0};
+        // find entry to invalidate
+        CacheLine* entry = cache.findEmptyEntry(cacheSet);
+        if (!entry)
+        {
+            entry = cache.evictValidEntry(cacheSet);
+            assert(entry);
+        }
+        // writeback if dirty
+        if (entry->hasFlag(CacheLine::Dirty))
+        {
+            uint64_t oldAddress = cache.cacheMemory().getAddress(cacheSet, *entry);
+            delay += cache.writeBackToNextLevel(hierarchy, oldAddress);
+        }
+        // replace entry
+        entry->tag = tag;
+        entry->setFlag(CacheLine::Invalid | CacheLine::Dirty, false);
+        return {delay, entry};
+    };
+}
+
+}
 
 } // namespace cmm
 

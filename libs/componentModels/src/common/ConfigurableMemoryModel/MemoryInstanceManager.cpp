@@ -302,49 +302,51 @@ cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
               << tagMemory.offsetBits() << " offset bits" << std::endl;
 
     // replacement strategy
-    std::string replacementStrategy;
-    if (!loadFromConfig(config, configPath + ".replacement_strategy", replacementStrategy))
+    std::string evictionStrategyName;
+    if (!loadFromConfig(config, configPath + ".replacement_strategy", evictionStrategyName))
     {
         throw std::logic_error("'" + configPath + ".type' is not defined!");
     }
 
-    std::cout << "INFO:   using replacement strategy '" << replacementStrategy << "'" << std::endl;
+    std::cout << "INFO:   using replacement strategy '" << evictionStrategyName << "'" << std::endl;
 
     CacheInstance::EvictionStrategyFunctor evictionStrategy{};
     CacheInstance::UpdateStrategyFunctor updateStrategy = update_strategy::default_(tagMemory);
+    CacheInstance::ReplacementStrategyFunctor replacementStrategy = replacement_strategy::default_();
+    CacheInstance::WriteStrategyFunctor writeStrategy = write_strategy::writeBack();
 
-    if (replacementStrategy == "LFSR")
+    if (evictionStrategyName == "LFSR")
     {
         evictionStrategy = eviction_strategy::lfsr8bit(tagMemory);
     }
-    else if (replacementStrategy == "RANDOM")
+    else if (evictionStrategyName == "RANDOM")
     {
         evictionStrategy = eviction_strategy::random(tagMemory);
     }
-    else if (replacementStrategy == "LRU")
+    else if (evictionStrategyName == "LRU")
     {
         evictionStrategy = eviction_strategy::lru(tagMemory);
         updateStrategy = update_strategy::lru(tagMemory);
     }
-    else if (replacementStrategy == "MRU")
+    else if (evictionStrategyName == "MRU")
     {
         evictionStrategy = eviction_strategy::mru(tagMemory);
         updateStrategy = update_strategy::mru(tagMemory);
     }
-    else if (replacementStrategy == "PLRU")
+    else if (evictionStrategyName == "PLRU")
     {
         evictionStrategy = eviction_strategy::plru(tagMemory);
         updateStrategy = update_strategy::plru(tagMemory);
     }
-    else if (replacementStrategy == "FIFO")
+    else if (evictionStrategyName == "FIFO")
     {
         evictionStrategy = eviction_strategy::fifo(tagMemory);
     }
-    else if (replacementStrategy == "LIFO")
+    else if (evictionStrategyName == "LIFO")
     {
         evictionStrategy = eviction_strategy::lifo(tagMemory);
     }
-    else if (replacementStrategy == "LFU")
+    else if (evictionStrategyName == "LFU")
     {
         evictionStrategy  = eviction_strategy::lfu(tagMemory);
         updateStrategy = update_strategy::lfu(tagMemory);
@@ -352,12 +354,14 @@ cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
     else
     {
         throw std::logic_error(std::string(__FUNCTION__) +
-                               "Replacement strategy '" + replacementStrategy + "' is unkown!");
+                               "Replacement strategy '" + evictionStrategyName + "' is unkown!");
     }
 
     m_cacheInstances.emplace_back(
         name,
         std::move(tagMemory),
+        std::move(replacementStrategy),
+        std::move(writeStrategy),
         std::move(evictionStrategy),
         std::move(updateStrategy),
         Delay{hitDelay},

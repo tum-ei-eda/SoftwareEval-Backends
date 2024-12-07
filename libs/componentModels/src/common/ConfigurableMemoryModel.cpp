@@ -22,6 +22,9 @@
 
 #include <string>
 
+using MemoryComponent = cmm::MemoryComponent;
+using ComponentRange  = cmm::ComponentRange;
+
 ConfigurableMemoryPort ::ConfigurableMemoryPort(std::string portId, PerformanceModel* parent_) :
     ResourceModel(std::move(portId), parent_),
     m_handle(MemoryInstanceManager::instance())
@@ -42,10 +45,13 @@ ConfigurableMemoryPort::readDelay()
         if (!path.contains(address)) continue;
 
         // traverse memory path
-        for (MemoryComponent* component : path.components)
+        auto iter = path.components.begin();
+        auto end  = path.components.end();
+        for (; iter != end; ++iter)
         {
+            MemoryComponent* component = *iter;
             assert(component);
-            cmm::AccessDetails access = component->readAccess(address);
+            cmm::AccessDetails access = component->readAccess(address, ComponentRange{(&*iter) + 1, &*end});
             delay += access.delay;
             if (access.wasEntryFound) break;
         }
@@ -68,10 +74,13 @@ ConfigurableMemoryPort::writeDelay()
         if (!path.contains(address)) continue;
 
         // traverse memory path
-        for (MemoryComponent* component : path.components)
+        auto iter = path.components.begin();
+        auto end  = path.components.end();
+        for (; iter != end; ++iter)
         {
+            MemoryComponent* component = *iter;
             assert(component);
-            cmm::AccessDetails access = component->writeAccess(address);
+            cmm::AccessDetails access = component->writeAccess(address, ComponentRange{(&*iter) + 1, &*end});
             delay += access.delay;
             if (access.wasEntryFound) break;
         }

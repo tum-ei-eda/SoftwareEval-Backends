@@ -36,9 +36,11 @@ struct CacheLine
         Invalid = 1 << 0,
         /// cache entry is dirty -> must be written back before replacement
         Dirty = 1 << 1,
-        /// cache entry is cold (used to detect compulsory misses)
+        /// cache entry is cold -> compulsory miss
         Uninitialized = 1 << 2,
-        // TODO: Dirty Flag? Coherency Flags?
+        /// base value for custom flags. e.g:
+        ///   auto MyFlag = UserFlag << 1;
+        UserFlag = 1 << 3,
     };
     using StatusFlags = uint32_t;
 
@@ -69,8 +71,6 @@ struct CacheLine
         uint32_t t_evictions = 0;
     )
 };
-
-using CacheEntry [[deprecated("Use CacheLine instead")]] = CacheLine;
 
 } // namespace cmm
 

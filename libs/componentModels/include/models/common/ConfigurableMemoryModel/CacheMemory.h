@@ -40,6 +40,12 @@ class CacheMemory
     using container_type = std::vector<CacheLine>;
 
 public:
+
+    // compile time constant for address width
+    static constexpr size_t ADDRESS_WIDTH  = 32;
+    // compile time constant for word size
+    static constexpr size_t BYTES_PER_WORD = ADDRESS_WIDTH / 8;
+
     using value_type = typename container_type::value_type;
     using size_type = typename container_type::size_type;
 
@@ -48,17 +54,28 @@ public:
                        const size_type sets,
                        const size_type lineSize)
     {
-        constexpr size_t wordSize = 4; // bytes in 1 words
-
         m_ways = ways;
         m_sets = sets;
         m_lineSize = lineSize;
 
         m_data.resize(ways * sets);
 
-        m_offsetBits = ceil(log2(wordSize)) + // offset to index byte in a word
-                       ceil(log2(lineSize));  // offset to index word in block
-        m_indexBits  = ceil(log2(sets));      // index for blocks
+        m_offsetBits = ceil(log2(BYTES_PER_WORD)) + // offset to index byte in a word
+                       ceil(log2(lineSize));        // offset to index word in a cache line
+        m_indexBits  = ceil(log2(sets));            // index for blocks
+    }
+
+    /**
+     * @brief Invlaidates the entire cache
+     */
+    inline void invalidate()
+    {
+        for (CacheLine& line : m_data)
+        {
+            line.flags = CacheLine::Invalid | CacheLine::Uninitialized;
+            line.tag   = 0x0;
+            line.data  = 0x0;
+        }
     }
 
     /// returns number of ways per set
@@ -101,10 +118,17 @@ public:
         return CacheIndex{(addr >> m_offsetBits) & ~(getTag(addr) << m_indexBits)};
     }
 
-    // inline CacheOffset getOffset(const uint64_t addr) const
-    // {
-    //     return CacheOffset{addr & ~(std::numeric_limits<uint64_t>::max() << m_offsetBits)};
-    // }
+    /**
+     * @brief Extracts the offset part of the address in words which would be
+     * used to retrieve a word from a cache line.
+     * @param addr Memory address
+     * @return Word offset
+     */
+    inline CacheOffset getOffset(const uint64_t addr) const
+    {
+        constexpr uint64_t mask = std::numeric_limits<uint64_t>::max();
+        return CacheOffset{addr & ~(mask << m_offsetBits) / BYTES_PER_WORD};
+    }
 
     /**
      * @brief Returns the cache set of the given block index
@@ -127,11 +151,11 @@ public:
         return {begin + baseIdx, begin + baseIdx + m_ways};
     }
 
-    inline uint64_t getStartAddress(uint64_t address) const
+    inline uint64_t getAddress(uint64_t address) const
     {
         return (getTag(address) << m_indexBits << m_offsetBits) | (getIndex(address) << m_offsetBits);
     }
-    inline uint64_t getStartAddress(CacheSet cacheSet, CacheLine& entry) const
+    inline uint64_t getAddress(CacheSet cacheSet, CacheLine& entry) const
     {
         size_t rawIndex = cacheSet.begin() -  &(*m_data.begin());
         CacheIndex index{rawIndex / m_ways};

@@ -35,7 +35,7 @@ public:
         m_accessDelay(accessDelay)
     { }
 
-    inline AccessDetails readAccess(uint64_t address) override
+    inline AccessDetails readAccess(uint64_t address, ComponentRange range) override
     {
         CMM_STATISTICS_ONLY(
             t_accesses++;
@@ -43,7 +43,7 @@ public:
         return AccessDetails(m_accessDelay);
     }
 
-    inline AccessDetails writeAccess(uint64_t address) override
+    inline AccessDetails writeAccess(uint64_t address, ComponentRange range) override
     {
         CMM_STATISTICS_ONLY(
             t_writes++;

@@ -28,7 +28,6 @@ class ConfigurableMemoryPort : public ResourceModel
 {
 public:
 
-    using MemoryComponent = cmm::MemoryComponent;
     using MemoryInstanceManager = cmm::MemoryInstanceManager;
     using MemoryPath = MemoryInstanceManager::MemoryPath;
 
@@ -45,7 +44,11 @@ public:
      * and updates `cacheHit` property
      * @return Delay
      */
-    int getDelay() override { return writeDelay(); }//(rand() % 1) == 0 ? writeDelay() : readDelay(); }
+    int getDelay() override {
+        return //writeDelay();
+            //readDelay();
+            (rand() % 2) == 0 ? writeDelay() : readDelay();
+    }
 
     int readDelay();
 

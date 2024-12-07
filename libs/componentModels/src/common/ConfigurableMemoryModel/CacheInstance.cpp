@@ -19,45 +19,16 @@
 #include <unordered_map>
 #include <iostream>
 
-std::unordered_map<uint64_t, cmm::CacheInstance*> s_dirtyEntries;
-
 struct cmm::CacheInstance::Impl
 {
-    static inline cmm::CacheLine&
-    selectEntryForReplacement(cmm::CacheInstance& cache, CacheSet cacheSet)
-    {
-        // find empty entry
-        CacheLine* entry = cacheSet.findInvalid();
-        if (entry)
-        {
-            CMM_STATISTICS_ONLY(
-                if (entry->hasFlag(CacheLine::Uninitialized))
-                {
-                    cache.t_compulsoryMisses++;
-                }
-            )
-
-            return *entry;
-        }
-
-        // find valid entry to evict
-        entry = cache.m_evictionStrategy(cacheSet);
-
-        assert(entry);
-
-        CMM_STATISTICS_ONLY(
-            cache.t_evictions++;
-            entry->t_evictions++;
-        )
-        return *entry;
-
-    }
-
     template <bool IsWrite>
-    static inline cmm::AccessDetails
-    performHit(cmm::CacheInstance& cache, uint64_t startAddress, CacheSet cacheSet, CacheLine& entry)
+    static inline AccessDetails
+    performHit(CacheInstance& cache,
+               uint64_t address,
+               CacheSet cacheSet,
+               CacheLine& entry,
+               ComponentRange hierarchy)
     {
-
         CMM_STATISTICS_ONLY(
             if (IsWrite)
             {
@@ -73,100 +44,66 @@ struct cmm::CacheInstance::Impl
 
         Delay delay = cache.m_hitDelay;
 
+        // update status of this entry
+        cache.updateEntryStatus(cacheSet, entry);
+
         if (IsWrite)
         {
-            // invalidate address in other caches
-            cache.invalidateOtherCaches(startAddress);
-
-            if (cache.m_writeBack)
-            {
-                cache.makeDirty(entry, startAddress);
-            }
-            else // write through
-            {
-                delay += cache.m_writeBackDelay;
-                delay += cache.writeBack(startAddress);
-            }
-
-            // TODO: mark as dirty in successor nodes
-            // TODO: write through to successor caches
+            constexpr bool IsMiss = false;
+            cache.m_writeStrategy(cache, cacheSet, entry, hierarchy, address, IsMiss);
         }
 
-        // update entry status
-        if (cache.m_updateStrategy) cache.m_updateStrategy(cacheSet, entry);
-
-        return cmm::AccessDetails{delay}
-            .setEntryFound(true) // = hit
-            ;
+        return AccessDetails{delay}.setEntryFound(true);
     }
 
     template <bool IsWrite>
-    static inline cmm::AccessDetails
-    performMiss(cmm::CacheInstance& cache, uint64_t startAddress, CacheSet cacheSet, CacheTag tag)
+    static inline AccessDetails
+    performMiss(CacheInstance& cache, uint64_t address, CacheSet cacheSet, CacheTag tag, ComponentRange hierarchy)
     {
-        if (!cache.m_writeAllocate)
-        {
-            // do not write entry into cache
-            // TODO: option to invalidate entire cache?
-            return AccessDetails(cache.m_missDelay)
-                .setEntryFound(false); // = miss
-        }
-
+        // TODO: support no allocate caches!
         CMM_STATISTICS_ONLY(
-            IsWrite ? cache.t_writeMisses++ :
-                      cache.t_readMisses++;
+            if (IsWrite)
+            {
+                cache.t_writeMisses++;
+            }
+            else
+            {
+                cache.t_readMisses++;
+            }
         )
-
-
-        CacheLine& entry = Impl::selectEntryForReplacement(cache, cacheSet);
 
         Delay delay = cache.m_missDelay;
 
-        // TODO: old entry is dirty -> perform write back
-        // TODO: write back to memory or next cache?
-        if (entry.hasFlag(CacheLine::Dirty))
+        // fetch from next components
+        if (hierarchy.hasNextComponent())
         {
-            uint64_t writeBackAddress = cache.cacheMemory()
-                                            .getStartAddress(cacheSet, entry);
-            cache.writeBack(writeBackAddress);
-            delay += cache.m_writeBackDelay;
+            auto* next = hierarchy.nextComponent();
+            delay += next->readAccess(address, hierarchy.nextRange()).delay;
         }
 
-        // replace entry
-        entry.tag = tag;
-        entry.setFlag(CacheLine::Invalid |
-                      CacheLine::Uninitialized |
-                      CacheLine::Dirty, false);
+        // perform replacement
+        auto retVal = cache.m_replacementStrategy(cache, cacheSet, hierarchy, address, tag, IsWrite);
+        auto* entry = std::get<CacheLine*>(retVal);
+        assert(entry);
+
+        delay += std::get<Delay>(retVal);
+
+        // update status of this entry
+        cache.updateEntryStatus(cacheSet, *entry);
 
         if (IsWrite)
         {
-            // invalidate address in other caches
-            cache.invalidateOtherCaches(startAddress);
-
-            if (cache.m_writeBack && !entry.hasFlag(CacheLine::Dirty))
-            {
-                cache.makeDirty(entry, startAddress);
-            }
-            else // write through
-            {
-                delay += cache.m_writeBackDelay;
-                delay += cache.writeBack(startAddress);
-            }
+            constexpr bool IsMiss = true;
+            cache.m_writeStrategy(cache, cacheSet, *entry, hierarchy, address, IsMiss);
         }
 
-        // update entry status
-        if (cache.m_updateStrategy) cache.m_updateStrategy(cacheSet, entry);
-
-        return cmm::AccessDetails{delay}
-            .setEntryFound(false) // = miss
-            ;
-
+        return AccessDetails{delay}.setEntryFound(true);
     }
 
     /**
      * @brief Performs a read/write access to the given address.
      * @param cache CacheInstance
-     * @param address Address to read form/write to
+     * @param address Address to read form/write to (not aligned to cache line)
      * @tparam IsWrite Flag indicating whether the function call is a read or
      * write. The idea is to reduce code duplication and give the compiler a
      * hand to optimize away the if-else conditions by using a compile-time
@@ -174,8 +111,8 @@ struct cmm::CacheInstance::Impl
      * @return Access details
      */
     template <bool IsWrite>
-    static inline cmm::AccessDetails
-    performAccess(cmm::CacheInstance& cache, uint64_t address)
+    static inline AccessDetails
+    performAccess(CacheInstance& cache, uint64_t address, ComponentRange range)
     {
         const CacheTag tag     = cache.m_tagMemory.getTag(address);
         const CacheIndex index = cache.m_tagMemory.getIndex(address);
@@ -186,42 +123,41 @@ struct cmm::CacheInstance::Impl
         // if entry was found it should be valid aswell
         assert (!(entry && !entry->isValid()));
 
-        uint64_t startAddress = cache.m_tagMemory.getStartAddress(address);
-
-        // static int i = 0;
-        // if (i < 50)
-        // {
-        //     i++;
-        //     std::cout << "HERE " << std::hex << address << " vs " << startAddress << " vs orig: " << (entry ? cache.m_tagMemory.getStartAddress(cacheSet, *entry) : 0xFFFFFFFF) << std::dec << std::endl;
-        // }
+        // address aligned to cache line
+        uint64_t baseAddress = cache.m_tagMemory.getAddress(address);
 
         const bool hit = entry && entry->isValid();
-        return hit ? Impl::performHit<IsWrite>(cache, startAddress, cacheSet, *entry) :
-                     Impl::performMiss<IsWrite>(cache, startAddress, cacheSet, tag);
+        return hit ? Impl::performHit<IsWrite>(cache, baseAddress, cacheSet, *entry, range) :
+                     Impl::performMiss<IsWrite>(cache, baseAddress, cacheSet, tag, range);
     }
 };
 
 cmm::AccessDetails
-cmm::CacheInstance::readAccess(uint64_t address)
+cmm::CacheInstance::readAccess(uint64_t address, ComponentRange range)
 {
     constexpr bool IsWrite = false;
-    return Impl::performAccess<IsWrite>(*this, address);
+    return Impl::performAccess<IsWrite>(*this, address, range);
 }
 
 cmm::AccessDetails
-cmm::CacheInstance::writeAccess(uint64_t address)
+cmm::CacheInstance::writeAccess(uint64_t address, ComponentRange range)
 {
     constexpr bool IsWrite = true;
-    return Impl::performAccess<IsWrite>(*this, address);
+    return Impl::performAccess<IsWrite>(*this, address, range);
 }
 
 void
-cmm::CacheInstance::invalidate(uint64_t startAddress, size_t blockSize)
+cmm::CacheInstance::invalidate(uint64_t address, size_t blockSize)
 {
-    // TODO: check that startAddress and blockSize are not overlapping multiple blocks
+    const CacheTag tag     = m_tagMemory.getTag(address);
+    const CacheIndex index = m_tagMemory.getIndex(address);
 
-    const CacheTag tag     = m_tagMemory.getTag(startAddress);
-    const CacheIndex index = m_tagMemory.getIndex(startAddress);
+    // check that the address range which should be invalidated does not
+    // overlapp multiple cache lines as this is not handled currently
+    assert(m_tagMemory.getIndex(address) ==
+           m_tagMemory.getIndex(address + blockSize) &&
+           "Address spans multiple cache lines! "
+           "Additionaly logic is needed to invalidate all affected cache lines!");
 
     CacheSet cacheSet = m_tagMemory.getCacheSet(index);
     CacheLine* entry  = cacheSet.find(tag);
@@ -231,53 +167,23 @@ cmm::CacheInstance::invalidate(uint64_t startAddress, size_t blockSize)
     // entry should not be dirty
     assert(!entry->hasFlag(CacheLine::Dirty));
 
-    std::cout << "INVALIDATING: " << std::hex << startAddress << std::dec << std::endl;
-
     // reset flags
-    entry->setFlag(CacheLine::Invalid |
-                   CacheLine::Uninitialized, false);
+    entry->setFlag(CacheLine::Invalid, false);
     entry->tag = 0x0;
 
-    // TODO: notify repalcement strategies
+    // TODO: notify replacement strategies!
 }
+
+// TODO: remove
 #include "models/common/ConfigurableMemoryModel/MemoryInstanceManager.h"
 
 void
-cmm::CacheInstance::invalidateOtherCaches(uint64_t startAddress)
+cmm::CacheInstance::emitInvalidation(uint64_t address)
 {
-    // invalidate caches on same level
+    // invalidate other components
+    // TODO: use `m_otherComponents` here
     for (CacheInstance& other : MemoryInstanceManager::instance()->caches())
     {
-        if (&other != this) other.invalidate(startAddress, m_tagMemory.lineSize());
+        if (&other != this) other.invalidate(address, m_tagMemory.lineSize());
     }
-}
-
-void
-cmm::CacheInstance::makeDirty(CacheLine &entry, uint64_t address)
-{
-    if (entry.hasFlag(CacheLine::Dirty)) return;
-
-    // std::cout << "MAKE DIRTY: " << std::hex << address << std::dec << std::endl;
-    // mark as dirty
-    entry.setFlag(CacheLine::Dirty, true);
-    s_dirtyEntries.insert({address, this});
-    t_makeDirty++;
-}
-
-cmm::Delay
-cmm::CacheInstance::writeBack(uint64_t address)
-{
-    std::cout << "ADDRESS TO WRITE BACK: " << std::hex << address << std::dec;
-
-    auto iter = s_dirtyEntries.find(address);
-    if (iter != s_dirtyEntries.end())
-    {
-        t_writeBacks++;
-        s_dirtyEntries.erase(iter);
-        std::cout << " (erasing)";
-    }
-    std::cout << std::endl;
-
-    // TODO: assume no write back delay due to write buffer?
-    return Delay(0);
 }
