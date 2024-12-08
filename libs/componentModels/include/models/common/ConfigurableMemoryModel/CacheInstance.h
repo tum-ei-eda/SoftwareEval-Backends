@@ -92,7 +92,6 @@ public:
         m_readHitDelay(hit),
         m_readMissDelay(miss)
     {
-        assert(m_replacementStrategy);
         assert(m_writeUpdateStrategy);
         assert(m_evictionStrategy);
     }
