@@ -29,9 +29,10 @@ namespace cmm
 {
 
 // stongly named types for tag and index part of an address
-using CacheTag    = NamedType<uint64_t, struct Tag_>;
-using CacheIndex  = NamedType<uint64_t, struct Index_>;
-using CacheOffset = NamedType<uint64_t, struct Offset_>;
+using CacheTag     = NamedType<uint64_t, struct Tag_>;
+using CacheIndex   = NamedType<uint64_t, struct Index_>;
+using CacheOffset  = NamedType<uint64_t, struct Offset_>;
+using CacheAddress = uint64_t;
 
 /// Implements a tag memory of a cache and provides simple access to
 /// cache sets and their cache lines.
@@ -180,6 +181,7 @@ private:
 
     /// tag cache memory (allocated once at runtime, contiguous memory)
     std::vector<CacheLine> m_data;
+    // TODO: add meta data for cache sets?
 };
 
 } // namespace cmm

@@ -66,7 +66,8 @@ struct CacheLine
     // only if statistics are desired
     CMM_STATISTICS_ONLY(
         /// number of hits
-        uint32_t t_hits  = 0;
+        uint32_t t_readHits  = 0;
+        uint32_t t_writeHits  = 0;
         /// number of evictions
         uint32_t t_evictions = 0;
     )

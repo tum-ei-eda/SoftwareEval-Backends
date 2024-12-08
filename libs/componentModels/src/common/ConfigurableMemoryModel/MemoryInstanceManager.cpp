@@ -310,46 +310,50 @@ cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
 
     std::cout << "INFO:   using replacement strategy '" << evictionStrategyName << "'" << std::endl;
 
-    CacheInstance::EvictionStrategyFunctor evictionStrategy{};
-    CacheInstance::UpdateStrategyFunctor updateStrategy = update_strategy::default_(tagMemory);
-    CacheInstance::ReplacementStrategyFunctor replacementStrategy = replacement_strategy::default_();
-    CacheInstance::WriteStrategyFunctor writeStrategy = write_strategy::writeBack();
+    CacheInstance::EvictionStrategy evictionStrategy{};
+    CacheInstance::UpdateOnAccessStrategy updateStrategy{};
+    CacheInstance::ReplacementStrategy replacementStrategy = replacement_strategy::default_();
+    CacheInstance::WriteUpdateStrategy writeStrategy = write_update_strategy::writeBack();
 
     if (evictionStrategyName == "LFSR")
     {
         evictionStrategy = eviction_strategy::lfsr8bit(tagMemory);
+        updateStrategy   = update_on_access_strategy::lfsr8bit();
     }
     else if (evictionStrategyName == "RANDOM")
     {
         evictionStrategy = eviction_strategy::random(tagMemory);
+        updateStrategy   = update_on_access_strategy::random();
     }
     else if (evictionStrategyName == "LRU")
     {
         evictionStrategy = eviction_strategy::lru(tagMemory);
-        updateStrategy = update_strategy::lru(tagMemory);
+        updateStrategy   = update_on_access_strategy::lru();
     }
     else if (evictionStrategyName == "MRU")
     {
         evictionStrategy = eviction_strategy::mru(tagMemory);
-        updateStrategy = update_strategy::mru(tagMemory);
+        updateStrategy   = update_on_access_strategy::mru();
     }
     else if (evictionStrategyName == "PLRU")
     {
         evictionStrategy = eviction_strategy::plru(tagMemory);
-        updateStrategy = update_strategy::plru(tagMemory);
+        updateStrategy   = update_on_access_strategy::plru();
     }
     else if (evictionStrategyName == "FIFO")
     {
         evictionStrategy = eviction_strategy::fifo(tagMemory);
+        updateStrategy   = update_on_access_strategy::fifo();
     }
     else if (evictionStrategyName == "LIFO")
     {
         evictionStrategy = eviction_strategy::lifo(tagMemory);
+        updateStrategy   = update_on_access_strategy::lifo();
     }
     else if (evictionStrategyName == "LFU")
     {
-        evictionStrategy  = eviction_strategy::lfu(tagMemory);
-        updateStrategy = update_strategy::lfu(tagMemory);
+        evictionStrategy = eviction_strategy::lfu(tagMemory);
+        updateStrategy   = update_on_access_strategy::lfu();
     }
     else
     {
@@ -498,9 +502,10 @@ cmm::MemoryInstanceManager::generateAccessStatistics() const
             for (size_t way = 0; way < cacheMemory.ways(); way++)
             {
                 auto entry = cacheSet[way];
-                if (entry.t_hits > 0) waysUsed  += 1;
+                auto totalHits = entry.t_readHits + entry.t_writeHits;
+                if (totalHits > 0) waysUsed  += 1;
 
-                hits  += entry.t_hits;
+                hits += totalHits;
                 evictions += entry.t_evictions;
             }
             fs << std::hex << idx << std::dec << "," << waysUsed << "," << hits << "," << evictions << "\n";

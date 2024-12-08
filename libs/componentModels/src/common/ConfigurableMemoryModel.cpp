@@ -22,8 +22,8 @@
 
 #include <string>
 
-using MemoryComponent = cmm::MemoryComponent;
-using ComponentRange  = cmm::ComponentRange;
+using MemoryComponent    = cmm::MemoryComponent;
+using ComponentHierarchy = cmm::ComponentHierarchy;
 
 ConfigurableMemoryPort ::ConfigurableMemoryPort(std::string portId, PerformanceModel* parent_) :
     ResourceModel(std::move(portId), parent_),
@@ -45,13 +45,13 @@ ConfigurableMemoryPort::readDelay()
         if (!path.contains(address)) continue;
 
         // traverse memory path
-        auto iter = path.components.begin();
-        auto end  = path.components.end();
-        for (; iter != end; ++iter)
+        ComponentHierarchy hierarchy{&*path.components.begin(), &*path.components.end()};
+        while (hierarchy.hasNextComponent())
         {
-            MemoryComponent* component = *iter;
+            MemoryComponent* component = hierarchy.nextComponent();
             assert(component);
-            cmm::AccessDetails access = component->readAccess(address, ComponentRange{(&*iter) + 1, &*end});
+            hierarchy = hierarchy.nextRange();
+            cmm::AccessDetails access = component->readAccess(address, hierarchy);
             delay += access.delay;
             if (access.wasEntryFound) break;
         }
@@ -74,13 +74,13 @@ ConfigurableMemoryPort::writeDelay()
         if (!path.contains(address)) continue;
 
         // traverse memory path
-        auto iter = path.components.begin();
-        auto end  = path.components.end();
-        for (; iter != end; ++iter)
+        ComponentHierarchy hierarchy{&*path.components.begin(), &*path.components.end()};
+        while (hierarchy.hasNextComponent())
         {
-            MemoryComponent* component = *iter;
+            MemoryComponent* component = hierarchy.nextComponent();
             assert(component);
-            cmm::AccessDetails access = component->writeAccess(address, ComponentRange{(&*iter) + 1, &*end});
+            hierarchy = hierarchy.nextRange();
+            cmm::AccessDetails access = component->writeAccess(address, hierarchy);
             delay += access.delay;
             if (access.wasEntryFound) break;
         }

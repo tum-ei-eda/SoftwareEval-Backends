@@ -37,6 +37,7 @@ public:
      * @brief Applies memory model configuration
      * @param config Config for memory model
      */
+    // TODO: apply config with instantiation?
     void applyConfig(etiss::Configuration& config) override;
 
     /**
