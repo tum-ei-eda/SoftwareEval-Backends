@@ -23,6 +23,8 @@
 
 #include "CVA6_PerformanceModel.h"
 
+namespace CVA6{
+
 // -- Support Macros
 
 #define PE_TIMEFUNC_CALL [](PerformanceModel* perfModel_)
@@ -892,3 +894,5 @@ static InstructionModel *instrModel_sraw = new InstructionModel(
   68,
   PE_TIMEFUNC_ARITH_RS1_RS2
 );
+
+} // namespace CVA6

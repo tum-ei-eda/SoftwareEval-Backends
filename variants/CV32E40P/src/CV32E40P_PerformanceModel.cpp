@@ -31,6 +31,8 @@
 #include "models/common/StandardRegisterModel.h"
 #include "models/common/StaticBranchPredictModel.h"
 
+namespace CV32E40P{
+
 void CV32E40P_PerformanceModel::connectChannel(Channel* channel_)
 {
   CV32E40P_Channel* channel = static_cast<CV32E40P_Channel*>(channel_);	
@@ -70,3 +72,5 @@ std::string CV32E40P_PerformanceModel::getPrintHeader(void)
   ret_strs << std::endl;
   return ret_strs.str();
 }
+
+} // namespace CV32E40P

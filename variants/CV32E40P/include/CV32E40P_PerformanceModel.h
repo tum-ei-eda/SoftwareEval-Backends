@@ -31,6 +31,8 @@
 #include "models/common/StandardRegisterModel.h"
 #include "models/common/StaticBranchPredictModel.h"
 
+namespace CV32E40P{
+
 class CV32E40P_pipeline_Model
 {
 public:
@@ -89,4 +91,6 @@ public:
 
 };
 
+} // namespace CV32E40P
+  
 #endif // SWEVAL_BACKENDS_CV32E40P_PERFORMANCE_MODEL_H

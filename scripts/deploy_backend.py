@@ -167,7 +167,7 @@ def updateFactory_backend_source(lib_):
 
         if hasPerfModel:
             perfModels += "\tcase " + var_i.name + ":\n"
-            perfModels += "\t\tperfModel = new " + var_i.name + "_PerformanceModel();\n"
+            perfModels += "\t\tperfModel = new " + var_i.name + "::" + var_i.name + "_PerformanceModel();\n"
             perfModels += "\t\tbreak;\n"
         
     # Substitute template and overwrite header file

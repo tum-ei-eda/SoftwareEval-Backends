@@ -23,6 +23,8 @@
 
 #include "CV32E40P_PerformanceModel.h"
 
+namespace CV32E40P{
+
 InstructionModelSet* CV32E40P_InstrModelSet = new InstructionModelSet("CV32E40P_InstrModelSet");
 
 static InstructionModel *instrModel_add = new InstructionModel(
@@ -3271,3 +3273,4 @@ n_23 = n_22;
   }
 );
 
+} // namespace CV32E40P

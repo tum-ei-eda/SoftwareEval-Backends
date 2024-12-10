@@ -27,6 +27,8 @@
 
 #include "CVA6_Channel.h"
 
+namespace CVA6{
+
 void CVA6_IqStage_Model::set_leaveStage(uint64_t c)
 {
   curLeaveStage = c;
@@ -125,3 +127,5 @@ std::string CVA6_PerformanceModel::getPrintHeader(void)
   ret_strs << std::endl;
  return ret_strs.str();
 }
+
+} // namespace CVA6

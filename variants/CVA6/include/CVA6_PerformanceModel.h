@@ -35,6 +35,8 @@
 #include "models/cva6/CVA6_DividerModel.h"
 #include "models/cva6/CVA6_DividerUnsignedModel.h"
 
+namespace CVA6{
+
 class CVA6_PcGenStage_Model
 {
 public:
@@ -305,5 +307,7 @@ public:
   virtual std::string getPrintHeader(void);
 
 };
+
+} // namespace CVA6
 
 #endif // SWEVAL_BACKENDS_CVA6_PERFORMANCE_MODEL_H
