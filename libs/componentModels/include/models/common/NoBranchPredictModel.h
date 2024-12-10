@@ -27,6 +27,7 @@ class NoBranchPredictModel : public ConnectorModel
 public:
     NoBranchPredictModel(PerformanceModel* parent_) : ConnectorModel("NoBranchPredictModel", parent_) {};
 
+    void setPc_p (uint64_t pc_p_) {};
     void setPc_np(uint64_t pc_np_) { pc = pc_np_; };
     uint64_t getPc(void) { return pc; };
     

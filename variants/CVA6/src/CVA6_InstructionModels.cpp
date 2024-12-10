@@ -26,7 +26,7 @@
 // -- Support Macros
 
 #define PE_TIMEFUNC_CALL [](PerformanceModel* perfModel_)
-#define PE_TIMEFUNC_INIT CVA6_Model* perfModel = static_cast<CVA6_Model*>(perfModel_);
+#define PE_TIMEFUNC_INIT CVA6_PerformanceModel* perfModel = static_cast<CVA6_PerformanceModel*>(perfModel_);
 
 // -- PcGen-Stage
 

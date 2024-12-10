@@ -67,8 +67,8 @@ public:
     // TODO: Make BUFFER_SIZE configurable! 
     DynamicBranchPredictModel(PerformanceModel* parent_) : ConnectorModel("DynamicBranchPredictModel", parent_), btb(), bht(), BUFFER_DEPTH(5) {};
 
-    int* pc_ptr;
-    int* brTarget_ptr;
+    uint64_t* pc_ptr;
+    uint64_t* brTarget_ptr;
 
     void setPc_p(int);
     void setPc_np(int);

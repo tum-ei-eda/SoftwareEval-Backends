@@ -23,10 +23,10 @@
 
 #include "PerformanceModel.h"
 
-class PredictFsm
+class CVA6_PredictFsm
 {
 public:
-  PredictFsm(){};
+  CVA6_PredictFsm(){};
   bool getPrediction(void);
   void update(bool);
 private:
@@ -37,67 +37,67 @@ private:
 };
 
 
-struct BranchHistoryEntry
+struct CVA6_BranchHistoryEntry
 {
   bool valid = false;
-  PredictFsm state;
+  CVA6_PredictFsm state;
 };
 
 
-class BranchHistoryTable
+class CVA6_BranchHistoryTable
 {
 public:
-  BranchHistoryTable(){};
+  CVA6_BranchHistoryTable(){};
   bool getPrediction(uint64_t, uint64_t);
   void update(uint64_t, bool);
 private:
-  std::array<std::array<BranchHistoryEntry, 64>, 2> tab;
+  std::array<std::array<CVA6_BranchHistoryEntry, 64>, 2> tab;
   int getPageIndex(uint64_t pc_) { return ((pc_ & 0x00000002) >> 1); };
   int getRowIndex(uint64_t pc_) { return ((pc_ & 0x000000FC) >> 2); };
 };
 
 
-struct ReturnAddressEntry
+struct CVA6_ReturnAddressEntry
 {
   bool valid = false;
   uint64_t addr = 0;
 };
 
 
-class ReturnAddressStack
+class CVA6_ReturnAddressStack
 {
 public:
-  ReturnAddressStack(){};
+  CVA6_ReturnAddressStack(){};
   void push(uint64_t);
   uint64_t pop(void);
 private:
-  std::array<ReturnAddressEntry,2> stack;
+  std::array<CVA6_ReturnAddressEntry,2> stack;
 };
 
 
-struct TargetBufferEntry
+struct CVA6_TargetBufferEntry
 {
   bool valid = false;
   uint64_t addr = 0;
 };
 
-class BranchTargetBuffer
+class CVA6_BranchTargetBuffer
 {
 public:
-  BranchTargetBuffer(){};
+  CVA6_BranchTargetBuffer(){};
   uint64_t getPrediction(uint64_t);
   void update(uint64_t, uint64_t);
 private:
-  std::array<std::array<TargetBufferEntry,16>,2> tab;
+  std::array<std::array<CVA6_TargetBufferEntry,16>,2> tab;
   int getPageIndex(uint64_t pc_) { return ((pc_ & 0x00000002) >> 1); };
   int getRowIndex(uint64_t pc_) { return ((pc_ & 0x0000003C) >> 2); };
 };
 
   
-class BranchPredictionModel : public ConnectorModel
+class CVA6_BranchPredictionModel : public ConnectorModel
 {
 public:
-  BranchPredictionModel(PerformanceModel* parent_) : ConnectorModel("BranchPredictionModel", parent_), bht(), ras(), btb() {};
+  CVA6_BranchPredictionModel(PerformanceModel* parent_) : ConnectorModel("CVA6_BranchPredictionModel", parent_), bht(), ras(), btb() {};
    
   // API
   void setPc_p(uint64_t);
@@ -122,9 +122,9 @@ public:
   uint64_t* rd_ptr;
   
 private:
-  BranchHistoryTable bht;
-  BranchTargetBuffer btb;
-  ReturnAddressStack ras;
+  CVA6_BranchHistoryTable bht;
+  CVA6_BranchTargetBuffer btb;
+  CVA6_ReturnAddressStack ras;
 
   bool branch_flag = false;
   uint64_t branchPc = 0; 

@@ -26,7 +26,7 @@ class DummyMemoryModel : public ResourceModel
 public:
   DummyMemoryModel(PerformanceModel* parent_) : ResourceModel("DummyMemoryModel", parent_) {};
 
-  unsigned int getDelay(void) {return 1;};
+  int getDelay(void) {return 1;};
 
 };
 

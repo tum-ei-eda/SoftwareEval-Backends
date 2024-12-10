@@ -260,11 +260,11 @@ private:
 
 extern InstructionModelSet* CVA6_InstrModelSet;
 
-class CVA6_Model : public PerformanceModel
+class CVA6_PerformanceModel : public PerformanceModel
 {
 public:
 
-  CVA6_Model() : PerformanceModel("CVA6", CVA6_InstrModelSet)
+  CVA6_PerformanceModel() : PerformanceModel("CVA6", CVA6_InstrModelSet)
     ,PcGenStage()
     ,IfStage()
     ,IqStage()
@@ -295,7 +295,7 @@ public:
   ClobberModel cbModel;
   ICacheModel iCacheModel;
   DCacheModel dCacheModel;
-  BranchPredictionModel brPredModel;
+  CVA6_BranchPredictionModel brPredModel;
   CVA6_DividerModel divModel;
   CVA6_DividerUnsignedModel divUModel;
   

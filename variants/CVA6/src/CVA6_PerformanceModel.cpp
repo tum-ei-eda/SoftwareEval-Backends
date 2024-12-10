@@ -56,7 +56,7 @@ void CVA6_ComStage_Model::set_leaveStage(uint64_t c)
   stage_ptr = (++stage_ptr)%2;
 }
 
-void CVA6_Model::connectChannel(Channel* channel_)
+void CVA6_PerformanceModel::connectChannel(Channel* channel_)
 {
   CVA6_Channel* channel = static_cast<CVA6_Channel*>(channel_);	
 
@@ -83,7 +83,7 @@ void CVA6_Model::connectChannel(Channel* channel_)
   divUModel.rs2_data_ptr = channel->rs2_data;
 }
 
-std::string CVA6_Model::getPipelineStream(void)
+std::string CVA6_PerformanceModel::getPipelineStream(void)
 {
   std::stringstream ret_strs;
   
@@ -104,7 +104,7 @@ std::string CVA6_Model::getPipelineStream(void)
   return ret_strs.str();
 }
 
-std::string CVA6_Model::getPrintHeader(void)
+std::string CVA6_PerformanceModel::getPrintHeader(void)
 {
   std::stringstream ret_strs;
 
