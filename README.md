@@ -82,3 +82,9 @@ Note:
 - The script will update "CMakeLists" files
 - If files allready exist, they will be over-written.
 - If variant was not present before, the script will add the new variant to "Factory.cpp" and "Factory.h" files, by over-writing them
+
+## Version
+
+This is version v1.0.
+
+This repository does not contain any submodules.
