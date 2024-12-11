@@ -55,7 +55,7 @@ tracePrinter_ptr->initialize();
 
 ### During Simulation
 
-During simulation, trigger the backends to read and process data from channel. Note it is the ISS's (or it's monitor's) responsebility to avoid overflow of the channel:
+During simulation, trigger the backends to read and process data from channel. NOTE: it is the ISS's (or it's monitor's) responsebility to avoid overflow of the channel:
 
 ```C++
 estimator_ptr->execute();
