@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Chair of EDA, Technical University of Munich
+ * Copyright 2024 Chair of EDA, Technical University of Munich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,50 +33,27 @@
 
 namespace CV32E40P{
 
-class CV32E40P_pipeline_Model
-{
-public:
-  CV32E40P_pipeline_Model(){};
-
-  stage stages[4] = { 
-     stage("IF_stage") 
-    ,stage("ID_stage")
-    ,stage("EX_stage")
-    ,stage("WB_stage")
-  };
-
-  void setIF_stage(uint64_t c) { stages[0].cnt = c; };
-  uint64_t getIF_stage(void) { return stages[0].cnt; };
-  
-  void setID_stage(uint64_t c) { stages[1].cnt = c; };
-  uint64_t getID_stage(void) { return stages[1].cnt; };
-  
-  void setEX_stage(uint64_t c) { stages[2].cnt = c; };
-  uint64_t getEX_stage(void) { return stages[2].cnt; };
-  
-  void setWB_stage(uint64_t c) { stages[3].cnt = c; };
-  uint64_t getWB_stage(void) { return stages[3].cnt; };
-
-  uint64_t getCycleCount(void) { return stages[3].cnt; };
-  
-};
-
-
-extern InstructionModelSet* CV32E40P_InstrModelSet;
+extern SchedulingFunctionSet* CV32E40P_SchedulingFunctionSet;
 
 class CV32E40P_PerformanceModel : public PerformanceModel
 {
 public:
 
-  CV32E40P_PerformanceModel() : PerformanceModel("CV32E40P", CV32E40P_InstrModelSet)
-    ,CV32E40P_pipeline()
+  CV32E40P_PerformanceModel() : PerformanceModel("CV32E40P", CV32E40P_SchedulingFunctionSet)
+    ,IF_stage("IF_stage")
+    ,ID_stage("ID_stage")
+    ,EX_stage("EX_stage")
+    ,WB_stage("WB_stage")
     ,divider(this)
     ,divider_u(this)
     ,regModel(this)
     ,staBranchPredModel(this)
   {};
-
-  CV32E40P_pipeline_Model CV32E40P_pipeline;
+  
+  TimingVariable IF_stage;
+  TimingVariable ID_stage;
+  TimingVariable EX_stage;
+  TimingVariable WB_stage;
 
   DividerModel divider;
   DividerUnsignedModel divider_u;
@@ -85,12 +62,12 @@ public:
   StaticBranchPredictModel staBranchPredModel;
 
   virtual void connectChannel(Channel*);
-  virtual uint64_t getCycleCount(void){ return CV32E40P_pipeline.getCycleCount(); };
+  virtual uint64_t getCycleCount(void);
   virtual std::string getPipelineStream(void);
   virtual std::string getPrintHeader(void);
 
 };
 
 } // namespace CV32E40P
-  
+
 #endif // SWEVAL_BACKENDS_CV32E40P_PERFORMANCE_MODEL_H

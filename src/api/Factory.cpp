@@ -28,10 +28,6 @@
 #include "CV32E40P_PerformanceModel.h"
 #include "CV32E40P_Printer.h"
 
-#include "CVA6_Channel.h"
-#include "CVA6_PerformanceModel.h"
-#include "CVA6_Printer.h"
-
 #include "AssemblyTrace_Channel.h"
 #include "AssemblyTrace_Printer.h"
 
@@ -46,10 +42,6 @@ int Factory::getVariantHandle(std::string var_)
     if(var_ == "CV32E40P")
     {
         return CV32E40P;
-    }
-    if(var_ == "CVA6")
-    {
-        return CVA6;
     }
     if(var_ == "AssemblyTrace")
     {
@@ -67,7 +59,6 @@ Channel* Factory::getChannel(int var_)
   switch((var_t)var_)
   {
     case CV32E40P: return new CV32E40P_Channel();
-    case CVA6: return new CVA6_Channel();
     case AssemblyTrace: return new AssemblyTrace_Channel();
     case InstructionTrace_RV64: return new InstructionTrace_RV64_Channel();
     default: return nullptr;
@@ -82,9 +73,6 @@ Backend* Factory::getPerformanceEstimator(int var_)
   {
     case CV32E40P:
       perfModel = new CV32E40P::CV32E40P_PerformanceModel();
-      break;
-    case CVA6:
-      perfModel = new CVA6::CVA6_PerformanceModel();
       break;
     default: perfModel = nullptr;
   }
@@ -108,9 +96,6 @@ Backend* Factory::getTracePrinter(int var_)
   {
     case CV32E40P:
       printer = new CV32E40P_Printer();
-      break;
-    case CVA6:
-      printer = new CVA6_Printer();
       break;
     case AssemblyTrace:
       printer = new AssemblyTrace_Printer();

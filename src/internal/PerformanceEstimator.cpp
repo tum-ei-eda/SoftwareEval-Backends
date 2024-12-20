@@ -49,13 +49,12 @@ void PerformanceEstimator::execute(void)
   
   for(int instr_i=0; instr_i < instrCnt; instr_i++)
   {
-    perfModel_ptr->callInstrTimeFunc(ch_typeId_ptr[instr_i]);
+    perfModel_ptr->callSchedulingFunction(ch_typeId_ptr[instr_i]);
     perfModel_ptr->update();
 
     if(streamer.isActive())
     {
       streamer.stream(perfModel_ptr->getPipelineStream());
-      streamer.stream("\n"); // TODO: Move new line to function that creates the line!
     }
 
   }

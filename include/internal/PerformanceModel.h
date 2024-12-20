@@ -36,19 +36,33 @@ struct stage
     stage(std::string name_) : name(name_) {};
 };
 
-class InstructionModelSet;
+class TimingVariable
+{
+public:
+  TimingVariable(std::string name_) : name(name_) {};
+  ~TimingVariable() = default;
+
+  uint64_t get(void) { return cnt; };
+  void set(uint64_t c_) { cnt = c_; };
+  
+private:
+  std::string name;
+  uint64_t cnt = 0;
+};
+
+class SchedulingFunctionSet;
 
 class PerformanceModel
 {
 public:
-    PerformanceModel(std::string, InstructionModelSet*);
+    PerformanceModel(std::string, SchedulingFunctionSet*);
     virtual ~PerformanceModel() = default;
 
     const std::string name;
 
     virtual void connectChannel(Channel*) = 0;
 
-    void callInstrTimeFunc(int);
+    void callSchedulingFunction(int);
     void update(void) { instrIndex++; };
     void newTraceBlock(void) { instrIndex = 0; };
     
@@ -59,36 +73,36 @@ public:
     int instrIndex; // TODO: Make protected, with ConnectorModel as a friend?
 
 private:
-    InstructionModelSet* const instrModelSet;
-    std::map<int, std::function<void(PerformanceModel*)>> instrTimeFunc_map;
+    SchedulingFunctionSet* const schedulingFunctionSet;
+    std::map<int, std::function<void(PerformanceModel*)>> schedulingFunction_map;
 
 };
 
-class InstructionModel;
+class SchedulingFunction;
 
-class InstructionModelSet
+class SchedulingFunctionSet
 {
 public:
-    InstructionModelSet(std::string name_) : name(name_) {};
+    SchedulingFunctionSet(std::string name_) : name(name_) {};
     const std::string name;
-    void addInstructionModel(InstructionModel*);
-    void foreach(std::function<void(InstructionModel &)>);
+    void addSchedulingFunction(SchedulingFunction*);
+    void foreach(std::function<void(SchedulingFunction &)>);
 private:
-    std::set<InstructionModel*> instrModel_set;
+    std::set<SchedulingFunction*> schedulingFunction_set;
 };
 
-class InstructionModel
+class SchedulingFunction
 {
 public:
-    InstructionModel(InstructionModelSet*, std::string, int, std::function<void(PerformanceModel*)>);
-    ~InstructionModel();
+    SchedulingFunction(SchedulingFunctionSet*, std::string, int, std::function<void(PerformanceModel*)>);
+    ~SchedulingFunction();
 
     const int typeId;
     const std::string name;
-    const std::function<void(PerformanceModel*)> timeFunc;
+    const std::function<void(PerformanceModel*)> schedulingFunction;
 
 private:
-    InstructionModelSet* const parentSet;
+    SchedulingFunctionSet* const parentSet;
 };
 
 class ConnectorModel

@@ -25,57 +25,44 @@
 #include <sstream> // Used for info prints in constructor. Replace with common print handling?
 #include <iomanip> // Used for info prints in constructor. Replace with common print handling?
 
-PerformanceModel::PerformanceModel(std::string name_, InstructionModelSet* instrModelSet_) : name(name_), instrModelSet(instrModelSet_)
+PerformanceModel::PerformanceModel(std::string name_, SchedulingFunctionSet* schedulingFunctionSet_) : name(name_), schedulingFunctionSet(schedulingFunctionSet_)
 {
-    //std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
-    //std::cout << "Creating performance model: " << name << "\n";
-    //std::cout << " - Creating time-function map:\n";
-
-    instrModelSet->foreach([this](InstructionModel &instr)
+    schedulingFunctionSet->foreach([this](SchedulingFunction &func)
     {
-        //std::stringstream instrInfo_strs;
-        //instrInfo_strs << instr.name << "[Type-ID: " << instr.typeId << "]";
-        
-        auto typeId_it = instrTimeFunc_map.find(instr.typeId);
-        if(typeId_it != instrTimeFunc_map.end())
+        auto typeId_it = schedulingFunction_map.find(func.typeId);
+        if(typeId_it != schedulingFunction_map.end())
         {
-	  //std::cout << "\tERROR: Cannot add " << instrInfo_strs.str() << " to time-function map. Type-ID already assigned.\n";
 	  return;
         }
-
-        instrTimeFunc_map[instr.typeId] = instr.timeFunc;
-        //std::cout << "\tAdding " << instrInfo_strs.str() << " to time-function map.\n";
-
+        schedulingFunction_map[func.typeId] = func.schedulingFunction;
     });
-
-    //std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
 }
 
-void PerformanceModel::callInstrTimeFunc(int typeId_)
+void PerformanceModel::callSchedulingFunction(int typeId_)
 {
-  instrTimeFunc_map[typeId_](this);
+  schedulingFunction_map[typeId_](this);
 }
 
-void InstructionModelSet::addInstructionModel(InstructionModel* instrModel)
+void SchedulingFunctionSet::addSchedulingFunction(SchedulingFunction* schedFunc_)
 {
-    instrModel_set.insert(instrModel);
+    schedulingFunction_set.insert(schedFunc_);
 }
 
-void InstructionModelSet::foreach(std::function<void(InstructionModel &)> func)
+void SchedulingFunctionSet::foreach(std::function<void(SchedulingFunction &)> func)
 {
-    for(auto it = instrModel_set.begin(); it != instrModel_set.end(); it++)
+    for(auto it = schedulingFunction_set.begin(); it != schedulingFunction_set.end(); it++)
     {
         func(**it);
     }
 }
 
-InstructionModel::InstructionModel(InstructionModelSet* parent_, std::string name_, int typeId_, std::function<void(PerformanceModel*)> timeFunc_) : 
+SchedulingFunction::SchedulingFunction(SchedulingFunctionSet* parent_, std::string name_, int typeId_, std::function<void(PerformanceModel*)> schedFunc_) : 
     typeId(typeId_),
     name(name_),
     parentSet(parent_),
-    timeFunc(timeFunc_)
+    schedulingFunction(schedFunc_)
 {
-    parentSet->addInstructionModel(this);
+    parentSet->addSchedulingFunction(this);
 }
 
 //int SharedResourceModel::getDelay(int prev_cycle)

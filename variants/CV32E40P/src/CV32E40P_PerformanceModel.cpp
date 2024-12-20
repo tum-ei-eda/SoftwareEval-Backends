@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 Chair of EDA, Technical University of Munich
+ * Copyright 2024 Chair of EDA, Technical University of Munich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 #include <stdbool.h>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 #include "Channel.h"
 
@@ -35,29 +36,35 @@ namespace CV32E40P{
 
 void CV32E40P_PerformanceModel::connectChannel(Channel* channel_)
 {
-  CV32E40P_Channel* channel = static_cast<CV32E40P_Channel*>(channel_);	
+  CV32E40P_Channel* channel = static_cast<CV32E40P_Channel*>(channel_);
 
   divider.rs2_data_ptr = channel->rs2_data;
-  
+
   divider_u.rs2_data_ptr = channel->rs2_data;
-  
+
   regModel.rs1_ptr = channel->rs1;
   regModel.rs2_ptr = channel->rs2;
   regModel.rd_ptr = channel->rd;
-  
+
   staBranchPredModel.pc_ptr = channel->pc;
   staBranchPredModel.brTarget_ptr = channel->brTarget;
-  
+
+}
+
+uint64_t CV32E40P_PerformanceModel::getCycleCount(void)
+{
+  return std::max({    IF_stage.get()    , ID_stage.get()  , EX_stage.get()  , WB_stage.get()  });
 }
 
 std::string CV32E40P_PerformanceModel::getPipelineStream(void)
 {
   std::stringstream ret_strs;
   
-  ret_strs << CV32E40P_pipeline.getIF_stage(); 
-  ret_strs << "," << CV32E40P_pipeline.getID_stage();
-  ret_strs << "," << CV32E40P_pipeline.getEX_stage();
-  ret_strs << "," << CV32E40P_pipeline.getWB_stage();
+  ret_strs << IF_stage.get(); 
+  ret_strs << "," << ID_stage.get();
+  ret_strs << "," << EX_stage.get();
+  ret_strs << "," << WB_stage.get();
+  ret_strs << std::endl;
   return ret_strs.str();
 }
 
