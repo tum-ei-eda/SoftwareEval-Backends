@@ -16,7 +16,7 @@
 
 // TODO: Proof-of-concept model, taken from Robert (more or less)!
 
-#include "models/cva6/BranchPredictionModel.h"
+#include "models/cva6/CVA6_BranchPredictionModel.h"
 
 #include <cstdint>
 

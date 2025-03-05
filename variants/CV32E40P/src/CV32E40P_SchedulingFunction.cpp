@@ -1,20 +1,21 @@
 /*
- * Copyright 2024 Chair of EDA, Technical University of Munich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *	 http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright 2025 Chair of EDA, Technical University of Munich
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*	 http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
+
 
 #include <algorithm>
 #include <cstdint>
@@ -34,7 +35,7 @@ static SchedulingFunction *schedulingFunction_add = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -48,8 +49,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -61,16 +62,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -82,7 +82,7 @@ static SchedulingFunction *schedulingFunction_sub = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -96,8 +96,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -109,16 +109,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -130,7 +129,7 @@ static SchedulingFunction *schedulingFunction_xor = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -144,8 +143,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -157,16 +156,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -178,7 +176,7 @@ static SchedulingFunction *schedulingFunction_or = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -192,8 +190,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -205,16 +203,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -226,7 +223,7 @@ static SchedulingFunction *schedulingFunction_and = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -240,8 +237,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -253,16 +250,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -274,7 +270,7 @@ static SchedulingFunction *schedulingFunction_slt = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -288,8 +284,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -301,16 +297,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -322,7 +317,7 @@ static SchedulingFunction *schedulingFunction_sltu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -336,8 +331,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -349,16 +344,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -370,7 +364,7 @@ static SchedulingFunction *schedulingFunction_sll = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -384,8 +378,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -397,16 +391,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -418,7 +411,7 @@ static SchedulingFunction *schedulingFunction_srl = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -432,8 +425,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -445,16 +438,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -466,7 +458,7 @@ static SchedulingFunction *schedulingFunction_sra = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -480,8 +472,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -493,16 +485,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -514,7 +505,7 @@ static SchedulingFunction *schedulingFunction_addi = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -528,8 +519,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -538,16 +529,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -559,7 +549,7 @@ static SchedulingFunction *schedulingFunction_xori = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -573,8 +563,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -583,16 +573,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -604,7 +593,7 @@ static SchedulingFunction *schedulingFunction_ori = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -618,8 +607,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -628,16 +617,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -649,7 +637,7 @@ static SchedulingFunction *schedulingFunction_andi = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -663,8 +651,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -673,16 +661,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -694,7 +681,7 @@ static SchedulingFunction *schedulingFunction_slti = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -708,8 +695,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -718,16 +705,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -739,7 +725,7 @@ static SchedulingFunction *schedulingFunction_sltiu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -753,8 +739,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -763,16 +749,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -784,7 +769,7 @@ static SchedulingFunction *schedulingFunction_slli = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -798,8 +783,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -808,16 +793,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -829,7 +813,7 @@ static SchedulingFunction *schedulingFunction_srli = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -843,8 +827,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -853,16 +837,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -874,7 +857,7 @@ static SchedulingFunction *schedulingFunction_srai = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -888,8 +871,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -898,16 +881,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -919,7 +901,7 @@ static SchedulingFunction *schedulingFunction_auipc = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -933,23 +915,22 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -961,7 +942,7 @@ static SchedulingFunction *schedulingFunction_lui = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -975,23 +956,22 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1003,7 +983,7 @@ static SchedulingFunction *schedulingFunction_mul = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1017,8 +997,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1030,16 +1010,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // MUL
 uint64_t n_MUL;
 n_MUL = n_ID_stage + 1;
 perfModel->regModel.setXd(n_MUL);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_MUL, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_MUL;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1051,7 +1030,7 @@ static SchedulingFunction *schedulingFunction_mulh = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1065,8 +1044,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1078,16 +1057,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // MULH
 uint64_t n_MULH;
 n_MULH = n_ID_stage + 5;
 perfModel->regModel.setXd(n_MULH);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_MULH, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_MULH;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1099,7 +1077,7 @@ static SchedulingFunction *schedulingFunction_mulhu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1113,8 +1091,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1126,16 +1104,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // MULH
 uint64_t n_MULH;
 n_MULH = n_ID_stage + 5;
 perfModel->regModel.setXd(n_MULH);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_MULH, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_MULH;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1147,7 +1124,7 @@ static SchedulingFunction *schedulingFunction_mulhsu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1161,8 +1138,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1174,16 +1151,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // MULH
 uint64_t n_MULH;
 n_MULH = n_ID_stage + 5;
 perfModel->regModel.setXd(n_MULH);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_MULH, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_MULH;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1195,7 +1171,7 @@ static SchedulingFunction *schedulingFunction_div = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1209,8 +1185,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1222,16 +1198,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // DIV
 uint64_t n_DIV;
 n_DIV = n_ID_stage + perfModel->divider.getDelay();
 perfModel->regModel.setXd(n_DIV);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_DIV, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_DIV;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1243,7 +1218,7 @@ static SchedulingFunction *schedulingFunction_rem = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1257,8 +1232,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1270,16 +1245,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // DIV
 uint64_t n_DIV;
 n_DIV = n_ID_stage + perfModel->divider.getDelay();
 perfModel->regModel.setXd(n_DIV);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_DIV, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_DIV;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1291,7 +1265,7 @@ static SchedulingFunction *schedulingFunction_divu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1305,8 +1279,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1318,16 +1292,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // DIVU
 uint64_t n_DIVU;
 n_DIVU = n_ID_stage + perfModel->divider_u.getDelay();
 perfModel->regModel.setXd(n_DIVU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_DIVU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_DIVU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1339,7 +1312,7 @@ static SchedulingFunction *schedulingFunction_remu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1353,8 +1326,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1366,16 +1339,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // DIVU
 uint64_t n_DIVU;
 n_DIVU = n_ID_stage + perfModel->divider_u.getDelay();
 perfModel->regModel.setXd(n_DIVU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_DIVU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_DIVU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1387,7 +1359,7 @@ static SchedulingFunction *schedulingFunction_csrrw = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1401,8 +1373,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1411,16 +1383,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // CSR
 uint64_t n_CSR;
 n_CSR = n_ID_stage + 1;
 perfModel->regModel.setXd(n_CSR);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_CSR, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_CSR;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1432,7 +1403,7 @@ static SchedulingFunction *schedulingFunction_csrrs = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1446,8 +1417,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1456,16 +1427,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // CSR
 uint64_t n_CSR;
 n_CSR = n_ID_stage + 1;
 perfModel->regModel.setXd(n_CSR);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_CSR, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_CSR;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1477,7 +1447,7 @@ static SchedulingFunction *schedulingFunction_csrrc = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1491,8 +1461,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1501,16 +1471,15 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // CSR
 uint64_t n_CSR;
 n_CSR = n_ID_stage + 1;
 perfModel->regModel.setXd(n_CSR);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_CSR, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_CSR;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1522,7 +1491,7 @@ static SchedulingFunction *schedulingFunction_csrrwi = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1536,23 +1505,22 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // CSR
 uint64_t n_CSR;
 n_CSR = n_ID_stage + 1;
 perfModel->regModel.setXd(n_CSR);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_CSR, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_CSR;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1564,7 +1532,7 @@ static SchedulingFunction *schedulingFunction_csrrsi = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1578,23 +1546,22 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // CSR
 uint64_t n_CSR;
 n_CSR = n_ID_stage + 1;
 perfModel->regModel.setXd(n_CSR);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_CSR, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_CSR;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1606,7 +1573,7 @@ static SchedulingFunction *schedulingFunction_csrrci = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1620,23 +1587,22 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // CSR
 uint64_t n_CSR;
 n_CSR = n_ID_stage + 1;
 perfModel->regModel.setXd(n_CSR);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_CSR, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_CSR;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -1648,7 +1614,7 @@ static SchedulingFunction *schedulingFunction_sb = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1662,8 +1628,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1675,21 +1641,21 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // LSU
 uint64_t n_LSU;
 n_LSU = n_ID_stage + 1;
 // EX_stage
 uint64_t n_EX_stage;
-n_EX_stage = std::max({n_LSU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+n_EX_stage = std::max({n_LSU, perfModel->WB_stage});
+perfModel->EX_stage = n_EX_stage;
 // DPort_W
 uint64_t n_DPort_W;
 n_DPort_W = n_EX_stage + 1;
 // WB_stage
 uint64_t n_WB_stage = n_DPort_W;
-perfModel->WB_stage.set(n_WB_stage);
+perfModel->WB_stage = n_WB_stage;
 
   }
 );
@@ -1701,7 +1667,7 @@ static SchedulingFunction *schedulingFunction_sh = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1715,8 +1681,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1728,21 +1694,21 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // LSU
 uint64_t n_LSU;
 n_LSU = n_ID_stage + 1;
 // EX_stage
 uint64_t n_EX_stage;
-n_EX_stage = std::max({n_LSU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+n_EX_stage = std::max({n_LSU, perfModel->WB_stage});
+perfModel->EX_stage = n_EX_stage;
 // DPort_W
 uint64_t n_DPort_W;
 n_DPort_W = n_EX_stage + 1;
 // WB_stage
 uint64_t n_WB_stage = n_DPort_W;
-perfModel->WB_stage.set(n_WB_stage);
+perfModel->WB_stage = n_WB_stage;
 
   }
 );
@@ -1754,7 +1720,7 @@ static SchedulingFunction *schedulingFunction_sw = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1768,8 +1734,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1781,21 +1747,21 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // LSU
 uint64_t n_LSU;
 n_LSU = n_ID_stage + 1;
 // EX_stage
 uint64_t n_EX_stage;
-n_EX_stage = std::max({n_LSU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+n_EX_stage = std::max({n_LSU, perfModel->WB_stage});
+perfModel->EX_stage = n_EX_stage;
 // DPort_W
 uint64_t n_DPort_W;
 n_DPort_W = n_EX_stage + 1;
 // WB_stage
 uint64_t n_WB_stage = n_DPort_W;
-perfModel->WB_stage.set(n_WB_stage);
+perfModel->WB_stage = n_WB_stage;
 
   }
 );
@@ -1807,7 +1773,7 @@ static SchedulingFunction *schedulingFunction_lw = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1821,8 +1787,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1831,22 +1797,22 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // LSU
 uint64_t n_LSU;
 n_LSU = n_ID_stage + 1;
 // EX_stage
 uint64_t n_EX_stage;
-n_EX_stage = std::max({n_LSU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+n_EX_stage = std::max({n_LSU, perfModel->WB_stage});
+perfModel->EX_stage = n_EX_stage;
 // DPort_R
 uint64_t n_DPort_R;
 n_DPort_R = n_EX_stage + 1;
 perfModel->regModel.setXd(n_DPort_R);
 // WB_stage
 uint64_t n_WB_stage = n_DPort_R;
-perfModel->WB_stage.set(n_WB_stage);
+perfModel->WB_stage = n_WB_stage;
 
   }
 );
@@ -1858,7 +1824,7 @@ static SchedulingFunction *schedulingFunction_lh = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1872,8 +1838,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1882,22 +1848,22 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // LSU
 uint64_t n_LSU;
 n_LSU = n_ID_stage + 1;
 // EX_stage
 uint64_t n_EX_stage;
-n_EX_stage = std::max({n_LSU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+n_EX_stage = std::max({n_LSU, perfModel->WB_stage});
+perfModel->EX_stage = n_EX_stage;
 // DPort_R
 uint64_t n_DPort_R;
 n_DPort_R = n_EX_stage + 1;
 perfModel->regModel.setXd(n_DPort_R);
 // WB_stage
 uint64_t n_WB_stage = n_DPort_R;
-perfModel->WB_stage.set(n_WB_stage);
+perfModel->WB_stage = n_WB_stage;
 
   }
 );
@@ -1909,7 +1875,7 @@ static SchedulingFunction *schedulingFunction_lhu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1923,8 +1889,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1933,22 +1899,22 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // LSU
 uint64_t n_LSU;
 n_LSU = n_ID_stage + 1;
 // EX_stage
 uint64_t n_EX_stage;
-n_EX_stage = std::max({n_LSU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+n_EX_stage = std::max({n_LSU, perfModel->WB_stage});
+perfModel->EX_stage = n_EX_stage;
 // DPort_R
 uint64_t n_DPort_R;
 n_DPort_R = n_EX_stage + 1;
 perfModel->regModel.setXd(n_DPort_R);
 // WB_stage
 uint64_t n_WB_stage = n_DPort_R;
-perfModel->WB_stage.set(n_WB_stage);
+perfModel->WB_stage = n_WB_stage;
 
   }
 );
@@ -1960,7 +1926,7 @@ static SchedulingFunction *schedulingFunction_lb = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -1974,8 +1940,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -1984,22 +1950,22 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // LSU
 uint64_t n_LSU;
 n_LSU = n_ID_stage + 1;
 // EX_stage
 uint64_t n_EX_stage;
-n_EX_stage = std::max({n_LSU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+n_EX_stage = std::max({n_LSU, perfModel->WB_stage});
+perfModel->EX_stage = n_EX_stage;
 // DPort_R
 uint64_t n_DPort_R;
 n_DPort_R = n_EX_stage + 1;
 perfModel->regModel.setXd(n_DPort_R);
 // WB_stage
 uint64_t n_WB_stage = n_DPort_R;
-perfModel->WB_stage.set(n_WB_stage);
+perfModel->WB_stage = n_WB_stage;
 
   }
 );
@@ -2011,7 +1977,7 @@ static SchedulingFunction *schedulingFunction_lbu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2025,8 +1991,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -2035,22 +2001,22 @@ uint64_t n_uA_OF_A;
 n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // LSU
 uint64_t n_LSU;
 n_LSU = n_ID_stage + 1;
 // EX_stage
 uint64_t n_EX_stage;
-n_EX_stage = std::max({n_LSU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+n_EX_stage = std::max({n_LSU, perfModel->WB_stage});
+perfModel->EX_stage = n_EX_stage;
 // DPort_R
 uint64_t n_DPort_R;
 n_DPort_R = n_EX_stage + 1;
 perfModel->regModel.setXd(n_DPort_R);
 // WB_stage
 uint64_t n_WB_stage = n_DPort_R;
-perfModel->WB_stage.set(n_WB_stage);
+perfModel->WB_stage = n_WB_stage;
 
   }
 );
@@ -2062,7 +2028,7 @@ static SchedulingFunction *schedulingFunction_beq = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2076,8 +2042,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -2089,16 +2055,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->staBranchPredModel.setPc_np(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -2110,7 +2075,7 @@ static SchedulingFunction *schedulingFunction_bne = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2124,8 +2089,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -2137,16 +2102,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->staBranchPredModel.setPc_np(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -2158,7 +2122,7 @@ static SchedulingFunction *schedulingFunction_blt = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2172,8 +2136,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -2185,16 +2149,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->staBranchPredModel.setPc_np(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -2206,7 +2169,7 @@ static SchedulingFunction *schedulingFunction_bge = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2220,8 +2183,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -2233,16 +2196,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->staBranchPredModel.setPc_np(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -2254,7 +2216,7 @@ static SchedulingFunction *schedulingFunction_bltu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2268,8 +2230,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -2281,16 +2243,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->staBranchPredModel.setPc_np(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -2302,7 +2263,7 @@ static SchedulingFunction *schedulingFunction_bgeu = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2316,8 +2277,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // Decoder
 uint64_t n_Decoder;
 n_Decoder = n_IF_stage + 1;
@@ -2329,16 +2290,15 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->staBranchPredModel.setPc_np(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -2350,7 +2310,7 @@ static SchedulingFunction *schedulingFunction__def = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2364,8 +2324,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen});
+perfModel->IF_stage = n_IF_stage;
 
   }
 );
@@ -2377,7 +2337,7 @@ static SchedulingFunction *schedulingFunction_jal = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2391,24 +2351,23 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // JumpDecoder
 uint64_t n_JumpDecoder;
 n_JumpDecoder = n_IF_stage + 1;
 perfModel->staBranchPredModel.setPc_np(n_JumpDecoder);
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_JumpDecoder, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_JumpDecoder, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );
@@ -2420,7 +2379,7 @@ static SchedulingFunction *schedulingFunction_jalr = new SchedulingFunction(
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
-uint64_t n_Enter = perfModel->IF_stage.get();
+uint64_t n_Enter = perfModel->IF_stage;
 // IPort_R
 uint64_t n_IPort_R;
 uint64_t n_IPort_R_max;
@@ -2434,8 +2393,8 @@ n_PCGen = n_PCGen_max + 1;
 perfModel->staBranchPredModel.setPc_p(n_PCGen);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage.get()});
-perfModel->IF_stage.set(n_IF_stage);
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
 // JumpDecoder
 uint64_t n_JumpDecoder;
 uint64_t n_JumpDecoder_max;
@@ -2444,16 +2403,15 @@ n_JumpDecoder = n_JumpDecoder_max + 1;
 perfModel->staBranchPredModel.setPc_np(n_JumpDecoder);
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_JumpDecoder, perfModel->EX_stage.get()});
-perfModel->ID_stage.set(n_ID_stage);
+n_ID_stage = std::max({n_JumpDecoder, perfModel->EX_stage});
+perfModel->ID_stage = n_ID_stage;
 // ALU
 uint64_t n_ALU;
 n_ALU = n_ID_stage + 1;
 perfModel->regModel.setXd(n_ALU);
 // EX_stage
-uint64_t n_EX_stage;
-n_EX_stage = std::max({n_ALU, perfModel->WB_stage.get()});
-perfModel->EX_stage.set(n_EX_stage);
+uint64_t n_EX_stage = n_ALU;
+perfModel->EX_stage = n_EX_stage;
 
   }
 );

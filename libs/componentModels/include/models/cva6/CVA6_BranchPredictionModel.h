@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef BRANCH_PREDICTION_MODEL_H
-#define BRANCH_PREDICTION_MODEL_H
+#ifndef CVA6_BRANCH_PREDICTION_MODEL_H
+#define CVA6_BRANCH_PREDICTION_MODEL_H
 
 #include <stdbool.h>
 #include <array>
@@ -150,4 +150,4 @@ private:
   
 };
 
-#endif //BRANCH_PREDICTION_MODEL_H
+#endif //CVA6_BRANCH_PREDICTION_MODEL_H

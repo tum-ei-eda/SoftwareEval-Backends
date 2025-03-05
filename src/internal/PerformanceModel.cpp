@@ -25,6 +25,26 @@
 #include <sstream> // Used for info prints in constructor. Replace with common print handling?
 #include <iomanip> // Used for info prints in constructor. Replace with common print handling?
 
+MultiElementTimingVariable::MultiElementTimingVariable(int numElements_, int resetValue_) : NUM_ELEMENTS(numElements_)
+{
+  fifo = new uint64_t[NUM_ELEMENTS];
+  for(int i = 0; i < NUM_ELEMENTS; i++){
+    fifo[i] = resetValue_;
+  }
+}
+
+void MultiElementTimingVariable::set(uint64_t value_)
+{
+  ptr = (ptr + 1) % NUM_ELEMENTS;
+  fifo[ptr] = value_;
+}
+
+uint64_t MultiElementTimingVariable::get(int depth_)
+{
+  int index = (ptr - (depth_ - 1) + NUM_ELEMENTS) % NUM_ELEMENTS;
+  return fifo[index];
+}
+
 PerformanceModel::PerformanceModel(std::string name_, SchedulingFunctionSet* schedulingFunctionSet_) : name(name_), schedulingFunctionSet(schedulingFunctionSet_)
 {
     schedulingFunctionSet->foreach([this](SchedulingFunction &func)

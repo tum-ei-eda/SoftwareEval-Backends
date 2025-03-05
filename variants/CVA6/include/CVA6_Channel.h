@@ -14,26 +14,35 @@
  * limitations under the License.
  */
 
-#ifndef CLOBBER_MODEL_H
-#define CLOBBER_MODEL_H
+/********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
 
-#include "PerformanceModel.h"
+#ifndef SWEVAL_BACKENDS_CVA6_CHANNEL_H
+#define SWEVAL_BACKENDS_CVA6_CHANNEL_H
+
+#include "Channel.h"
+
+#include <string>
+#include <stdbool.h>
 #include <cstdint>
 
-class ClobberModel : public ConnectorModel
+class CVA6_Channel: public Channel
 {
 public:
-  ClobberModel(PerformanceModel* parent_) : ConnectorModel("ClobberModel", parent_) {};
 
-  uint64_t* rd_ptr;
+  CVA6_Channel() {};
+  ~CVA6_Channel() {};
 
-  // TODO: Consider corner-case rd = 0?
-  
-  uint64_t getCb_out(void){ return (rd_ptr[getInstrIndex()] != 0) ? registerModel[rd_ptr[getInstrIndex()]] : 0; };
-  void setCb_in(uint64_t xd_){ registerModel[rd_ptr[getInstrIndex()]] = xd_; };
+  uint64_t rs1 [100];
+  uint64_t rs2 [100];
+  uint64_t rd [100];
+  uint64_t pc [100];
+  uint64_t brTarget [100];
+  uint64_t imm [100];
+  uint64_t rs1_data [100];
+  uint64_t rs2_data [100];
+  uint64_t addr [100];
 
-private:
-  uint64_t registerModel [64] = {0};
+  virtual void *getTraceValueHook(std::string);
 };
 
-#endif //CLOBBER_MODEL_H
+#endif // SWEVAL_BACKENDS_CVA6_CHANNEL_H

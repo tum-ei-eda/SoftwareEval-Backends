@@ -1,20 +1,21 @@
 /*
- * Copyright 2024 Chair of EDA, Technical University of Munich
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *	 http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright 2025 Chair of EDA, Technical University of Munich
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*	 http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
+
 
 #include "CV32E40P_PerformanceModel.h"
 
@@ -53,17 +54,23 @@ void CV32E40P_PerformanceModel::connectChannel(Channel* channel_)
 
 uint64_t CV32E40P_PerformanceModel::getCycleCount(void)
 {
-  return std::max({    IF_stage.get()    , ID_stage.get()  , EX_stage.get()  , WB_stage.get()  });
+  
+  return std::max({
+    IF_stage 
+    ,ID_stage
+    ,EX_stage
+    ,WB_stage
+  });
 }
 
 std::string CV32E40P_PerformanceModel::getPipelineStream(void)
 {
   std::stringstream ret_strs;
   
-  ret_strs << IF_stage.get(); 
-  ret_strs << "," << ID_stage.get();
-  ret_strs << "," << EX_stage.get();
-  ret_strs << "," << WB_stage.get();
+  ret_strs << IF_stage; 
+  ret_strs << "," << ID_stage;
+  ret_strs << "," << EX_stage;
+  ret_strs << "," << WB_stage;
   ret_strs << std::endl;
   return ret_strs.str();
 }

@@ -1,3 +1,4 @@
+
 /*
  * Copyright 2022 Chair of EDA, Technical University of Munich
  *
@@ -28,7 +29,13 @@ namespace SwEvalBackends
 class Factory
 {
 private:
-  enum var_t {CV32E40P, AssemblyTrace, InstructionTrace_RV64};
+  enum var_t { 
+	AssemblyTrace,
+	CV32E40P,
+	InstructionTrace_RV64,
+	Vicuna,
+	CVA6 
+  };
 public:
   int getVariantHandle(std::string);
   Channel* getChannel(int);

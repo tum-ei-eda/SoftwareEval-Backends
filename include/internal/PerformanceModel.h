@@ -29,25 +29,20 @@
 
 #include <iostream> // TODO: For debug. Remove
 
-struct stage
-{
-    uint64_t cnt = 0;
-    std::string name;
-    stage(std::string name_) : name(name_) {};
-};
-
-class TimingVariable
+class MultiElementTimingVariable
 {
 public:
-  TimingVariable(std::string name_) : name(name_) {};
-  ~TimingVariable() = default;
+  MultiElementTimingVariable(int,int);
+  ~MultiElementTimingVariable() { delete[]  fifo; };
 
-  uint64_t get(void) { return cnt; };
-  void set(uint64_t c_) { cnt = c_; };
-  
+  void set(uint64_t);
+  uint64_t get(int);
+    
 private:
-  std::string name;
-  uint64_t cnt = 0;
+  const int NUM_ELEMENTS;
+
+  uint64_t* fifo; //Pointer to dynamically allocated array (circular buffer)
+  int ptr = 0;    //Points to newest element's index
 };
 
 class SchedulingFunctionSet;
