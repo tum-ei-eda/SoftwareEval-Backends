@@ -28,30 +28,19 @@
 
 #include "CVA6_Channel.h"
 
-#include "models/cva6/ICacheResModel.h"
-#include "models/cva6/CVA6_DividerModel.h"
-#include "models/cva6/CVA6_DividerUnsignedModel.h"
-#include "models/cva6/DCacheModel.h"
 #include "models/common/StandardRegisterModel.h"
-#include "models/cva6/CVA6_BranchPredictionModel.h"
+#include "models/cva6/BranchPredictionModel.h"
 #include "models/cva6/ClobberModel.h"
-#include "models/cva6/ICacheConModel.h"
+#include "models/cva6/ICacheModel.h"
+#include "models/cva6/DividerModel.h"
+#include "models/cva6/DividerUnsignedModel.h"
+#include "models/cva6/DCacheModel.h"
 
 namespace CVA6{
 
 void CVA6_PerformanceModel::connectChannel(Channel* channel_)
 {
   CVA6_Channel* channel = static_cast<CVA6_Channel*>(channel_);
-
-  iCacheResModel.pc_ptr = channel->pc;
-
-  divider.rs1_data_ptr = channel->rs1_data;
-  divider.rs2_data_ptr = channel->rs2_data;
-
-  divider_u.rs1_data_ptr = channel->rs1_data;
-  divider_u.rs2_data_ptr = channel->rs2_data;
-
-  dCacheModel.addr_ptr = channel->addr;
 
   regModel.rs1_ptr = channel->rs1;
   regModel.rs2_ptr = channel->rs2;
@@ -65,7 +54,15 @@ void CVA6_PerformanceModel::connectChannel(Channel* channel_)
 
   clobberModel.rd_ptr = channel->rd;
 
-  iCacheConModel.pc_ptr = channel->pc;
+  iCacheModel.pc_ptr = channel->pc;
+
+  divider.rs1_data_ptr = channel->rs1_data;
+  divider.rs2_data_ptr = channel->rs2_data;
+
+  divider_u.rs1_data_ptr = channel->rs1_data;
+  divider_u.rs2_data_ptr = channel->rs2_data;
+
+  dCacheModel.addr_ptr = channel->addr;
 
 }
 
@@ -74,7 +71,7 @@ uint64_t CVA6_PerformanceModel::getCycleCount(void)
   
   return std::max({
     PC_stage 
-    ,IF_stage
+    ,IF_stage.get(1)
     ,IF_substage_0
     ,IF_substage_1
     ,IF_substage_2
@@ -100,7 +97,7 @@ std::string CVA6_PerformanceModel::getPipelineStream(void)
   std::stringstream ret_strs;
   
   ret_strs << PC_stage; 
-  ret_strs << "," << IF_stage;
+  ret_strs << "," << IF_stage.get(1);
   ret_strs << "," << IQ_stage.get(1);
   ret_strs << "," << ID_stage;
   ret_strs << "," << IS_stage;

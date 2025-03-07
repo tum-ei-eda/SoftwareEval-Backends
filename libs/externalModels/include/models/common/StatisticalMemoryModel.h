@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2022 Chair of EDA, Technical University of Munich
  *
@@ -15,33 +14,24 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+#ifndef COMMON_STATISTICAL_MEMORY_MODEL_H
+#define COMMON_STATISTICAL_MEMORY_MODEL_H
 
-#include "Channel.h"
-#include "Backend.h"
+#include "PerformanceModel.h"
 
-#include <string>
+namespace common{
 
-namespace SwEvalBackends
+class StatisticalMemoryModel : public ResourceModel
 {
-
-class Factory
-{
-private:
-  enum var_t { 
-	AssemblyTrace,
-	CV32E40P,
-	InstructionTrace_RV64,
-	CVA6 
-  };
 public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
+  StatisticalMemoryModel(PerformanceModel* parent_) : ResourceModel("StatisticalMemoryModel", parent_) {};
+
+  int getDelay(void) {return ((cnt++)%100 == 0) ? 5 : 1; };
+  
+private:
+  int cnt = 0;
 };
 
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+} // namespace common
+  
+#endif //COMMON_STATISTICAL_MEMORY_MODEL_H

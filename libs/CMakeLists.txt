@@ -1,1 +1,1 @@
-ADD_SUBDIRECTORY(componentModels)
+ADD_SUBDIRECTORY(externalModels)

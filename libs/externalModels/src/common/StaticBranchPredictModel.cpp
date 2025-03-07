@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2022 Chair of EDA, Technical University of Munich
  *
@@ -15,33 +14,43 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+#include "models/common/StaticBranchPredictModel.h"
 
-#include "Channel.h"
-#include "Backend.h"
+#include <cstdint>
 
-#include <string>
+namespace common{
 
-namespace SwEvalBackends
+void StaticBranchPredictModel::setPc_p(uint64_t pc_p_)
 {
+  pc_p = pc_p_;
+}
 
-class Factory
+void StaticBranchPredictModel::setPc_np(uint64_t pc_np_)
 {
-private:
-  enum var_t { 
-	AssemblyTrace,
-	CV32E40P,
-	InstructionTrace_RV64,
-	CVA6 
-  };
-public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
-};
+  pc_np = pc_np_;
+  branchInstr = true;
+  branchTarget = brTarget_ptr[getInstrIndex()];
+}
 
-} // namespace SwEvalBackends
+uint64_t StaticBranchPredictModel::getPc(void)
+{
+  if(!branchInstr)
+  {
+    return pc_p;
+  }
+  else
+  {
+    branchInstr = false;
+    // Always predict branch-not-taken
+    if(pc_ptr[getInstrIndex()] == branchTarget)
+    {
+      return pc_np;
+    }
+    else
+    {
+      return pc_p;
+    }
+  }
+}
 
-#endif //SWEVAL_BACKENDS_FACTORY_H
+} // namespace common

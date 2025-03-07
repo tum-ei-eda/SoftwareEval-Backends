@@ -27,14 +27,13 @@
 #include "PerformanceModel.h"
 #include "Channel.h"
 
-#include "models/cva6/ICacheResModel.h"
-#include "models/cva6/CVA6_DividerModel.h"
-#include "models/cva6/CVA6_DividerUnsignedModel.h"
-#include "models/cva6/DCacheModel.h"
 #include "models/common/StandardRegisterModel.h"
-#include "models/cva6/CVA6_BranchPredictionModel.h"
+#include "models/cva6/BranchPredictionModel.h"
 #include "models/cva6/ClobberModel.h"
-#include "models/cva6/ICacheConModel.h"
+#include "models/cva6/ICacheModel.h"
+#include "models/cva6/DividerModel.h"
+#include "models/cva6/DividerUnsignedModel.h"
+#include "models/cva6/DCacheModel.h"
 
 namespace CVA6{
 
@@ -45,22 +44,21 @@ class CVA6_PerformanceModel : public PerformanceModel
 public:
 
   CVA6_PerformanceModel() : PerformanceModel("CVA6", CVA6_SchedulingFunctionSet)
+    ,IF_stage(3,0)
     ,IQ_stage(7,0)
     ,EX_stage(8,0)
     ,COM_stage(2,0)
-    ,iCacheResModel(this)
-    ,divider(this)
-    ,divider_u(this)
-    ,dCacheModel(this)
     ,regModel(this)
     ,dynBranchPredModel(this)
     ,clobberModel(this)
-    ,iCacheConModel(this)
+    ,iCacheModel(this)
+    ,divider(this)
+    ,divider_u(this)
+    ,dCacheModel(this)
   {};
 
   // Single-Element Timing Variables
   uint64_t PC_stage = 0;
-  uint64_t IF_stage = 0;
   uint64_t IF_substage_0 = 0;
   uint64_t IF_substage_1 = 0;
   uint64_t IF_substage_2 = 0;
@@ -77,21 +75,19 @@ public:
   uint64_t EX_substage_sUnit = 0;
 
   // Multi-Element Timing Variables
+  MultiElementTimingVariable IF_stage;
   MultiElementTimingVariable IQ_stage;
   MultiElementTimingVariable EX_stage;
   MultiElementTimingVariable COM_stage;
 
   // External Resource Models
-  ICacheResModel iCacheResModel;
-  CVA6_DividerModel divider;
-  CVA6_DividerUnsignedModel divider_u;
-  DCacheModel dCacheModel;
-
-  // External Connector Models
-  StandardRegisterModel regModel;
-  CVA6_BranchPredictionModel dynBranchPredModel;
-  ClobberModel clobberModel;
-  ICacheConModel iCacheConModel;
+  common::StandardRegisterModel regModel;
+  cva6::BranchPredictionModel dynBranchPredModel;
+  cva6::ClobberModel clobberModel;
+  cva6::ICacheModel iCacheModel;
+  cva6::DividerModel divider;
+  cva6::DividerUnsignedModel divider_u;
+  cva6::DCacheModel dCacheModel;
 
   virtual void connectChannel(Channel*);
   virtual uint64_t getCycleCount(void);

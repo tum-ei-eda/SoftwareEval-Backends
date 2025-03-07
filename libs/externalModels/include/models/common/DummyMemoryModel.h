@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2022 Chair of EDA, Technical University of Munich
  *
@@ -15,33 +14,23 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+// TODO: Can delete this model! It always returns delay of 1 (i.e. easily replaced by static resource). Just used to test autogeneration tool.
 
-#include "Channel.h"
-#include "Backend.h"
+#ifndef COMMON_DUMMY_MEMORY_MODEL_H
+#define COMMON_DUMMY_MEMORY_MODEL_H
 
-#include <string>
+#include "PerformanceModel.h"
 
-namespace SwEvalBackends
+namespace common{
+
+class DummyMemoryModel : public ResourceModel
 {
-
-class Factory
-{
-private:
-  enum var_t { 
-	AssemblyTrace,
-	CV32E40P,
-	InstructionTrace_RV64,
-	CVA6 
-  };
 public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
+  DummyMemoryModel(PerformanceModel* parent_) : ResourceModel("DummyMemoryModel", parent_) {};
+
+  int getDelay(void) {return 1;};
+
 };
-
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+} // namespace common
+  
+#endif //COMMON_DUMMY_MEMORY_MODEL_H

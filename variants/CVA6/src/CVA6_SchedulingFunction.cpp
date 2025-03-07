@@ -44,22 +44,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -69,8 +72,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -129,22 +132,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -154,8 +160,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -216,22 +222,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -241,8 +250,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -303,22 +312,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -328,8 +340,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -390,22 +402,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -415,8 +430,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -477,22 +492,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -502,8 +520,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -564,22 +582,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -589,8 +610,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -657,22 +678,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -682,8 +706,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -750,22 +774,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -775,8 +802,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -843,22 +870,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -868,8 +898,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -936,22 +966,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -961,8 +994,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1029,22 +1062,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1054,8 +1090,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1122,22 +1158,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1147,8 +1186,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1215,22 +1254,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1240,8 +1282,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1308,22 +1350,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1333,8 +1378,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1401,22 +1446,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1426,8 +1474,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1494,22 +1542,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1519,8 +1570,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1587,22 +1638,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1612,8 +1666,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1680,22 +1734,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1705,8 +1762,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1773,22 +1830,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1798,8 +1858,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1866,22 +1926,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1891,8 +1954,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -1959,22 +2022,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -1984,8 +2050,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2052,22 +2118,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2077,8 +2146,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2148,22 +2217,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2173,8 +2245,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2244,22 +2316,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2269,8 +2344,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2340,22 +2415,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2365,8 +2443,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2436,22 +2514,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2461,8 +2542,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2532,22 +2613,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2557,8 +2641,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2628,22 +2712,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2653,8 +2740,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2724,22 +2811,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2749,8 +2839,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2820,22 +2910,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2845,8 +2938,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -2916,22 +3009,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -2941,8 +3037,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3012,22 +3108,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3037,8 +3136,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3108,22 +3207,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3133,8 +3235,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3204,22 +3306,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3230,8 +3335,8 @@ n_IScan = n_IF_substage_1 + 1;
 perfModel->dynBranchPredModel.setPc_p(n_IScan);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3297,22 +3402,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3323,8 +3431,8 @@ n_IScan = n_IF_substage_1 + 1;
 perfModel->dynBranchPredModel.setPc_p(n_IScan);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3390,22 +3498,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3416,8 +3527,8 @@ n_IScan = n_IF_substage_1 + 1;
 perfModel->dynBranchPredModel.setPc_p(n_IScan);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3483,22 +3594,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3509,8 +3623,8 @@ n_IScan = n_IF_substage_1 + 1;
 perfModel->dynBranchPredModel.setPc_p(n_IScan);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3576,22 +3690,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3602,8 +3719,8 @@ n_IScan = n_IF_substage_1 + 1;
 perfModel->dynBranchPredModel.setPc_p(n_IScan);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3669,22 +3786,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3695,8 +3815,8 @@ n_IScan = n_IF_substage_1 + 1;
 perfModel->dynBranchPredModel.setPc_p(n_IScan);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3762,22 +3882,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3788,8 +3911,8 @@ n_IScan = n_IF_substage_1 + 1;
 perfModel->dynBranchPredModel.setPc_p_j(n_IScan);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3853,22 +3976,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3879,8 +4005,8 @@ n_IScan = n_IF_substage_1 + 1;
 perfModel->dynBranchPredModel.setPc_p_jr(n_IScan);
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -3948,22 +4074,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -3973,8 +4102,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4051,22 +4180,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4076,8 +4208,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4154,22 +4286,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4179,8 +4314,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4257,22 +4392,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4282,8 +4420,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4360,22 +4498,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4385,8 +4526,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4463,22 +4604,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4488,8 +4632,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4558,22 +4702,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4583,8 +4730,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4653,22 +4800,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4678,8 +4828,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4748,22 +4898,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4773,8 +4926,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4843,22 +4996,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4868,8 +5024,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -4938,22 +5094,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -4963,8 +5122,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5033,22 +5192,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5058,8 +5220,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5128,22 +5290,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5153,8 +5318,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5223,22 +5388,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5248,8 +5416,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5294,6 +5462,7 @@ perfModel->EX_substage_dCache = n_EX_substage_dCache;
 // LUnit
 uint64_t n_LUnit;
 n_LUnit = n_EX_substage_dCache + 1;
+perfModel->regModel.setXd(n_LUnit);
 // EX_substage_lUnit
 uint64_t n_EX_substage_lUnit = n_LUnit;
 perfModel->EX_substage_lUnit = n_EX_substage_lUnit;
@@ -5329,22 +5498,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5354,8 +5526,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5400,6 +5572,7 @@ perfModel->EX_substage_dCache = n_EX_substage_dCache;
 // LUnit
 uint64_t n_LUnit;
 n_LUnit = n_EX_substage_dCache + 1;
+perfModel->regModel.setXd(n_LUnit);
 // EX_substage_lUnit
 uint64_t n_EX_substage_lUnit = n_LUnit;
 perfModel->EX_substage_lUnit = n_EX_substage_lUnit;
@@ -5435,22 +5608,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5460,8 +5636,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5506,6 +5682,7 @@ perfModel->EX_substage_dCache = n_EX_substage_dCache;
 // LUnit
 uint64_t n_LUnit;
 n_LUnit = n_EX_substage_dCache + 1;
+perfModel->regModel.setXd(n_LUnit);
 // EX_substage_lUnit
 uint64_t n_EX_substage_lUnit = n_LUnit;
 perfModel->EX_substage_lUnit = n_EX_substage_lUnit;
@@ -5541,22 +5718,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5566,8 +5746,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5612,6 +5792,7 @@ perfModel->EX_substage_dCache = n_EX_substage_dCache;
 // LUnit
 uint64_t n_LUnit;
 n_LUnit = n_EX_substage_dCache + 1;
+perfModel->regModel.setXd(n_LUnit);
 // EX_substage_lUnit
 uint64_t n_EX_substage_lUnit = n_LUnit;
 perfModel->EX_substage_lUnit = n_EX_substage_lUnit;
@@ -5647,22 +5828,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5672,8 +5856,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5718,6 +5902,7 @@ perfModel->EX_substage_dCache = n_EX_substage_dCache;
 // LUnit
 uint64_t n_LUnit;
 n_LUnit = n_EX_substage_dCache + 1;
+perfModel->regModel.setXd(n_LUnit);
 // EX_substage_lUnit
 uint64_t n_EX_substage_lUnit = n_LUnit;
 perfModel->EX_substage_lUnit = n_EX_substage_lUnit;
@@ -5753,22 +5938,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5778,8 +5966,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5824,6 +6012,7 @@ perfModel->EX_substage_dCache = n_EX_substage_dCache;
 // LUnit
 uint64_t n_LUnit;
 n_LUnit = n_EX_substage_dCache + 1;
+perfModel->regModel.setXd(n_LUnit);
 // EX_substage_lUnit
 uint64_t n_EX_substage_lUnit = n_LUnit;
 perfModel->EX_substage_lUnit = n_EX_substage_lUnit;
@@ -5859,22 +6048,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5884,8 +6076,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -5930,6 +6122,7 @@ perfModel->EX_substage_dCache = n_EX_substage_dCache;
 // LUnit
 uint64_t n_LUnit;
 n_LUnit = n_EX_substage_dCache + 1;
+perfModel->regModel.setXd(n_LUnit);
 // EX_substage_lUnit
 uint64_t n_EX_substage_lUnit = n_LUnit;
 perfModel->EX_substage_lUnit = n_EX_substage_lUnit;
@@ -5965,22 +6158,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -5990,8 +6186,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -6063,22 +6259,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -6088,8 +6287,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -6161,22 +6360,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -6186,8 +6388,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;
@@ -6259,22 +6461,25 @@ uint64_t n_uA_PcCorrect;
 n_uA_PcCorrect = std::max({n_Enter, perfModel->dynBranchPredModel.getPc_mp()});
 // uA_CacheBlock
 uint64_t n_uA_CacheBlock;
-n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheConModel.getIc_out()});
+n_uA_CacheBlock = std::max({n_Enter, perfModel->iCacheModel.getIc_out()});
 // PC_stage
 uint64_t n_PC_stage;
-n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage, perfModel->IF_substage_0});
+n_PC_stage = std::max({n_PCGen, n_uA_PcCorrect, n_uA_CacheBlock, perfModel->IF_stage.get(3), perfModel->IF_substage_0});
 perfModel->PC_stage = n_PC_stage;
 // ICacheCtrl
 uint64_t n_ICacheCtrl;
 n_ICacheCtrl = n_PC_stage + 1;
+// uA_PcPredict
+uint64_t n_uA_PcPredict;
+n_uA_PcPredict = std::max({n_PC_stage, perfModel->dynBranchPredModel.getPc_pt()});
 // IF_substage_0
 uint64_t n_IF_substage_0;
-n_IF_substage_0 = std::max({n_ICacheCtrl, perfModel->IF_substage_1});
+n_IF_substage_0 = std::max({n_ICacheCtrl, n_uA_PcPredict, perfModel->IF_substage_1});
 perfModel->IF_substage_0 = n_IF_substage_0;
 // ICache
 uint64_t n_ICache;
-n_ICache = n_IF_substage_0 + perfModel->iCacheResModel.getDelay();
-perfModel->iCacheConModel.setIc_in(n_ICache);
+n_ICache = n_IF_substage_0 + perfModel->iCacheModel.getDelay();
+perfModel->iCacheModel.setIc_in(n_ICache);
 // IF_substage_1
 uint64_t n_IF_substage_1;
 n_IF_substage_1 = std::max({n_ICache, perfModel->IF_substage_2});
@@ -6284,8 +6489,8 @@ uint64_t n_IScan;
 n_IScan = n_IF_substage_1 + 1;
 // IF_stage
 uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IScan, perfModel->IQ_stage.get(7)});
-perfModel->IF_stage = n_IF_stage;
+n_IF_stage = std::max({n_IScan, perfModel->IF_stage.get(1), perfModel->IQ_stage.get(7)});
+perfModel->IF_stage.set(n_IF_stage);
 perfModel->IF_substage_2 = n_IF_stage;
 // IQInsert
 uint64_t n_IQInsert;

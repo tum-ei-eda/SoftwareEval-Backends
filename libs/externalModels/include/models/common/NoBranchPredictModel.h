@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2022 Chair of EDA, Technical University of Munich
  *
@@ -15,33 +14,29 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+#ifndef COMMON_NO_BRANCH_PREDICT_MODEL_H
+#define COMMON_NO_BRANCH_PREDICT_MODEL_H
 
-#include "Channel.h"
-#include "Backend.h"
+#include "PerformanceModel.h"
 
-#include <string>
+#include <stdbool.h>
+#include <cstdint>
 
-namespace SwEvalBackends
+namespace common{
+
+class NoBranchPredictModel : public ConnectorModel
 {
-
-class Factory
-{
-private:
-  enum var_t { 
-	AssemblyTrace,
-	CV32E40P,
-	InstructionTrace_RV64,
-	CVA6 
-  };
 public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
+    NoBranchPredictModel(PerformanceModel* parent_) : ConnectorModel("NoBranchPredictModel", parent_) {};
+
+    void setPc_p (uint64_t pc_p_) {};
+    void setPc_np(uint64_t pc_np_) { pc = pc_np_; };
+    uint64_t getPc(void) { return pc; };
+    
+private:
+    uint64_t pc = 0;
 };
 
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+} // namespace common
+  
+#endif //COMMON_NO_BRANCH_PREDICT_MODEL_H

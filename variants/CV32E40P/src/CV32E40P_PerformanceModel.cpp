@@ -28,10 +28,10 @@
 
 #include "CV32E40P_Channel.h"
 
-#include "models/cv32e40p/DividerModel.h"
-#include "models/cv32e40p/DividerUnsignedModel.h"
 #include "models/common/StandardRegisterModel.h"
 #include "models/common/StaticBranchPredictModel.h"
+#include "models/cv32e40p/DividerModel.h"
+#include "models/cv32e40p/DividerUnsignedModel.h"
 
 namespace CV32E40P{
 
@@ -39,16 +39,16 @@ void CV32E40P_PerformanceModel::connectChannel(Channel* channel_)
 {
   CV32E40P_Channel* channel = static_cast<CV32E40P_Channel*>(channel_);
 
-  divider.rs2_data_ptr = channel->rs2_data;
-
-  divider_u.rs2_data_ptr = channel->rs2_data;
-
   regModel.rs1_ptr = channel->rs1;
   regModel.rs2_ptr = channel->rs2;
   regModel.rd_ptr = channel->rd;
 
   staBranchPredModel.pc_ptr = channel->pc;
   staBranchPredModel.brTarget_ptr = channel->brTarget;
+
+  divider.rs2_data_ptr = channel->rs2_data;
+
+  divider_u.rs2_data_ptr = channel->rs2_data;
 
 }
 

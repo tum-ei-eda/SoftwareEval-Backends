@@ -27,10 +27,10 @@
 #include "PerformanceModel.h"
 #include "Channel.h"
 
-#include "models/cv32e40p/DividerModel.h"
-#include "models/cv32e40p/DividerUnsignedModel.h"
 #include "models/common/StandardRegisterModel.h"
 #include "models/common/StaticBranchPredictModel.h"
+#include "models/cv32e40p/DividerModel.h"
+#include "models/cv32e40p/DividerUnsignedModel.h"
 
 namespace CV32E40P{
 
@@ -41,10 +41,10 @@ class CV32E40P_PerformanceModel : public PerformanceModel
 public:
 
   CV32E40P_PerformanceModel() : PerformanceModel("CV32E40P", CV32E40P_SchedulingFunctionSet)
-    ,divider(this)
-    ,divider_u(this)
     ,regModel(this)
     ,staBranchPredModel(this)
+    ,divider(this)
+    ,divider_u(this)
   {};
 
   // Single-Element Timing Variables
@@ -55,12 +55,10 @@ public:
 
 
   // External Resource Models
-  DividerModel divider;
-  DividerUnsignedModel divider_u;
-
-  // External Connector Models
-  StandardRegisterModel regModel;
-  StaticBranchPredictModel staBranchPredModel;
+  common::StandardRegisterModel regModel;
+  common::StaticBranchPredictModel staBranchPredModel;
+  cv32e40p::DividerModel divider;
+  cv32e40p::DividerUnsignedModel divider_u;
 
   virtual void connectChannel(Channel*);
   virtual uint64_t getCycleCount(void);

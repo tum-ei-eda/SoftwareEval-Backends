@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2022 Chair of EDA, Technical University of Munich
  *
@@ -15,33 +14,30 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+#ifndef CVA6_CLOBBER_MODEL_H
+#define CVA6_CLOBBER_MODEL_H
 
-#include "Channel.h"
-#include "Backend.h"
+#include "PerformanceModel.h"
+#include <cstdint>
 
-#include <string>
+namespace cva6{
 
-namespace SwEvalBackends
+class ClobberModel : public ConnectorModel
 {
-
-class Factory
-{
-private:
-  enum var_t { 
-	AssemblyTrace,
-	CV32E40P,
-	InstructionTrace_RV64,
-	CVA6 
-  };
 public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
+  ClobberModel(PerformanceModel* parent_) : ConnectorModel("ClobberModel", parent_) {};
+
+  uint64_t* rd_ptr;
+
+  // TODO: Consider corner-case rd = 0?
+  
+  uint64_t getCb_out(void){ return (rd_ptr[getInstrIndex()] != 0) ? registerModel[rd_ptr[getInstrIndex()]] : 0; };
+  void setCb_in(uint64_t xd_){ registerModel[rd_ptr[getInstrIndex()]] = xd_; };
+
+private:
+  uint64_t registerModel [64] = {0};
 };
 
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+} // namespace cva6
+  
+#endif //CVA6_CLOBBER_MODEL_H

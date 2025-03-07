@@ -1,6 +1,5 @@
-
 /*
- * Copyright 2022 Chair of EDA, Technical University of Munich
+ * Copyright 2023 Chair of EDA, Technical University of Munich
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,33 +14,28 @@
  * limitations under the License.
  */
 
-#ifndef SWEVAL_BACKENDS_FACTORY_H
-#define SWEVAL_BACKENDS_FACTORY_H
+#ifndef CV32E40P_DIVIDER_UNSIGNED_MODEL_H
+#define CV32E40P_DIVIDER_UNSIGNED_MODEL_H
 
-#include "Channel.h"
-#include "Backend.h"
+#include <cstdint>
 
-#include <string>
+#include "PerformanceModel.h"
 
-namespace SwEvalBackends
+namespace cv32e40p{
+
+class DividerUnsignedModel : public ResourceModel
 {
-
-class Factory
-{
-private:
-  enum var_t { 
-	AssemblyTrace,
-	CV32E40P,
-	InstructionTrace_RV64,
-	CVA6 
-  };
 public:
-  int getVariantHandle(std::string);
-  Channel* getChannel(int);
-  Backend* getPerformanceEstimator(int);
-  Backend* getTracePrinter(int);
+  DividerUnsignedModel(PerformanceModel* parent_) : ResourceModel("DividerUnsignedModel", parent_) {};
+
+  uint64_t* rs2_data_ptr;
+  
+  int getDelay(void);
+
+private:
+  int findReverseOneIndex(uint64_t);
 };
 
-} // namespace SwEvalBackends
-
-#endif //SWEVAL_BACKENDS_FACTORY_H
+} // namespace cv32e40p
+  
+#endif // CV32E40P_DIVIDER_UNSIGNED_MODEL_H
