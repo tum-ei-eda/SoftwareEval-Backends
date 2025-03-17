@@ -34,8 +34,8 @@ moveToBottom(CacheSet set, size_t index)
     const size_t size = set.size();
     while (index < size - 1)
     {
-        cmm::CacheLine& moveDown = set[index];
-        cmm::CacheLine& moveUp   = set[index + 1];
+        cmm::CacheEntry& moveDown = set[index];
+        cmm::CacheEntry& moveUp   = set[index + 1];
         std::swap(moveDown, moveUp);
         index++;
     }
@@ -55,27 +55,27 @@ moveToTop(CacheSet set, size_t index)
         // -> done
         // now `entry` is at the top of the set whereas the other entries
         // have moved down a place
-        cmm::CacheLine& moveUp   = set[index];
-        cmm::CacheLine& moveDown = set[index - 1];
+        cmm::CacheEntry& moveUp   = set[index];
+        cmm::CacheEntry& moveDown = set[index - 1];
         std::swap(moveDown, moveUp);
         index--;
     }
 }
 
 /// strategies that chose an entry to evict if all entries of a cache set are
-/// used. May use the `CacheLine::data` member to store information
+/// used. May use the `CacheEntry::data` member to store information
 /// persistently.
 namespace eviction_strategy
 {
 
-/// selects pseudo-random cache line using a 8 bit linear feedback shift
+/// selects pseudo-random cache entry using a 8 bit linear feedback shift
 /// register (adopted from DCacheModel)
 inline auto lfsr8bit(const CacheMemory& tagMemory)
 {
     uint8_t shift_state = 0x00; // seed
     const size_t ways = tagMemory.ways() - 1;
 
-    return [shift_state, ways](CacheSet set) mutable -> CacheLine* {
+    return [shift_state, ways](CacheSet set) mutable -> CacheEntry* {
         uint8_t shift_in = ~(((shift_state & 0x80) >> 7) ^
                              ((shift_state & 0x08) >> 3) ^
                              ((shift_state & 0x04) >> 2) ^
@@ -85,23 +85,24 @@ inline auto lfsr8bit(const CacheMemory& tagMemory)
     };
 }
 
-/// choses a (pseudo-)random cache line using built-in `rand()` method
+/// choses a (pseudo-)random cache entry using built-in `rand()` method
 inline auto random(const CacheMemory& tagMemory)
 {
     const size_t ways = tagMemory.ways();
-    return [ways](CacheSet set) -> CacheLine* {
+    return [ways](CacheSet set) -> CacheEntry* {
         return &set[rand() % ways];
     };
 }
 
-/// choses the cache line that was least frequently used
-/// NOTE: the current implemention might heavily bias certain entries
+/// choses the cache entry that was least frequently used
+/// NOTE: the current implemention may lead to strongly biased entries, as the
+/// counter does not decay or is capped
 inline auto lfu(const CacheMemory& tagMemory)
 {
-    return [](CacheSet set) -> CacheLine* {
-        CacheLine* entry = &*std::max_element(set.begin(), set.end(),
-                                              [](CacheLine& smallest,
-                                                 CacheLine& entry){
+    return [](CacheSet set) -> CacheEntry* {
+        CacheEntry* entry = &*std::max_element(set.begin(), set.end(),
+                                              [](CacheEntry& smallest,
+                                                 CacheEntry& entry){
             // data = number of accesses
             return entry.data < smallest.data;
         });
@@ -111,23 +112,23 @@ inline auto lfu(const CacheMemory& tagMemory)
     };
 }
 
-/// choses the cache line that was least recently used
+/// choses the cache entry that was least recently used
 inline auto lru(const CacheMemory& tagMemory)
 {
-    return [](CacheSet set) -> CacheLine* {
+    return [](CacheSet set) -> CacheEntry* {
         // assumes set is sorted according to most recently used first
         // -> use last entry
         return &set.last();
     };
 }
 
-/// choses the cache line that was most recently used (apperantly useful if
+/// choses the cache entry that was most recently used (apperantly useful if
 /// large datasets are searched repeatedly?)
 inline auto mru(const CacheMemory& tagMemory)
 {
-    return [](CacheSet set) -> CacheLine* {
+    return [](CacheSet set) -> CacheEntry* {
         // assumes set is sorted according to most recently used first
-        // -> use last entry
+        // -> use first entry
         return &set.first();
     };
 }
@@ -136,8 +137,8 @@ inline auto mru(const CacheMemory& tagMemory)
 /// the leftmost element whose bit is not zero gets replaced
 inline auto plru(const CacheMemory& tagMemory)
 {
-    return [](CacheSet set) -> CacheLine* {
-        for (CacheLine& e : set)
+    return [](CacheSet set) -> CacheEntry* {
+        for (CacheEntry& e : set)
         {
             if (e.data > 0) return &e;
         }
@@ -147,17 +148,15 @@ inline auto plru(const CacheMemory& tagMemory)
     };
 }
 
-// TODO: implement PLRU (pseudo LRU with binary tree)
-
 /// evicts the entries in the order they were added
 /// (entries are sorted form oldest to newest)
 /// Assuming:
 /// 1. entries are placed into cache set from top to bottom
 inline auto fifo(const CacheMemory& tagMemory)
 {
-    return [](CacheSet set) -> CacheLine* {
+    return [](CacheSet set) -> CacheEntry* {
         size_t index = 0;
-        // oldest entry is at top -> move to back by shifting other entries up a place
+        // oldest entry is at top -> move to back by shifting other entries up
         moveToBottom(set, index);
         // now the oldest entry is at the bottom and is evicted
         // -> newest entry is placed at the bottom
@@ -168,10 +167,10 @@ inline auto fifo(const CacheMemory& tagMemory)
 /// evicts the entry that was most recently added
 /// (entries are sorted form oldest to newest)
 /// Assuming:
-/// 1. entries are placed into cache set from top to bottom
+/// - entries are placed into cache set from top to bottom
 inline auto lifo(const CacheMemory& tagMemory)
 {
-    return [](CacheSet set) -> CacheLine* {
+    return [](CacheSet set) -> CacheEntry* {
         // newest entry is placed at the end of the cache set
         return &set.last();
     };
@@ -179,10 +178,10 @@ inline auto lifo(const CacheMemory& tagMemory)
 
 } // namespace eviction_strategy
 
-/// strategies that update the internal state of the cache set/entry. Often
-/// an update strategy is required for the implementation of the eviction
-/// strategy. May use the `CacheLine::data` member to store information
-/// persistently.
+/// strategies that update the internal state of the cache set/entry once an
+/// entry us accessed, which may be required for the implementation of the
+/// eviction strategy. May use the `CacheEntry::data` member to store
+/// information persistently.
 namespace update_on_access_strategy
 {
 
@@ -198,14 +197,14 @@ auto random = default_;
 auto fifo = default_;
 auto lifo = default_;
 
-/// updates the cache line and set according to the least frequently used
+/// updates the cache entry and set according to the least frequently used
 /// replacement strategy
 inline auto lfu()
 {
     // somewhat crude implementation
-    // -> count is not capped which may lead to heavy bias in keeping an old
-    //    entry alive that is no longer used
-    return [](CacheSet set, CacheLine* entry) -> void {
+    // -> count is not capped nor does it decay, which may lead to heavy bias
+    //    keeping old entries alive that are no longer used
+    return [](CacheSet set, CacheEntry* entry) -> void {
         assert(entry);
         // data = number of accesses
         entry->data += 1;
@@ -216,7 +215,7 @@ inline auto lfu()
 /// the set from most recently used to least recently used
 inline auto lru()
 {
-    return [](CacheSet set, CacheLine* entry) -> void {
+    return [](CacheSet set, CacheEntry* entry) -> void {
         assert(entry);
 
         size_t index = set.indexOf(entry);
@@ -237,19 +236,17 @@ auto mru = lru;
 ///  the last bit that was set to one before, the bits for all other lines
 ///  are set to one. Upon a cache miss, the leftmost element whose bit is set
 ///  to one gets replaced."
-///
-/// Unsure if its implemented correctly but delivers very close results to LRU!
 inline auto plru()
 {
-    return [](CacheSet set, CacheLine* entry) -> void {
+    return [](CacheSet set, CacheEntry* entry) -> void {
         entry->data = 0;
         // check if its was the last line to be set to zero
         bool allZeros = std::all_of(set.begin(), set.end(),
-                                    [](CacheLine& e){ return e.data == 0; });
+                                    [](CacheEntry& e){ return e.data == 0; });
         if (allZeros)
         {
             // if so, set all other entries to one
-            for (CacheLine& e : set) e.data = 1;
+            for (CacheEntry& e : set) e.data = 1;
             entry->data = 0;
         }
     };
@@ -257,7 +254,8 @@ inline auto plru()
 
 } // namespace update_on_access_strategy
 
-// TODO: brief
+/// strategies that are invoked when invalidating a cache entry. Depending
+/// on the eviction strategy certain data may need to be invalidated.
 namespace update_on_invalidation_strategy
 {
 
@@ -276,7 +274,7 @@ auto plru = default_;
 
 inline auto lfu()
 {
-    return [](CacheSet set, CacheLine* entry) -> void {
+    return [](CacheSet set, CacheEntry* entry) -> void {
         assert(entry);
         // reset count
         entry->data = 0x0;
@@ -285,7 +283,7 @@ inline auto lfu()
 
 inline auto fifo()
 {
-    return [](CacheSet set, CacheLine* entry) -> void {
+    return [](CacheSet set, CacheEntry* entry) -> void {
         assert(entry);
         size_t index = set.indexOf(entry);
         // move entry to bottom as it is now free
@@ -297,17 +295,19 @@ auto lifo = fifo;
 
 } // namespace update_on_invalidation_strategy
 
-// TODO: brief
+/// strategies that implement the behavior of a write policy.
 namespace write_update_strategy
 {
 
-// TODO: brief
+/// basic write through policy. Broadcasts invalidtion to all other
+/// caches that are registered (usually all caches on the same level are affected).
 inline auto writeThrough()
 {
     return [](CacheInstance& cache,
               CacheLookup& lookup,
               ComponentHierarchy hierarchy,
-              bool isMiss) -> Delay {
+              bool const isMiss,
+              bool const isWrite) -> Delay {
         // invalidate address on same level
         cache.broadcastInvalidation(lookup.address);
         // writeback to next component
@@ -315,8 +315,8 @@ inline auto writeThrough()
     };
 }
 
-// TODO: brief
-/// Assuming:
+/// basic write back policy.
+/// assuming:
 /// 1. cache is "alone" on its level no invalidations are
 ///    necessary to other caches
 /// 2. next level is not accessed without prior access to this
@@ -326,7 +326,8 @@ inline auto writeBack()
     return [](CacheInstance& cache,
               CacheLookup& lookup,
               ComponentHierarchy hierarchy,
-              bool isMiss) -> Delay {
+              bool const isMiss,
+              bool const isWrite) -> Delay {
         // mark as dirty
         cache.makeEntryDirty(*lookup.entry);
         return Delay{0};
@@ -334,45 +335,6 @@ inline auto writeBack()
 }
 
 } // namespace write_update_strategy
-
-// TODO: brief
-namespace replacement_strategy
-{
-
-// TODO: brief
-inline auto default_()
-{
-    return nullptr; // nothing to do here
-}
-
-} // namespace replacement_strategy
-
-
-// TODO: brief
-namespace on_hit_routine
-{
-
-// TODO: brief
-inline auto default_()
-{
-    return nullptr; // nothing to do here
-}
-
-} // namespace on_hit_routine
-
-// TODO: brief
-namespace on_miss_routine
-{
-
-// TODO: brief
-inline auto default_()
-{
-    return nullptr; // nothing to do here
-}
-
-// TODO: implement no allocate routine
-
-} // namespace on_miss_routine
 
 } // namespace cmm
 

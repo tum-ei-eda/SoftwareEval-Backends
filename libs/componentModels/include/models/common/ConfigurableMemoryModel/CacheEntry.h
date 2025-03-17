@@ -25,8 +25,15 @@
 namespace cmm
 {
 
-/// Denotes a cache line
-struct CacheLine
+// stongly named types for tag part of an address
+using CacheTag = NamedType<uint64_t, struct Tag_>;
+
+/**
+ * @brief The CacheEntry struct. Denotes a cache entry. Only the tag and
+ * flag part of a cache entry are modeled, the data (i.e. the cache-line) is
+ * not modeled.
+ */
+struct CacheEntry
 {
     /// Status flags of a cache entry
     enum StatusFlag : uint32_t
@@ -36,19 +43,17 @@ struct CacheLine
         Invalid = 1 << 0,
         /// cache entry is dirty -> must be written back before replacement
         Dirty = 1 << 1,
-        /// cache entry is cold -> compulsory miss
-        Uninitialized = 1 << 2,
         /// base value for custom flags. e.g:
         ///   auto MyFlag = UserFlag << 1;
-        UserFlag = 1 << 3,
+        UserFlag = 1 << 2,
     };
     using StatusFlags = uint32_t;
 
     /// tag part of all cache entries
-    uint64_t tag  = 0x0;
+    CacheTag tag = CacheTag{0x0};
     /// status flags
-    StatusFlags flags = Invalid | Uninitialized;
-    /// custom data (ccan be used for update/replacement strategy)
+    StatusFlags flags = Invalid;
+    /// custom data (can be used for update/eviction strategy)
     uint32_t data = 0x0;
 
     /// checks whether the cache linbe is valid
@@ -57,15 +62,25 @@ struct CacheLine
     /// checks whether the flag is set
     constexpr inline bool hasFlag(StatusFlags flag) const { return flags & flag; }
 
-    /// sets the given flag for the cache line
+    /// sets the given flag for the cache entry
     constexpr inline void setFlag(StatusFlags flag, bool enable = true)
     {
         enable ? flags |=  flag : flags &= ~flag;
     }
 
+    /**
+     * @brief Invalidates the cache entry
+     */
+    void invalidate()
+    {
+        flags = CacheEntry::Invalid;
+        tag   = CacheTag{0x0};
+        data  = 0x0;
+    }
+
     // only if statistics are desired
     CMM_STATISTICS_ONLY(
-        /// number of hits
+        /// number of hits --> misses cannot be tracked
         uint32_t t_readHits  = 0;
         uint32_t t_writeHits  = 0;
         /// number of evictions

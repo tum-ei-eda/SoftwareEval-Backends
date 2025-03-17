@@ -57,14 +57,7 @@ public:
     
     virtual uint64_t getCycleCount(void) = 0;
     virtual std::string getPipelineStream(void) = 0;
-    virtual std::string getPrintHeader(void) = 0; 
-
-    /**
-     * @brief Can be reimplemented to apply a configuration to the performance
-     * model
-     * @param config
-     */
-    virtual void applyConfig(etiss::Configuration&) {}
+    virtual std::string getPrintHeader(void) = 0;
   
     int instrIndex; // TODO: Make protected, with ConnectorModel as a friend?
 
@@ -119,11 +112,6 @@ public:
     ResourceModel(std::string name_, PerformanceModel* parent_) : name(name_), parentModel(parent_) {};
     virtual ~ResourceModel() = default;
     virtual int getDelay() = 0;
-    /**
-     * @brief Can be reimplemented to apply a configuration
-     * @param config
-     */
-    virtual void applyConfig(etiss::Configuration&) {}
     const std::string name;
 protected:
     int getInstrIndex() { return parentModel->instrIndex; };

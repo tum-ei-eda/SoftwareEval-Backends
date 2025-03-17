@@ -46,7 +46,7 @@
 namespace SwEvalBackends
 {
 
-int Factory::getVariantHandle(std::string var_)
+int Factory::getVariantHandle(std::string const& var_)
 {
     if(var_ == "CV32E40P")
     {
@@ -84,7 +84,7 @@ Channel* Factory::getChannel(int var_)
   }
 }
 
-Backend* Factory::getPerformanceEstimator(int var_)
+Backend* Factory::getPerformanceEstimator(int var_, etiss::Configuration& config_)
 {
   // Get performance model
   PerformanceModel* perfModel;
@@ -94,7 +94,7 @@ Backend* Factory::getPerformanceEstimator(int var_)
       perfModel = new CV32E40P_PerformanceModel();
       break;
     case TestCore:
-      perfModel = new TestCore_PerformanceModel(); // TODO: remove me
+      perfModel = new TestCore_PerformanceModel(config_); // TODO: remove me
       break;
     case CVA6:
       perfModel = new CVA6_Model(); // TODO: Rename to CVA6_PerformanceModel

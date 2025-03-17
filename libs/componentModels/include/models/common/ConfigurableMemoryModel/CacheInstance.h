@@ -26,96 +26,267 @@
 namespace cmm
 {
 
+class CacheInstance;
+
+/**
+ * @brief The CacheLookup struct. Helper struct that holds relevant data for an
+ * "address lookup". This is mainly used to "save" on the number of parameters.
+ */
 struct CacheLookup
 {
-    CacheAddress address{};
+    /// address aligned to cache-lines
+    MemoryAddress address{};
+    /// tag part of the address
     CacheTag     tag{};
+    /// cache set the cache entry belongs to
     CacheSet     set{};
-    CacheLine*   entry{};
+    /// cache entry containing target address (null if not cached)
+    CacheEntry*  entry{};
+};
+
+/// strategy to chose a valid cache entry to evict
+using EvictionStrategy =
+    std::function<CacheEntry*(CacheSet)>;
+/// strategy to update the status of a cache entry
+using UpdateOnAccessStrategy =
+    std::function<void(CacheSet, CacheEntry*)>;
+using UpdateOnInvalidationStrategy =
+    std::function<void(CacheSet, CacheEntry*)>;
+/// strategy to implement write policy
+using WriteUpdateStrategy =
+    std::function<Delay(CacheInstance& cache,
+                        CacheLookup& lookup,
+                        ComponentHierarchy hierarchy,
+                        bool isMiss,
+                        bool isWrite)>;
+
+/**
+ * @brief The CacheConfig struct. Helper struct to setup cache's parameters
+ * using explicit setters. Each setter returns a reference that can be used
+ * for operator chaining.
+ */
+struct CacheConfig
+{
+    std::string name{};
+    CacheMemory memory{};
+    EvictionStrategy evictionStrategy{};
+    WriteUpdateStrategy writeUpdateStrategy{};
+    UpdateOnAccessStrategy updateOnAccessStrategy{};
+    UpdateOnInvalidationStrategy updateOnInvlidationStrategy{};
+    Delay readHitDelay{}, readMissDelay{}, writeHitDelay{}, writeMissDelay{};
+
+    inline CacheConfig&
+    setName(std::string s) { name = std::move(s); return *this; }
+    inline  CacheConfig&
+    setCacheMemory(CacheMemory m) { memory = std::move(m); return *this; }
+
+    inline CacheConfig&
+    setEvictionStrategy(EvictionStrategy f) { evictionStrategy = std::move(f); return *this; }
+    inline CacheConfig&
+    setWriteUpdateStrategy(WriteUpdateStrategy f) { writeUpdateStrategy = std::move(f); return *this; }
+    inline CacheConfig&
+    setUpdateOnAccessStrategy(UpdateOnAccessStrategy f) { updateOnAccessStrategy = std::move(f); return *this; }
+    inline CacheConfig&
+    setUpdateOnInvalidationStrategy(UpdateOnInvalidationStrategy f) { updateOnInvlidationStrategy = std::move(f); return *this; }
+
+    constexpr inline CacheConfig& setReadHitDelay(Delay v) { readHitDelay = v; return *this; }
+    constexpr inline CacheConfig& setReadMissDelay(Delay v) { readMissDelay = v; return *this; }
+    constexpr inline CacheConfig& setWriteHitDelay(Delay v) { writeHitDelay = v; return *this; }
+    constexpr inline CacheConfig& setWriteMissDelay(Delay v) { writeMissDelay = v; return *this; }
 };
 
 /**
- * @brief The CacheInstace class. Implements a basic API to fetch a memory address.
+ * @brief The CacheInstace class. A cache instance can model the behavior of
+ * varoius cache types and provides an API to fetch memory addresses.
  */
 class CacheInstance : public MemoryComponent
 {
 public:
 
-    /// strategy to chose a valid cache line to evict
-    using EvictionStrategy =
-        std::function<CacheLine*(CacheSet)>;
-    /// strategy to update the status of a cache line
-    using UpdateOnAccessStrategy =
-        std::function<void(CacheSet, CacheLine*)>;
-    using UpdateOnInvalidationStrategy =
-        std::function<void(CacheSet, CacheLine*)>;
-    /// stategy to select and replace an entry (calls evicton strategy if needed)
-    using ReplacementStrategy =
-        std::function<Delay(CacheInstance& cache,
-                            CacheLookup& lookup,
-                            ComponentHierarchy hierarchy,
-                            bool isWrite)>;
-    // TODO: brief
-    using OnHit =
-        std::function<AccessDetails(CacheInstance& cache,
-                            CacheLookup& lookup,
-                            ComponentHierarchy hierarchy,
-                            bool isWrite)>;
-    // TODO: brief
-    using OnMiss =
-        std::function<AccessDetails(CacheInstance& cache,
-                            CacheLookup& lookup,
-                            ComponentHierarchy hierarchy,
-                            bool isWrite)>;
-    // TODO: brief
-    using WriteUpdateStrategy =
-        std::function<Delay(CacheInstance& cache,
-                            CacheLookup& lookup,
-                            ComponentHierarchy hierarchy,
-                            bool isMiss)>;
-
-    // TODO: refactor (use dedicated setters instead?)
-    CacheInstance(std::string name,
-                  CacheMemory tagMemory,
-                  ReplacementStrategy replacementStrategy,
-                  WriteUpdateStrategy writeUpdateStrategy,
-                  EvictionStrategy evictionStrategy,
-                  UpdateOnAccessStrategy updateOnAccessStrategy,
-                  Delay hit,
-                  Delay miss) :
-        MemoryComponent(std::move(name)),
-        m_tagMemory(std::move(tagMemory)),
-        m_replacementStrategy(std::move(replacementStrategy)),
-        m_writeUpdateStrategy(std::move(writeUpdateStrategy)),
-        m_evictionStrategy(std::move(evictionStrategy)),
-        m_updateOnAccessStrategy(std::move(updateOnAccessStrategy)),
-        m_readHitDelay(hit),
-        m_readMissDelay(miss)
+    /**
+     * @brief Constructor, uses a config struct to set the various parameters
+     * @param config Config struct
+     */
+    CacheInstance(CacheConfig config) :
+        MemoryComponent(std::move(config.name)),
+        m_tagMemory(std::move(config.memory)),
+        m_evictionStrategy(std::move(config.evictionStrategy)),
+        m_writeUpdateStrategy(std::move(config.writeUpdateStrategy)),
+        m_updateOnAccessStrategy(std::move(config.updateOnAccessStrategy)),
+        m_updateOnInvlidationStrategy(std::move(config.updateOnInvlidationStrategy)),
+        m_readHitDelay(config.readHitDelay),
+        m_writeHitDelay(config.writeHitDelay),
+        m_readMissDelay(config.readMissDelay),
+        m_writeMissDelay(config.writeMissDelay)
     {
         assert(m_writeUpdateStrategy);
         assert(m_evictionStrategy);
     }
+
     ~CacheInstance() override = default;
 
-    /// Getter for cache memory
-    inline CacheMemory& cacheMemory() { return m_tagMemory; }
-    /// Const overload: getter for cache memory
-    inline CacheMemory const& cacheMemory() const { return m_tagMemory; }
-
-    // TODO: brief
-    AccessDetails readAccess(CacheAddress address, ComponentHierarchy hierarchy) override
+    /**
+     * @brief Setter for caches that must be accessed when broadcasting an
+     * invalidation. Cannot be set via constructor.
+     * @param list
+     */
+    void setCachesToInvalidate(std::vector<CacheInstance*> list)
     {
-        return performAccess<false>(address, hierarchy);
+        m_cachesToInvalidate = std::move(list);
     }
 
-    // TODO: brief
-    AccessDetails writeAccess(CacheAddress address, ComponentHierarchy hierarchy) override
+    // getters for cache memory
+    inline CacheMemory& cacheMemory() { return m_tagMemory; }
+    inline CacheMemory const& cacheMemory() const { return m_tagMemory; }
+    // getters for read delays
+    inline Delay readHitDelay() const  { return m_readHitDelay; }
+    inline Delay readMissDelay() const { return m_readMissDelay; }
+    // getters for write delays
+    inline Delay writeHitDelay() const  { return m_writeHitDelay; }
+    inline Delay writeMissDelay() const { return m_writeMissDelay; }
+
+    /**
+     * @brief Performs a read access on the given address and yields a delay
+     * based on the hit or miss delay. Subsequential components may be updated
+     * as well.
+     * @param address Address to perform read access on
+     * @param hierarchy Next components, which may be accessed and updated
+     * @return Result of the memory access
+     */
+    AccessResult readAccess(MemoryAddress address, ComponentHierarchy hierarchy) final
     {
-        return performAccess<true>(address, hierarchy);
+        constexpr bool isWrite = false;
+
+        AccessResult result = performAccess(address, hierarchy, isWrite);
+
+        CMM_STATISTICS_ONLY(
+            (result.isCacheHit) ? t_writeHits++ : t_writeMisses++;
+        )
+
+        return result;
     }
 
     /**
-     * @brief Performs a read/write access to the given address.
+     * @brief Performs a write access to the given address and yields a delay
+     * based on the hit or miss delay. Subsequential components may be updated
+     * as well.
+     * @param address Address to perform read access on
+     * @param hierarchy Next components, which may be accessed and updated
+     * @return Result of the memory access
+     */
+    AccessResult writeAccess(MemoryAddress address, ComponentHierarchy hierarchy) final
+    {
+        constexpr bool isWrite = true;
+
+        AccessResult result = performAccess(address, hierarchy, isWrite);
+
+        CMM_STATISTICS_ONLY(
+            (result.isCacheHit) ? t_readHits++ : t_readMisses++;
+        )
+
+        return result;
+    }
+
+    /**
+     * @brief Performs a lookup of the given address. The given address
+     * may be "unaligned" (e.g. point to the 2nd word in a cache line). The
+     * lookup returns a cache line aligned address which points to the first
+     * entry in the cache line.
+     * @param unalignedAddress Unaligned address to lookup
+     * @return Helper object for a lookup
+     */
+    CacheLookup lookupAddress(MemoryAddress unalignedAddress);
+
+    /**
+     * @brief Invalidates the cache entry that contains `startAddress` if it
+     * exists.
+     * @param startAddress start address of the block to invalidate
+     * @param blockSize Size of the block (in words) to invalidate
+     */
+    void invalidate(MemoryAddress startAddress, size_t blockSize);
+
+    /**
+     * @brief Invalidates the address in all other caches registered for
+     * invaldiation (see `m_cachesToInvalidate`).
+     * @param startAddress Start of address block to invalidate in other cache
+     * components
+     */
+    void broadcastInvalidation(MemoryAddress startAddress);
+
+    /**
+     * @brief Marks the entry as dirty.
+     * @param entry Entry to mark as dirty.
+     */
+    void makeEntryDirty(CacheEntry& entry);
+
+    /**
+     * @brief Attempts to find an empty entry (i.e. unused/free) in the given
+     * cache set.
+     * @param cacheSet Cache set to search through
+     * @return Pointer to cache entry (null if no empty entry was found)
+     */
+    CacheEntry* findEmptyEntry(CacheSet cacheSet);
+
+    ///// cache strategies /////
+    /**
+     * @brief Invokes the corresponding strategy when accessing (read or write)
+     * a cache entry.
+     * @param cacheSet Cache set of the cache entry
+     * @param entry Cache entry that was accessed
+     */
+    void invokeUpdateOnAccessStrategy(CacheSet cacheSet, CacheEntry* entry);
+
+    /**
+     * @brief Invokes the corresponding strategy when invalidating a cache entry.
+     * @param cacheSet Cache set of the cache entry
+     * @param entry Cache entry that was invalidated
+     */
+    void invokeUpdateOnInvalidationStrategy(CacheSet cacheSet, CacheEntry* entry);
+
+    /**
+     * @brief Invokes the write policy specific strategy.
+     * @param lookup Object containing information of the address block that
+     * was accessed
+     * @param hierarchy Range of all components that follow
+     * @param isMiss Whether the access was a miss
+     * @return Delay
+     */
+    Delay invokeWriteUpdateStrategy(CacheLookup& lookup,
+                                    ComponentHierarchy hierarchy,
+                                    bool const isMiss,
+                                    bool const isWrite);
+
+    /**
+     * @brief Invokes the strategy for evicting a valid cache entry.
+     * @param cacheSet Cache set which must evict a valid cache entry.
+     * @return Cache entry selected for eviction
+     */
+    CacheEntry* invokeEvictionStrategy(CacheSet cacheSet);
+
+    ///// access to next level /////
+    /**
+     * @brief Performs a writeback to the next level cache/memory (no data is
+     * written back, but a write access is performed on the next components)
+     * @param address Address to write back
+     * @param hierarchy Next hierarchy
+     * @return delay
+     */
+    Delay writeBackToNextLevel(MemoryAddress address, ComponentHierarchy hierarchy);
+
+    /**
+     * @brief Fetches the address from next level cache/memory (no data is
+     * read, but a read access is performed on the next components)
+     * @param address Address to write back
+     * @param hierarchy Next hierarchy
+     * @return delay
+     */
+    Delay fetchFromNextLevel(MemoryAddress address, ComponentHierarchy hierarchy);
+
+protected:
+
+    /**
+     * @brief Performs a read/write access to the given address. Override this
+     * function to implement custom access behavior
      * @param cache CacheInstance
      * @param address Address to read form/write to (not aligned to cache line)
      * @tparam IsWrite Flag indicating whether the function call is a read or
@@ -124,92 +295,56 @@ public:
      * value parameter.
      * @return Access details
      */
-    template <bool IsWrite>
-    AccessDetails performAccess(CacheAddress address, ComponentHierarchy hierarchy);
+  virtual AccessResult performAccess(MemoryAddress address,
+                                     ComponentHierarchy hierarchy,
+                                     bool const isWrite)
+  {
+      CacheLookup lookup = lookupAddress(address);
 
-    // TODO: brief
-    CacheLookup lookupAddress(CacheAddress unalignedAddress);
+      bool const hit = lookup.entry;
 
-    // TODO: brief
-    void invalidate(uint64_t startAddress, size_t blockSize);
+      return hit ? performHit(lookup, hierarchy, isWrite) :
+                   performMiss(lookup, hierarchy, isWrite);
+  }
 
-    // TODO: brief
-    void broadcastInvalidation(uint64_t startAddress);
+  AccessResult performHit(CacheLookup lookup,
+                          ComponentHierarchy hierarchy,
+                          bool const isWrite);
 
-    // TODO: brief
-    void makeEntryDirty(CacheLine& entry);
-
-    // TODO: brief
-    CacheLine* findEmptyEntry(CacheSet cacheSet);
-
-    ///// cache strategies /////
-    // TODO: brief
-    void invokeUpdateOnAccessStrategy(CacheSet cacheSet, CacheLine* entry);
-
-    void invokeUpdateOnInvalidationStrategy(CacheSet cacheSet, CacheLine* entry);
-
-    // TODO: brief
-    Delay invokeReplacementStrategy(CacheLookup& lookup, ComponentHierarchy hierarchy, bool isWrite);
-
-    // TODO: brief
-    Delay invokeWriteUpdateStrategy(CacheLookup& lookup, ComponentHierarchy hierarchy, bool isMiss);
-
-    // TODO: brief
-    CacheLine* invokeEvictionStrategy(CacheSet cacheSet);
-
-    ///// access to next level /////
-    /**
-     * @brief Performs a writeback to the next level cache
-     * @param address Address to write back
-     * @param hierarchy Next hierarchy
-     * @return delay
-     */
-    Delay writeBackToNextLevel(CacheAddress address, ComponentHierarchy hierarchy);
+  AccessResult performMiss(CacheLookup lookup,
+                           ComponentHierarchy hierarchy,
+                           bool const isWrite);
 
     /**
-     * @brief Fetches the address from next level cache/memory
-     * @param address Address to write back
-     * @param hierarchy Next hierarchy
-     * @return delay
+     * @brief Performs the replacement of a cache entry including the eviction
+     * of a valid cache entry if necessary.
+     * @param lookup Object containing information of the address block that
+     * was accessed
+     * @param hierarchy Range of all components that follow this cache.
+     * @return Delay
      */
-    Delay fetchFromNextLevel(CacheAddress address, ComponentHierarchy hierarchy);
+    Delay performReplacement(CacheLookup& lookup, ComponentHierarchy hierarchy);
 
 private:
 
     /// tag memory of cache
     CacheMemory m_tagMemory{};
-    // TODO: brief
-    OnHit m_onHitRoutine{};
-    // TODO: brief
-    OnMiss m_onMissRoutine{};
-    // TODO: brief
-    ReplacementStrategy m_replacementStrategy{};
-    // TODO: brief
-    WriteUpdateStrategy m_writeUpdateStrategy{};
-    /// strategy to evict an entry of a cache cacheSet
-    EvictionStrategy m_evictionStrategy{};
-    /// strategy to update status of an entry or cache cacheSet
-    UpdateOnAccessStrategy m_updateOnAccessStrategy{};
-
-    UpdateOnInvalidationStrategy m_updateOnInvlidationStrategy{};
+    /// strategy to evict an entry of a cache set (i.e. replacement)
+    const EvictionStrategy m_evictionStrategy{};
+    /// strategy to implement behavior for write policy
+    const WriteUpdateStrategy m_writeUpdateStrategy{};
+    /// strategy to update status of an entry when its accessed
+    const UpdateOnAccessStrategy m_updateOnAccessStrategy{};
+    /// strategy to update status of an entry if its invalidated
+    const UpdateOnInvalidationStrategy m_updateOnInvlidationStrategy{};
     /// delay if address was cached
     const Delay m_readHitDelay{0};
     const Delay m_writeHitDelay{0};
     /// delay if address was not cached
     const Delay m_readMissDelay{0};
     const Delay m_writeMissDelay{0};
-    // TODO: brief
-    std::vector<CacheInstance*> m_otherComponents;
-
-    // TODO: brief
-    template <bool IsWrite>
-    AccessDetails defaultHitRoutine(CacheLookup& lookup, ComponentRange hierarchy);
-
-    // TODO: brief
-    template <bool IsWrite>
-    AccessDetails defaultMissRoutine(CacheLookup& lookup, ComponentRange hierarchy);
-
-    Delay defaultReplacementRoutine(CacheLookup& lookup, ComponentHierarchy hierarchy);
+    //// list of other caches that must be invalidated for a write
+    std::vector<CacheInstance*> m_cachesToInvalidate;
 
 public:
 
@@ -222,36 +357,79 @@ public:
         uint32_t t_writeBacks = 0;
         uint32_t t_makeDirty = 0;
         uint32_t t_evictions = 0;
-        uint32_t t_compulsoryMisses = 0;
     )
 };
 
+
+/**
+ * @brief The CacheInstanceNoAllocate class. A specialization for caches with
+ * write-no-allocate policies.
+ */
+class CacheInstanceNoAllocate : public CacheInstance
+{
+    public:
+
+    /**
+     * @brief Constructor, uses a config struct to set the various parameters
+     * @param config Config struct
+     */
+    CacheInstanceNoAllocate(CacheConfig config, bool invalidateCacheOnWriteMiss) :
+        CacheInstance(std::move(config)),
+          m_invalidateCacheOnWriteMiss(invalidateCacheOnWriteMiss)
+    { }
+
+    ~CacheInstanceNoAllocate() override = default;
+
+protected:
+
+    /**
+     * @brief Performs a read/write access to the given address. Override this
+     * function to implement custom access behavior
+     * @param cache CacheInstance
+     * @param address Address to read form/write to (not aligned to cache line)
+     * @tparam IsWrite Flag indicating whether the function call is a read or
+     * write. The idea is to reduce code duplication and give the compiler a
+     * hand to optimize away the if-else conditions by using a compile-time
+     * value parameter.
+     * @return Access details
+     */
+    AccessResult performAccess(MemoryAddress address,
+                               ComponentHierarchy hierarchy,
+                               bool const isWrite) final;
+
+private:
+
+    bool m_invalidateCacheOnWriteMiss = false;
+};
+
+///// inline implementations /////
+
 inline CacheLookup
-CacheInstance::lookupAddress(CacheAddress unalignedAddress)
+CacheInstance::lookupAddress(MemoryAddress unalignedAddress)
 {
     const CacheTag tag     = m_tagMemory.getTag(unalignedAddress);
     const CacheIndex index = m_tagMemory.getIndex(unalignedAddress);
 
     CacheSet cacheSet = m_tagMemory.getCacheSet(index);
-    CacheLine* entry  = cacheSet.find(tag);
+    CacheEntry* entry  = cacheSet.find(tag);
 
     // if entry found it should be valid
     // -> if its not valid it should not be found
     assert (!(entry && !entry->isValid()));
 
-    // address aligned to cache line
-    uint64_t baseAddress = m_tagMemory.getAddress(unalignedAddress);
+    // make address aligned to cache entry
+    uint64_t baseAddress = m_tagMemory.getBaseAddress(unalignedAddress);
 
     return CacheLookup{ baseAddress, tag, cacheSet, (entry ? entry : nullptr) };
 }
 
 inline void
-CacheInstance::invalidate(uint64_t address, size_t blockSize)
+CacheInstance::invalidate(MemoryAddress address, size_t blockSize)
 {
     CacheLookup lookup = lookupAddress(address);
 
     // check that the address range which should be invalidated does not
-    // overlapp multiple cache lines as this is not handled currently
+    // overlap with multiple cache lines as this is not supported currently
     assert(m_tagMemory.getIndex(address) ==
                m_tagMemory.getIndex(address + blockSize) &&
            "Address spans multiple cache lines! "
@@ -260,52 +438,52 @@ CacheInstance::invalidate(uint64_t address, size_t blockSize)
     if (!lookup.entry) return; // nothing to invalidate
 
     // entry should not be dirty
-    assert(!lookup.entry->hasFlag(CacheLine::Dirty));
+    assert(!lookup.entry->hasFlag(CacheEntry::Dirty));
 
     // reset flags
-    lookup.entry->setFlag(CacheLine::Invalid, false);
-    lookup.entry->tag = 0x0;
+    lookup.entry->setFlag(CacheEntry::Invalid, false);
+    lookup.entry->tag = CacheTag{0x0};
 
     invokeUpdateOnInvalidationStrategy(lookup.set, lookup.entry);
 }
 
 inline void
-CacheInstance::makeEntryDirty(CacheLine& entry)
+CacheInstance::broadcastInvalidation(MemoryAddress startAddress)
 {
-    if (!entry.hasFlag(CacheLine::Dirty))
+    // invalidate other components
+    for (CacheInstance* other : m_cachesToInvalidate)
+    {
+        if (other != this) other->invalidate(startAddress, m_tagMemory.lineSize());
+    }
+}
+
+inline void
+CacheInstance::makeEntryDirty(CacheEntry& entry)
+{
+    if (!entry.hasFlag(CacheEntry::Dirty))
     {
         CMM_STATISTICS_ONLY(
             t_makeDirty++;
         )
 
         // mark as dirty
-        entry.setFlag(CacheLine::Dirty, true);
+        entry.setFlag(CacheEntry::Dirty, true);
     }
 }
 
-inline CacheLine*
+inline CacheEntry*
 CacheInstance::findEmptyEntry(CacheSet cacheSet)
 {
     // find empty entry
-    CacheLine* entry = cacheSet.findInvalid();
-    if (entry)
-    {
-        CMM_STATISTICS_ONLY(
-            if (entry->hasFlag(CacheLine::Uninitialized))
-            {
-                t_compulsoryMisses++;
-                // TODO: always unset?
-                entry->setFlag(CacheLine::Uninitialized, false);
-            }
-            )
-    }
+    CacheEntry* entry = cacheSet.findInvalid();
     return entry;
 }
 
 inline void
-CacheInstance::invokeUpdateOnAccessStrategy(CacheSet cacheSet, CacheLine* entry)
+CacheInstance::invokeUpdateOnAccessStrategy(CacheSet cacheSet,
+                                            CacheEntry* entry)
 {
-    // update status of entry
+    // update the status of entry in case an entry is accessed
     if (m_updateOnAccessStrategy)
     {
         m_updateOnAccessStrategy(cacheSet, entry);
@@ -313,9 +491,10 @@ CacheInstance::invokeUpdateOnAccessStrategy(CacheSet cacheSet, CacheLine* entry)
 }
 
 inline void
-CacheInstance::invokeUpdateOnInvalidationStrategy(CacheSet cacheSet, CacheLine *entry)
+CacheInstance::invokeUpdateOnInvalidationStrategy(CacheSet cacheSet,
+                                                  CacheEntry *entry)
 {
-    // update status of entry
+    // update the status of entry in case an entry is invalidated
     if (m_updateOnInvlidationStrategy)
     {
         m_updateOnInvlidationStrategy(cacheSet, entry);
@@ -323,23 +502,45 @@ CacheInstance::invokeUpdateOnInvalidationStrategy(CacheSet cacheSet, CacheLine *
 }
 
 inline Delay
-CacheInstance::invokeReplacementStrategy(CacheLookup& lookup, ComponentHierarchy hierarchy, bool isWrite)
+CacheInstance::performReplacement(CacheLookup& lookup,
+                                         ComponentHierarchy hierarchy)
 {
-    return m_replacementStrategy ? m_replacementStrategy(*this, lookup, hierarchy, isWrite) :
-                                   defaultReplacementRoutine(lookup, hierarchy);
+    Delay delay{0};
+    // find entry to invalidate
+    CacheEntry* entry = findEmptyEntry(lookup.set);
+    if (!entry)
+    {
+        entry = invokeEvictionStrategy(lookup.set);
+        assert(entry);
+    }
+    // writeback if dirty
+    if (entry->hasFlag(CacheEntry::Dirty))
+    {
+        uint64_t oldAddress = cacheMemory().getAddress(lookup.set, entry);
+        delay += writeBackToNextLevel(oldAddress, hierarchy);
+    }
+    // replace entry
+    entry->tag = lookup.tag;
+    entry->setFlag(CacheEntry::Invalid | CacheEntry::Dirty, false);
+    lookup.entry = entry;
+    return delay;
 }
 
 inline Delay
-CacheInstance::invokeWriteUpdateStrategy(CacheLookup& lookup, ComponentHierarchy hierarchy, bool isMiss)
+CacheInstance::invokeWriteUpdateStrategy(CacheLookup& lookup,
+                                         ComponentHierarchy hierarchy,
+                                         bool const isMiss,
+                                         bool const isWrite)
 {
-    return m_writeUpdateStrategy(*this, lookup, hierarchy, isMiss);
+    assert(m_writeUpdateStrategy);
+    return m_writeUpdateStrategy(*this, lookup, hierarchy, isMiss, isWrite);
 }
 
-inline CacheLine*
+inline CacheEntry*
 CacheInstance::invokeEvictionStrategy(CacheSet cacheSet)
 {
-    // find valid entry to evict
-    CacheLine* entry = m_evictionStrategy(cacheSet);
+    // choose an entry that is still valid for eviction
+    CacheEntry* entry = m_evictionStrategy(cacheSet);
 
     CMM_STATISTICS_ONLY(
         t_evictions++;
@@ -350,7 +551,7 @@ CacheInstance::invokeEvictionStrategy(CacheSet cacheSet)
 }
 
 inline Delay
-CacheInstance::writeBackToNextLevel(CacheAddress address, ComponentHierarchy hierarchy)
+CacheInstance::writeBackToNextLevel(MemoryAddress address, ComponentHierarchy hierarchy)
 {
     CMM_STATISTICS_ONLY(
         t_writeBacks++;
@@ -359,139 +560,107 @@ CacheInstance::writeBackToNextLevel(CacheAddress address, ComponentHierarchy hie
     if (hierarchy.hasNextComponent())
     {
         MemoryComponent* next = hierarchy.nextComponent();
-        return next->writeAccess(address, hierarchy.nextRange()).delay;
+        return next->writeAccess(address, hierarchy.advance()).delay;
     }
     return Delay{0};
 }
 
 inline Delay
-CacheInstance::fetchFromNextLevel(CacheAddress address, ComponentHierarchy hierarchy)
+CacheInstance::fetchFromNextLevel(MemoryAddress address, ComponentHierarchy hierarchy)
 {
     if (hierarchy.hasNextComponent())
     {
         MemoryComponent* next = hierarchy.nextComponent();
-        return next->readAccess(address, hierarchy.nextRange()).delay;
+        return next->readAccess(address, hierarchy.advance()).delay;
     }
     return Delay{0};
 }
 
-template<bool IsWrite>
-inline AccessDetails
-CacheInstance::performAccess(CacheAddress address, ComponentHierarchy hierarchy)
+inline AccessResult
+CacheInstance::performHit(CacheLookup lookup,
+                          ComponentHierarchy hierarchy,
+                          bool const isWrite)
+{
+    CMM_STATISTICS_ONLY(
+        (isWrite) ? lookup.entry->t_writeHits++ :
+                    lookup.entry->t_readHits++;
+    )
+
+    Delay delay = isWrite ? m_writeHitDelay : m_readHitDelay;
+
+           // update status of this entry
+    invokeUpdateOnAccessStrategy(lookup.set, lookup.entry);
+
+    if (isWrite)
+    {
+        constexpr bool IsMiss = false;
+        delay += invokeWriteUpdateStrategy(lookup, hierarchy, IsMiss, isWrite);
+    }
+
+    return AccessResult{delay}
+        .setAccessCompleted(true)
+        .setCacheHit(true);
+}
+
+inline AccessResult
+CacheInstance::performMiss(CacheLookup lookup,
+                           ComponentHierarchy hierarchy,
+                           bool const isWrite)
+{
+    Delay delay = isWrite ? m_writeMissDelay : m_readMissDelay;
+
+    // fetch from next components
+    delay += fetchFromNextLevel(lookup.address, hierarchy);
+
+    // perform replacement
+    delay += performReplacement(lookup, hierarchy);
+
+    // update status of this entry
+    invokeUpdateOnAccessStrategy(lookup.set, lookup.entry);
+
+    if (isWrite)
+    {
+        constexpr bool IsMiss = true;
+        delay += invokeWriteUpdateStrategy(lookup, hierarchy, IsMiss, isWrite);
+    }
+
+    return AccessResult{delay}
+        .setAccessCompleted(true)
+        .setCacheHit(false);
+}
+
+///// inline specializations /////
+
+inline AccessResult
+CacheInstanceNoAllocate::performAccess(MemoryAddress address,
+                                       ComponentHierarchy hierarchy,
+                                       bool const isWrite)
 {
     CacheLookup lookup = lookupAddress(address);
 
     const bool hit = lookup.entry;
     if (hit)
     {
-        // hit
-        CMM_STATISTICS_ONLY(
-            if (IsWrite)
-            {
-                t_writeHits++;
-                lookup.entry->t_writeHits++;
-            }
-            else
-            {
-                t_readHits++;
-                lookup.entry->t_readHits++;
-            }
-        )
-
-        Delay delay = IsWrite ? m_writeHitDelay : m_readHitDelay;
-
-        AccessDetails access =
-            m_onHitRoutine ?
-                m_onHitRoutine(*this, lookup, hierarchy, IsWrite) :
-                defaultHitRoutine<IsWrite>(lookup, hierarchy);
-        return AccessDetails{access.delay + delay}.setEntryFound(access.wasEntryFound);
+        return performHit(lookup, hierarchy, isWrite);
     }
 
-    // miss
-    CMM_STATISTICS_ONLY(
-        if (IsWrite)
-        {
-            t_writeMisses++;
-        }
-        else
-        {
-            t_readMisses++;
-        }
-    )
-
-    Delay delay = IsWrite ? m_writeMissDelay : m_readMissDelay;
-
-    AccessDetails access =
-        m_onMissRoutine ?
-            m_onMissRoutine(*this, lookup, hierarchy, IsWrite) :
-            defaultMissRoutine<IsWrite>(lookup, hierarchy);
-
-    return AccessDetails{access.delay + delay}.setEntryFound(access.wasEntryFound);
-}
-
-template<bool IsWrite>
-inline AccessDetails
-CacheInstance::defaultHitRoutine(CacheLookup &lookup, ComponentRange hierarchy)
-{
-    Delay delay{0};
-
-    // update status of this entry
-    invokeUpdateOnAccessStrategy(lookup.set, lookup.entry);
-
-    if (IsWrite)
+    if (!isWrite)
     {
-        constexpr bool IsMiss = false;
-        delay += invokeWriteUpdateStrategy(lookup, hierarchy, IsMiss);
+        return performMiss(lookup, hierarchy, isWrite);
     }
 
-    return AccessDetails{delay}.setEntryFound(true);
-}
+    Delay delay = writeMissDelay();
 
-template<bool IsWrite>
-inline AccessDetails
-CacheInstance::defaultMissRoutine(CacheLookup &lookup, ComponentRange hierarchy)
-{
-    Delay delay{0};
-
-    // fetch from next components
-    delay += fetchFromNextLevel(lookup.address, hierarchy);
-
-    // perform replacement
-    delay += invokeReplacementStrategy(lookup, hierarchy, IsWrite);
-
-    // update status of this entry
-    invokeUpdateOnAccessStrategy(lookup.set, lookup.entry);
-
-    if (IsWrite)
+    // for no-allocate-invalidate: invalidate entire cache
+    if (m_invalidateCacheOnWriteMiss)
     {
-        constexpr bool IsMiss = true;
-        delay += invokeWriteUpdateStrategy(lookup, hierarchy, IsMiss);
+        cacheMemory().invalidate();
     }
-    return AccessDetails{delay}.setEntryFound(true);
-}
 
-inline Delay
-CacheInstance::defaultReplacementRoutine(CacheLookup &lookup, ComponentHierarchy hierarchy)
-{
-    Delay delay{0};
-    // find entry to invalidate
-    CacheLine* entry = findEmptyEntry(lookup.set);
-    if (!entry)
-    {
-        entry = invokeEvictionStrategy(lookup.set);
-        assert(entry);
-    }
-    // writeback if dirty
-    if (entry->hasFlag(CacheLine::Dirty))
-    {
-        uint64_t oldAddress = cacheMemory().getAddress(lookup.set, *entry);
-        delay += writeBackToNextLevel(oldAddress, hierarchy);
-    }
-    // replace entry
-    entry->tag = lookup.tag;
-    entry->setFlag(CacheLine::Invalid | CacheLine::Dirty, false);
-    lookup.entry = entry;
-    return delay;
+    // on write miss skip this cache
+    return AccessResult{delay}
+        .setAccessCompleted(false)
+        .setCacheHit(false);
 }
 
 } // namespace cmm

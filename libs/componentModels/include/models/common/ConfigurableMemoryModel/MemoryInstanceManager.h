@@ -30,20 +30,46 @@ namespace cmm
 {
 
 class MemoryInstance;
+
+/**
+ * @brief The MemoryInstanceManager class. Manages all memory and cache
+ * instances, including their setup.
+ */
 class MemoryInstanceManager
 {
 public:
 
+    /**
+     * @brief The MemoryPath struct. Denotes a address region, which is defined
+     * by the end of the address region (the start is implicitly given
+     * by the preceeding address region!) and the components that are
+     * accessed for memory access within this address region.
+     */
     struct MemoryPath
     {
-        uint64_t endAddress = 0x0;
+        /// end of address (start is given implicitly by the preceeding path)
+        MemoryAddress endAddress = 0x0;
+        /// list and order of components that are accessed for a memory access
         std::vector<MemoryComponent*> components;
 
-        constexpr inline bool contains(uint64_t addr) const { return addr < endAddress; }
+        /**
+         * @brief Returns whether the given address is located within this
+         * memory path
+         * @param addr Address to check
+         * @return Whether the address is located within this memory path
+         */
+        constexpr inline bool
+        contains(MemoryAddress addr) const { return addr < endAddress; }
     };
 
     ~MemoryInstanceManager();
 
+    /**
+     * @brief Returns the instance of the memory manager. Only a single instance
+     * can be alive at any moment (singleton). The instance is scoped using
+     * a shared pointer.
+     * @return Singleton instance.
+     */
     static std::shared_ptr<MemoryInstanceManager> instance();
 
     /**
@@ -67,15 +93,15 @@ public:
 
     void outputGeneralAccessStatistics() const;
 
-    std::vector<CacheInstance>& caches() /*const*/ { return m_cacheInstances; }
-    std::vector<MemoryInstance> const& memories() const { return m_memoryInstances; }
+    std::vector<std::unique_ptr<CacheInstance>>  const& caches() const { return m_cacheInstances; }
+    std::vector<std::unique_ptr<MemoryInstance>> const& memories() const { return m_memoryInstances; }
 
 private:
 
     MemoryInstanceManager() = default;
 
-    std::vector<CacheInstance> m_cacheInstances;
-    std::vector<MemoryInstance> m_memoryInstances;
+    std::vector<std::unique_ptr<CacheInstance>> m_cacheInstances;
+    std::vector<std::unique_ptr<MemoryInstance>> m_memoryInstances;
 
     MemoryComponent* generateComponent(etiss::Configuration& config,
                                        std::string const& componentName);

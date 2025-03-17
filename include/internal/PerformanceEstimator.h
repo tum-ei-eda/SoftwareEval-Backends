@@ -35,12 +35,6 @@ class PerformanceEstimator: public Backend
   void initialize(void);
   void execute(void);
   void finalize(void);
-
-  /**
-   * @brief Forwards configuration to performance model
-   * @param config
-   */
-  void applyConfig(etiss::Configuration& config_);
   
  private:
   PerformanceModel* perfModel_ptr;

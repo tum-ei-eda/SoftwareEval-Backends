@@ -25,11 +25,15 @@
 using MemoryComponent    = cmm::MemoryComponent;
 using ComponentHierarchy = cmm::ComponentHierarchy;
 
-ConfigurableMemoryPort ::ConfigurableMemoryPort(std::string portId, PerformanceModel* parent_) :
+ConfigurableMemoryPort ::ConfigurableMemoryPort(std::string portId,
+                                                PerformanceModel* parent_,
+                                                etiss::Configuration& config) :
     ResourceModel(std::move(portId), parent_),
     m_handle(MemoryInstanceManager::instance())
 {
     assert(m_handle);
+
+    m_handle->applyConfig(config, m_memoryPaths, name);
 }
 
 int
@@ -50,10 +54,10 @@ ConfigurableMemoryPort::readDelay()
         {
             MemoryComponent* component = hierarchy.nextComponent();
             assert(component);
-            hierarchy = hierarchy.nextRange();
-            cmm::AccessDetails access = component->readAccess(address, hierarchy);
+            hierarchy.advance();
+            cmm::AccessResult access = component->readAccess(address, hierarchy);
             delay += access.delay;
-            if (access.wasEntryFound) break;
+            if (access.accessCompleted) break;
         }
         break;
     }
@@ -79,20 +83,13 @@ ConfigurableMemoryPort::writeDelay()
         {
             MemoryComponent* component = hierarchy.nextComponent();
             assert(component);
-            hierarchy = hierarchy.nextRange();
-            cmm::AccessDetails access = component->writeAccess(address, hierarchy);
+            hierarchy = hierarchy.advance();
+            cmm::AccessResult access = component->writeAccess(address, hierarchy);
             delay += access.delay;
-            if (access.wasEntryFound) break;
+            if (access.accessCompleted) break;
         }
         break;
     }
 
     return delay;
-}
-
-void
-ConfigurableMemoryPort::applyConfig(etiss::Configuration& config)
-{
-    std::string const& id = name;
-    m_handle->applyConfig(config, m_memoryPaths, id);
 }

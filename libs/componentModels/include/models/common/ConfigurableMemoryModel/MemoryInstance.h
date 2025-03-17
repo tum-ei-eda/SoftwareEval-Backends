@@ -24,43 +24,76 @@
 namespace cmm
 {
 
+struct MemoryConfig
+{
+    std::string name;
+    Delay readDelay{}, writeDelay{};
+
+    inline MemoryConfig&
+    setName(std::string s) { name = std::move(s); return *this; }
+
+    constexpr inline MemoryConfig& setReadDelay(Delay v) { readDelay = v; return *this; }
+    constexpr inline MemoryConfig& setWriteDelay(Delay v) { writeDelay = v; return *this; }
+
+};
+
+/**
+ * @brief The MemoryInstance class. Implements a basic main memory component.
+ * Has a fixed read and write delay.
+ */
 class MemoryInstance : public MemoryComponent
 {
 public:
 
     ~MemoryInstance() override = default;
 
-    MemoryInstance(std::string name, Delay accessDelay) :
-        MemoryComponent(std::move(name)),
-        m_accessDelay(accessDelay)
+    /// constructor
+    MemoryInstance(MemoryConfig config) :
+        MemoryComponent(std::move(config.name)),
+        m_readDelay(config.readDelay),
+        m_writeDelay(config.writeDelay)
     { }
 
-    inline AccessDetails readAccess(uint64_t address, ComponentRange range) override
+    /**
+     * @brief Returns a fixed read delay. Terminates memory access.
+     * @param address Address that is accessed (assumed to be present in memory)
+     * @param range Range for following memory components (never used)
+     * @return Result of memory access (always a hit)
+     */
+    inline AccessResult readAccess(uint64_t address, ComponentRange range) final
     {
         CMM_STATISTICS_ONLY(
-            t_accesses++;
+            t_reads++;
         )
-        return AccessDetails(m_accessDelay);
+        return AccessResult(m_readDelay);
     }
 
-    inline AccessDetails writeAccess(uint64_t address, ComponentRange range) override
+    /**
+     * @brief Returns a fixed write delay. Terminates memory access.
+     * @param address Address that is accessed (assumed to be present in memory)
+     * @param range Range for following memory components (never used)
+     * @return Result of memory access (always a hit)
+     */
+    inline AccessResult writeAccess(uint64_t address, ComponentRange range) final
     {
         CMM_STATISTICS_ONLY(
             t_writes++;
         )
-        return AccessDetails(m_accessDelay);
+        return AccessResult(m_writeDelay);
     }
 
 private:
 
-    /// access delay
-    Delay m_accessDelay{1};
+    /// read delay
+    const Delay m_readDelay{1};
+    /// write delay
+    const Delay m_writeDelay{1};
 
 public:
 
     CMM_STATISTICS_ONLY(
-        // variables solely used for debugging/statistical purpose
-        uint32_t t_accesses = 0;
+        // variables solely used for debugging/statistical purposes
+        uint32_t t_reads = 0;
         uint32_t t_writes = 0;
     )
 };

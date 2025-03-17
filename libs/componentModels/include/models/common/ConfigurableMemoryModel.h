@@ -31,32 +31,23 @@ public:
     using MemoryInstanceManager = cmm::MemoryInstanceManager;
     using MemoryPath = MemoryInstanceManager::MemoryPath;
 
-    ConfigurableMemoryPort(std::string portId, PerformanceModel* parent_);
+    ConfigurableMemoryPort(std::string portId,
+                           PerformanceModel* parent_,
+                           etiss::Configuration& config);
 
     /**
-     * @brief Applies memory model configuration
-     * @param config Config for memory model
+     * @brief Performs a read access for the given address in `addr_ptr`
+     * @return Delay of read access.
      */
-    // TODO: apply config with instantiation?
-    void applyConfig(etiss::Configuration& config) override;
-
-    /**
-     * @brief Delay for accessing the current address. Updates the cache
-     * and updates `cacheHit` property
-     * @return Delay
-     */
-    int getDelay() override {
-        return //writeDelay();
-            //readDelay();
-            (rand() % 2) == 0 ? writeDelay() : readDelay();
-    }
-
     int readDelay();
 
+    /**
+     * @brief Performs a write access for the given address in `addr_ptr`
+     * @return Delay of write access.
+     */
     int writeDelay();
 
-    /// pointer to memory
-    // TODO: more fitting name?
+    /// pointer to address
     uint64_t* addr_ptr = nullptr;
 
 private:
@@ -67,39 +58,48 @@ private:
     std::shared_ptr<MemoryInstanceManager> m_handle;
 };
 
+/**
+ * @brief The DMemoryPort class. Memory Port for data read accesses.
+ */
 class DMemoryPort : public ConfigurableMemoryPort
 {
 public:
-
-    DMemoryPort(PerformanceModel* parent_) :
-        ConfigurableMemoryPort("DPort", parent_)
+    DMemoryPort(PerformanceModel* parent_, etiss::Configuration& config) :
+        ConfigurableMemoryPort("DPort", parent_, config)
     { }
 
+    int getDelay() final { return readDelay(); }
 };
 
+/**
+ * @brief The DMemoryWritePort class. Memory Port for data write accesses.
+ */
 class DMemoryWritePort : public ConfigurableMemoryPort
 {
 public:
-
-    DMemoryWritePort(PerformanceModel* parent_) :
-        ConfigurableMemoryPort("DWPort", parent_)
+    DMemoryWritePort(PerformanceModel* parent_, etiss::Configuration& config) :
+        ConfigurableMemoryPort("DWPort", parent_, config)
     { }
 
-    int getDelay() override { return writeDelay(); }
+    int getDelay() final { return writeDelay(); }
 };
 
+/**
+ * @brief The IMemoryPort class. Memory Port for instruction fetches (read
+ * access).
+ */
 class IMemoryPort : public ConfigurableMemoryPort
 {
 public:
 
-    IMemoryPort(PerformanceModel* parent_) :
-        ConfigurableMemoryPort("IPort", parent_),
+    IMemoryPort(PerformanceModel* parent_, etiss::Configuration& config) :
+        ConfigurableMemoryPort("IPort", parent_, config),
         pc_ptr(ConfigurableMemoryPort::addr_ptr)
     { }
 
-    int getDelay() override { return readDelay(); }
+    int getDelay() final { return readDelay(); }
 
-    // alias for addr_ptr
+    // alias for addr_ptr for API compatibility
     uint64_t*& pc_ptr;
 };
 

@@ -36,28 +36,17 @@ namespace cmm
  *
  * Plain types (such as integers) are not "strongly typed". I.e. the compiler
  * may convert a plain `int` to `size_t` or vice versa. Further, if a
- * constructor of some class takes multiple arguments with the same type,
- * it may be ambigious which parameter is used for what:
+ * constructor of some class takes multiple arguments of the same type,
+ * it may be ambigious which parameter is used for what and we may mix
+ * parameters:
  *
  *   struct Rect { Rect(int width, int height) {} };
  *
  *   int height = 10, width = 5;
  *   Rect{height, width}; // mixed up arguments, compiler does not care!
  *
- * Here we accidentally passed the height parameter as a first argument.
- * One can use type aliases to be more explicit, however these are also
- * "weakly typed". I.e. the compiler does not differentiate between the alias
- * type and the underlying type:
- *
- *   using Width = int;
- *   using Height = int;
- *
- *   struct Rect { Rect(Width width, Height height) {} };
- *
- *   Rect{Height(10), Width(5)}; // mixed up arguments, compiler does not care!
- *
- * Instead one can use "named types" that are strongly typed by using dedicated
- * types using `class` or `struct`:
+ * To avoid such errors, one can use "named types" that are strongly typed
+ * by using dedicated types using `class` or `struct`:
  *
  *   using Width  = NamedType<int, struct WidthTag_>;
  *   using Height = NamedType<int, struct HeightTag_>;
@@ -70,13 +59,6 @@ namespace cmm
  * @tparam T Underlying type (i.e. value type)
  * @tparam Tag Tag type used to create a "unique" type that can be used
  * to disable implicit conversions between different "named types".
- * @note Can easily be removed by using alias types. E.g.:
- *
- * instead of:
- *   using Width  = NamedType<int, struct WidthTag_>;
- *
- * use:
- *   using Width  = int;
  */
 template <typename T, typename Tag>
 class NamedType

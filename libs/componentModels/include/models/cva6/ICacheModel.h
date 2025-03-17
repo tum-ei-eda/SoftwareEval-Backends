@@ -39,12 +39,12 @@ public:
   
   void setIc(uint64_t c_) { t_ic = isMiss ? c_ : 0; };
   uint64_t getIc(void) { return t_ic; };
-
+  
   // Trace value
   uint64_t* pc_ptr;
 
 private:
-
+  
   // Cache state
   // TODO: Associativity hard-coded to 4
   ICacheEntry tag_cache[4][256];

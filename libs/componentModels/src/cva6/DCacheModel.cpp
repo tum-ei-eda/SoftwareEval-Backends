@@ -82,10 +82,7 @@ void DCacheModel::updateCache(uint64_t tag_, uint64_t index_)
 int DCacheModel::lfsr(void)
 {
     static uint8_t shift_state = 0;
-    uint8_t shift_in = ~(((shift_state & 0x80) >> 7) ^
-                         ((shift_state & 0x08) >> 3) ^
-                         ((shift_state & 0x04) >> 2) ^
-                         ((shift_state & 0x02) >> 1));
+    uint8_t shift_in = ~(((shift_state & 0x80) >> 7) ^ ((shift_state & 0x08) >> 3) ^ ((shift_state & 0x04) >> 2) ^ ((shift_state & 0x02) >> 1));
     shift_state = (shift_state << 1) | shift_in;
     return (shift_state & 0x07);
 }

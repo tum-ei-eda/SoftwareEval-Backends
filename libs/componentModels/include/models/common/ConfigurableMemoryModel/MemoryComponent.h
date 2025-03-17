@@ -26,70 +26,131 @@
 namespace cmm
 {
 
+struct ComponentRange;
+
 // alias for access delay
-using Delay = NamedType<int, struct Delay_>;
+using Delay = int;
 
-struct AccessDetails
+/**
+ * @brief The AccessResult class. Helper struct that holds the delay of a
+ * memory accesses and whether the access is completed.
+ */
+struct AccessResult
 {
-    explicit AccessDetails(Delay delay_) : delay(delay_) {}
+    explicit AccessResult(Delay delay_) : delay(delay_) {}
 
+    /// total delay of the memory access
     Delay delay{0};
+    /// whether the memory access is completed
+    bool accessCompleted = false;
+    /// whether the memory access resulted in a cache hit
+    bool isCacheHit = false;
 
-    bool wasEntryFound = false; // hit or miss in cache
-
-    constexpr inline AccessDetails& setEntryFound(bool value)
+    /**
+     * @brief Sets whether a memory access is completed. If the access is not
+     * completed the next components (e.g. next cache-level) should be accessed.
+     * @param value Whether the memory access is completed
+     * @return Reference for operator chaining
+     */
+    constexpr inline AccessResult& setAccessCompleted(bool value)
     {
-        wasEntryFound = value;
+        accessCompleted = value;
+        return *this;
+    }
+    /**
+     * @brief Sets whether a memory access resulted in a cache hit.
+     * @param value Whether the memory accesses resulted in a cache hit.
+     * @return Reference for operator chaining
+     */
+    constexpr inline AccessResult& setCacheHit(bool value)
+    {
+        isCacheHit = value;
         return *this;
     }
 };
 
-struct ComponentRange;
+/**
+ * @brief The MemoryComponent class. Base class for components that handle
+ * memory accesses.
+ */
 class MemoryComponent
 {
 public:
 
     explicit MemoryComponent(std::string name_) :
         name(std::move(name_))
-    {}
+    {
+        assert(!name.empty());
+    }
 
     virtual ~MemoryComponent() = default;
 
-    virtual AccessDetails readAccess(uint64_t address, ComponentRange range) = 0;
+    /**
+     * @brief Overload to implement a read access.
+     * @param address Address that is accessed.
+     * @param range Range for accessing the next components
+     * @return Result of the memory access
+     */
+    virtual AccessResult readAccess(uint64_t address, ComponentRange range) = 0;
 
-    virtual AccessDetails writeAccess(uint64_t address, ComponentRange range) = 0;
+    /**
+     * @brief Overload to implement a write access.
+     * @param address Address that is accessed.
+     * @param range Range for accessing the next components
+     * @return Result of the memory access
+     */
+    virtual AccessResult writeAccess(uint64_t address, ComponentRange range) = 0;
 
-    /// name of component
+    /// name of the component
     const std::string name{};
 };
 
+/**
+ * @brief The ComponentRange class. Lightweight wrapper around a range of memory
+ * components. Can be used to access the next component which may be necessary
+ * for certain memory accesses.
+ */
 struct ComponentRange
 {
-    MemoryComponent** b{};
-    MemoryComponent** e{};
+    /// start of range
+    MemoryComponent** begin_{};
+    /// end of range (points one element past the actual range)
+    MemoryComponent** end_{};
 
-    MemoryComponent** begin() const { return b; }
-    MemoryComponent** end() const { return e; }
+    /// begin iterator
+    /// (c++ iterators, used for range-based for loops and std algorithms)
+    MemoryComponent** begin() const { return begin_; }
+    /// end iterator
+    MemoryComponent** end() const { return end_; }
 
+    /**
+     * @brief Returns whether a next component exists i.e. whether the range
+     * is empty.
+     * @return Whether a next component exists.
+     */
     inline bool hasNextComponent() const { return begin() != end(); }
 
-    inline void advance()
+    /**
+     * @brief Advances the range, such that the range points to the next
+     * component. Range must not be empty.
+     * @return Reference for operator chaining
+     */
+    inline ComponentRange& advance()
     {
         assert(hasNextComponent());
-        ++b;
+        ++begin_;
+        return *this;
     }
 
+    /**
+     * @brief Returns a pointer to the next component. The range must not be
+     * empty. Does not advance the range.
+     * @return Pointer to next component.
+     */
     inline MemoryComponent* nextComponent() const
     {
         assert(hasNextComponent());
         return *begin();
-    }
-
-    inline ComponentRange nextRange() const
-    {
-        ComponentRange cpy{*this};
-        cpy.advance();
-        return cpy;
     }
 };
 

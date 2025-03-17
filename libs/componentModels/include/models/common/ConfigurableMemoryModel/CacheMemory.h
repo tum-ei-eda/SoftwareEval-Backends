@@ -17,7 +17,7 @@
 #ifndef CONFIGURABLE_MEMORY_MODEL_CACHE_MEMORY_H
 #define CONFIGURABLE_MEMORY_MODEL_CACHE_MEMORY_H
 
-#include "./CacheLine.h"
+#include "./CacheEntry.h"
 #include "./CacheSet.h"
 
 #include <vector>
@@ -28,29 +28,36 @@
 namespace cmm
 {
 
-// stongly named types for tag and index part of an address
-using CacheTag     = NamedType<uint64_t, struct Tag_>;
-using CacheIndex   = NamedType<uint64_t, struct Index_>;
-using CacheOffset  = NamedType<uint64_t, struct Offset_>;
-using CacheAddress = uint64_t;
+// stongly named types for index and offset part of an address
+using CacheIndex    = NamedType<uint64_t, struct Index_>;
+using CacheOffset   = NamedType<uint64_t, struct Offset_>;
+using MemoryAddress = uint64_t;
 
-/// Implements a tag memory of a cache and provides simple access to
-/// cache sets and their cache lines.
+/// Implements the tag memory of a cache and provides a simple API to access
+/// cache sets and their cache entries.
 class CacheMemory
 {
-    using container_type = std::vector<CacheLine>;
+    /// typedef defining storage layout
+    using container_type = std::vector<CacheEntry>;
 
 public:
 
     // compile time constant for address width
-    static constexpr size_t ADDRESS_WIDTH  = 32;
+    static constexpr size_t ADDRESS_WIDTH  = 32u;
     // compile time constant for word size
-    static constexpr size_t BYTES_PER_WORD = ADDRESS_WIDTH / 8;
+    static constexpr size_t BYTES_PER_WORD = ADDRESS_WIDTH / 8u;
 
+    /// standard typedefs for container classes
     using value_type = typename container_type::value_type;
-    using size_type = typename container_type::size_type;
+    using size_type  = typename container_type::size_type;
 
-    /// allocates the tag memory for the given layout
+    /**
+     * @brief Allocates the tag memory for the given layout. May be called
+     * multiple times.
+     * @param ways Number of ways (associativity)
+     * @param sets Number of sets (defines index-bits)
+     * @param lineSize Number of words per cache-line (only used to calc offset-bits)
+     */
     inline void resize(const size_type ways,
                        const size_type sets,
                        const size_type lineSize)
@@ -67,20 +74,18 @@ public:
     }
 
     /**
-     * @brief Invlaidates the entire cache
+     * @brief Invalidates the entire cache
      */
     inline void invalidate()
     {
-        for (CacheLine& line : m_data)
+        for (CacheEntry& line : m_data)
         {
-            line.flags = CacheLine::Invalid | CacheLine::Uninitialized;
-            line.tag   = 0x0;
-            line.data  = 0x0;
+            line.invalidate();
         }
     }
 
     /// returns number of ways per set
-    /// (#ways * #sets = #lines)
+    /// (#ways * #sets = #total-entries)
     inline size_type ways() const { return m_ways; }
     /// returns number of sets
     inline size_type sets() const { return m_sets; }
@@ -99,7 +104,7 @@ public:
 
     /**
      * @brief Extracts the tag part of the address which is used to check if
-     * a cache line is actually the one of interest (i.e. hit or miss)
+     * a cache entry is the one of interest (i.e. hit or miss)
      * @param addr Memory address
      * @return Tag part
      */
@@ -121,7 +126,7 @@ public:
 
     /**
      * @brief Extracts the offset part of the address in words which would be
-     * used to retrieve a word from a cache line.
+     * used to retrieve a word from a cache entry.
      * @param addr Memory address
      * @return Word offset
      */
@@ -132,13 +137,13 @@ public:
     }
 
     /**
-     * @brief Returns the cache set of the given block index
+     * @brief Returns the cache set for the given index
      * @param index Index part
      * @return Cache block (#entries-per-block = #ways)
      */
     inline CacheSet getCacheSet(const CacheIndex index)
     {
-        CacheLine* begin = (&*m_data.begin());
+        CacheEntry* begin = (&*m_data.begin());
         const size_t baseIdx = index * m_ways;
 
         return {begin + baseIdx, begin + baseIdx + m_ways};
@@ -146,31 +151,48 @@ public:
     /// const overload
     inline ConstCacheSet getCacheSet(const CacheIndex index) const
     {
-        CacheLine const* begin = (&*m_data.begin());
+        CacheEntry const* begin = (&*m_data.begin());
         const size_t baseIdx = index * m_ways;
 
         return {begin + baseIdx, begin + baseIdx + m_ways};
     }
 
-    inline uint64_t getAddress(uint64_t address) const
+    /**
+     * @brief Converts the unaligned address to an aligned base address
+     * (aligned to the start of the respective cache-line)
+     * @param address Address to align
+     * @return Aligned address
+     */
+    inline uint64_t getBaseAddress(uint64_t address) const
     {
-        return (getTag(address) << m_indexBits << m_offsetBits) | (getIndex(address) << m_offsetBits);
+        return (getTag(address)   << m_indexBits << m_offsetBits) |
+               (getIndex(address) << m_offsetBits);
     }
-    inline uint64_t getAddress(CacheSet cacheSet, CacheLine& entry) const
+    /**
+     * @brief Returns the base address of the given cache entry
+     * @param cacheSet Cache set that contains the entry
+     * @param entry Pointer to entry in the cache set (must not be null)
+     * @return
+     */
+    inline uint64_t getAddress(CacheSet cacheSet, CacheEntry* entry) const
     {
+        assert(entry);
         size_t rawIndex = cacheSet.begin() -  &(*m_data.begin());
         CacheIndex index{rawIndex / m_ways};
 
-        return (entry.tag << m_indexBits << m_offsetBits) | (index << m_offsetBits);
+        return (entry->tag << m_indexBits << m_offsetBits) |
+               (index << m_offsetBits);
     }
 
+    /// Returns the number of index bits
     inline uint64_t indexBits() const { return m_indexBits; }
+    /// Returns the number of offset bits
     inline uint64_t offsetBits() const { return m_offsetBits; }
 
 private:
-    /// number of cache lines per set (= cache associativity)
+    /// number of cache entries per set (= cache associativity)
     size_type m_ways = 1;
-    /// number of sets (each set has #ways cache-lines)
+    /// number of sets (each set has #ways cache-entries)
     size_type m_sets = 0;
     /// words per cache line (used to calculate offset bits)
     size_type m_lineSize = 1;
@@ -179,9 +201,11 @@ private:
     /// index bits
     uint64_t m_indexBits  = 1;
 
-    /// tag cache memory (allocated once at runtime, contiguous memory)
-    std::vector<CacheLine> m_data;
+    /// tag cache memory (allocated at runtime, contiguous memory)
+    container_type m_data;
     // TODO: add meta data for cache sets?
+    // (currently cache sets are just a wrapper around a range of cache-entries)
+    // std::vector<CacheSetData> m_cacheSetData;
 };
 
 } // namespace cmm

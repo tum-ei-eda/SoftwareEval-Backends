@@ -118,14 +118,3 @@ TestCore_PerformanceModel::getPrintHeader(void)
     ret_strs << std::endl;
     return ret_strs.str();
 }
-
-void
-TestCore_PerformanceModel::applyConfig(etiss::Configuration& config)
-{
-    auto start = std::chrono::high_resolution_clock::now();
-    iCacheModel.applyConfig(config);
-    dCacheModel.applyConfig(config);
-    auto end = std::chrono::high_resolution_clock::now();
-    auto duration = end - start;
-    std::cout << "INFO: applying configuration took " << std::chrono::duration_cast<std::chrono::microseconds>(duration).count() / 1000.0 << " ms" << std::endl << std::endl;
-}

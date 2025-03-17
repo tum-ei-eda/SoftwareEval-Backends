@@ -37,8 +37,8 @@ class Channel;
 class TestCore_IMemoryPort : public IMemoryPort
 {
   public:
-    TestCore_IMemoryPort(PerformanceModel* parent_) :
-        IMemoryPort(parent_)
+    TestCore_IMemoryPort(PerformanceModel* parent_, etiss::Configuration& config) :
+        IMemoryPort(parent_, config)
     { }
 
     void setIc(uint64_t c_)
@@ -66,12 +66,12 @@ public:
      */
     static InstructionModelSet* instructionSet();
     
-    TestCore_PerformanceModel() : 
+    TestCore_PerformanceModel(etiss::Configuration& config) :
         PerformanceModel("TestCore", instructionSet())
         ,regModel(this)
         ,cbModel(this)
-        ,iCacheModel(this)
-        ,dCacheModel(this)
+        ,iCacheModel(this, config)
+        ,dCacheModel(this, config)
         ,brPredModel(this)
         ,divModel(this)
         ,divUModel(this)
@@ -99,12 +99,6 @@ public:
     uint64_t getCycleCount(void) override;
     std::string getPipelineStream(void) override;
     std::string getPrintHeader(void) override;
-
-    /**
-     * @brief Reimplemented to apply a configuration to the memory model
-     * @param config Configuration
-     */
-    void applyConfig(etiss::Configuration& config) override;
 };
 
 

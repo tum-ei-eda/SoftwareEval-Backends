@@ -17,7 +17,7 @@
 #ifndef CONFIGURABLE_MEMORY_MODEL_CACHE_SET_H
 #define CONFIGURABLE_MEMORY_MODEL_CACHE_SET_H
 
-#include "./CacheLine.h"
+#include "./CacheEntry.h"
 
 #include <cstddef>
 
@@ -25,39 +25,49 @@
 namespace cmm
 {
 
-/// Denotes a set of cache lines (i.e. number of cache lines per set is given
-/// by the associativity of the cache). This is a lightweight wrapper around
-/// a range of CacheLines (must be in contiguous memory). Does not store
-/// acutal data
-template<typename CacheLine_t>
+/**
+ * @brief The CacheSet_t class. Denotes a set of cache entries (i.e. number of
+ * cache entries per set is given by the associativity of the cache). This is
+ * a lightweight wrapper around a range of CacheLines (must be in contiguous
+ * memory). Does not store data nor manages the cache entries.
+ * `CacheEntry_t` can either be const or non-const.
+ */
+template<typename CacheEntry_t>
 struct CacheSet_t
 {
     /// start of range
-    CacheLine_t* begin_{};
+    CacheEntry_t* begin_{};
     /// end of range (points one element past the actual range)
-    CacheLine_t* end_{};
+    CacheEntry_t* end_{};
 
     /// begin iterator
     /// (c++ iterators, used for range-based for loops and std algorithms)
-    CacheLine_t* begin() const { return begin_; }
+    CacheEntry_t* begin() const { return begin_; }
     /// end iterator
-    CacheLine_t* end() const { return end_; }
+    CacheEntry_t* end() const { return end_; }
 
     /// []-operator to behave like a vector/array
-    CacheLine_t& operator[](size_t idx) const { return *(begin() + idx); }
+    CacheEntry_t& operator[](size_t idx) const { return *(begin() + idx); }
 
     /// Returns size of range
     size_t size() const { return end_ - begin_; }
 
-    /// Returns first entry
-    CacheLine_t& first() const { return operator[](0); }
-    /// Returns last entry
-    CacheLine_t& last() const { return operator[](size() - 1); }
+    /// Returns first entry of the cache set
+    CacheEntry_t& first() const { return operator[](0); }
+    /// Returns last entry of the cache set
+    CacheEntry_t& last() const { return operator[](size() - 1); }
 
-    inline size_t indexOf(CacheLine* entry) const
+    /**
+     * @brief Returns the index of the entry in the cache set. The entry
+     * must be contained by the cache set, otherwise an invalid index is
+     * returned.
+     * @param entry Entry
+     * @return Index of entry
+     */
+    inline size_t indexOf(CacheEntry* entry) const
     {
         size_t index = 0; // index of entry
-        for (CacheLine& other : (*this))
+        for (CacheEntry& other : (*this))
         {
             if (&other == entry) break;
             index++;
@@ -65,12 +75,12 @@ struct CacheSet_t
         return index;
     }
     /**
-     * @brief Attempts to find a cache line with the given tag
-     * @return Cache line with the given tag (may be null)
+     * @brief Attempts to find a cache entry with the given tag
+     * @return Cache entry with the given tag (may be null)
      */
-    inline CacheLine_t* find(uint64_t tag) const
+    inline CacheEntry_t* find(uint64_t tag) const
     {
-        for (CacheLine_t& e : (*this))
+        for (CacheEntry_t& e : (*this))
         {
             if (e.tag == tag) return &e;
         }
@@ -78,12 +88,12 @@ struct CacheSet_t
     }
 
     /**
-     * @brief Attempts to find a cache line that is invalid (= free/empty)
-     * @return Cache line that is invalid (may be null)
+     * @brief Attempts to find a cache entry that is invalid (= free/empty)
+     * @return Cache entry that is invalid (may be null)
      */
-    inline CacheLine_t* findInvalid() const
+    inline CacheEntry_t* findInvalid() const
     {
-        for (CacheLine_t& e : (*this))
+        for (CacheEntry_t& e : (*this))
         {
             if (!e.isValid()) return &e;
         }
@@ -91,8 +101,8 @@ struct CacheSet_t
     }
 };
 
-using CacheSet = CacheSet_t<CacheLine>;
-using ConstCacheSet = CacheSet_t<CacheLine const>;
+using CacheSet = CacheSet_t<CacheEntry>;
+using ConstCacheSet = CacheSet_t<CacheEntry const>;
 
 } // namespace cmm
 
