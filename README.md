@@ -8,7 +8,7 @@ This library contains trace-based backends for software evaluation with instruct
 
 An example of a library using SoftwareEval-Backends is the [SoftwareEvalLib](https://github.com/tum-ei-eda/SoftwareEvalLib) for the ETISS simulator.
 
-The SoftwareEval-Backends library contains backends for different core variants. The majority of these files can be automatically generated using [M2ISAR-Perf](https://github.com/tum-ei-eda/M2-ISA-R-Perf) (performance estimators) and M2ISAR (channels and printers).
+The SoftwareEval-Backends library contains backends for different core variants. The majority of these files can be automatically generated using [M2ISAR-Perf](https://github.com/tum-ei-eda/M2-ISA-R-Perf) (performance estimators) and [M2ISAR](https://github.com/tum-ei-eda/M2-ISA-R) (channels and printers).
 
 ## Usage
 
@@ -85,6 +85,6 @@ Note:
 
 ## Version
 
-This is version v1.0.
+This is version v2.0.
 
 This repository does not contain any submodules.
