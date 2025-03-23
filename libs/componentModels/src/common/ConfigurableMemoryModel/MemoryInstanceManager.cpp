@@ -168,8 +168,8 @@ cmm::MemoryInstanceManager::findMemoryInstance(std::string const& name)
 
 bool
 cmm::MemoryInstanceManager::applyConfig(etiss::Configuration& config,
-                                        std::vector<MemoryPath>& memoryPaths,
-                                        std::string const& portId)
+                                        std::string const& portId,
+                                        std::vector<MemoryPath>& memoryPaths)
 {
     // print configuration set once
     static auto log_once = [&config](){
@@ -228,7 +228,7 @@ cmm::MemoryInstanceManager::applyConfig(etiss::Configuration& config,
 
 cmm::MemoryComponent*
 cmm::MemoryInstanceManager::generateComponent(etiss::Configuration& config,
-                                              std::string const& componentName)
+                                              std::string const& componentName) noexcept(false)
 {
     if (CacheInstance* cache = findCacheInstance(componentName))
     {
@@ -269,10 +269,10 @@ cmm::MemoryInstanceManager::generateComponent(etiss::Configuration& config,
 
 cmm::CacheInstance*
 cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
-                                                  std::string const& name)
+                                                  std::string const& name) noexcept(false)
 {
     CacheConfig cacheConfig;
-    cacheConfig.setName(name);
+    cacheConfig.name = name;
 
     std::string configPath = "plugin.perfEst.memory.instance." + name;
 
@@ -300,7 +300,7 @@ cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
               << cacheConfig.memory.indexBits()  << " index bits, "
               << cacheConfig.memory.offsetBits() << " offset bits" << std::endl;
 
-    // delays
+    // set delays
     success &= loadFromConfig(config, configPath + ".delay.readHit",  cacheConfig.readHitDelay);
     success &= loadFromConfig(config, configPath + ".delay.readMiss", cacheConfig.readMissDelay);
     success &= loadFromConfig(config, configPath + ".delay.writeHit",  cacheConfig.writeHitDelay);
@@ -401,25 +401,25 @@ cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
     {
         evictionStrategy   = eviction_strategy::plru(cacheConfig.memory);
         updateStrategy     = update_on_access_strategy::plru();
-        invalidateStrategy = update_on_access_strategy::plru();
+        invalidateStrategy = update_on_invalidation_strategy::plru();
     }
     else if (evictionStrategyName == "FIFO")
     {
         evictionStrategy   = eviction_strategy::fifo(cacheConfig.memory);
         updateStrategy     = update_on_access_strategy::fifo();
-        invalidateStrategy = update_on_access_strategy::fifo();
+        invalidateStrategy = update_on_invalidation_strategy::fifo();
     }
     else if (evictionStrategyName == "LIFO")
     {
         evictionStrategy   = eviction_strategy::lifo(cacheConfig.memory);
         updateStrategy     = update_on_access_strategy::lifo();
-        invalidateStrategy = update_on_access_strategy::lifo();
+        invalidateStrategy = update_on_invalidation_strategy::lifo();
     }
     else if (evictionStrategyName == "LFU")
     {
         evictionStrategy   = eviction_strategy::lfu(cacheConfig.memory);
         updateStrategy     = update_on_access_strategy::lfu();
-        invalidateStrategy = update_on_access_strategy::lfu();
+        invalidateStrategy = update_on_invalidation_strategy::lfu();
     }
     else
     {
@@ -430,11 +430,10 @@ cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
     }
 
     // apply cache config
-    cacheConfig
-        .setEvictionStrategy(std::move(evictionStrategy))
-        .setWriteUpdateStrategy(std::move(writeStrategy))
-        .setUpdateOnAccessStrategy(std::move(updateStrategy))
-        .setUpdateOnInvalidationStrategy(std::move(invalidateStrategy));
+    cacheConfig.evictionStrategy = std::move(evictionStrategy);
+    cacheConfig.writeUpdateStrategy = std::move(writeStrategy);
+    cacheConfig.updateOnAccessStrategy = std::move(updateStrategy);
+    cacheConfig.updateOnInvlidationStrategy = std::move(invalidateStrategy);
 
     auto ptr =  isNoAllocate ?
                     std::make_unique<CacheInstanceNoAllocate>(
@@ -470,10 +469,10 @@ cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
 
 cmm::MemoryInstance*
 cmm::MemoryInstanceManager::generateMemoryInstance(etiss::Configuration& config,
-                                                   std::string const& name)
+                                                   std::string const& name) noexcept(false)
 {
     MemoryConfig memoryConfig;
-    memoryConfig.setName(name);
+    memoryConfig.name = name;
 
     std::string configPath = "plugin.perfEst.memory.instance." + name;
 
@@ -502,38 +501,48 @@ cmm::MemoryInstanceManager::generateMemoryInstance(etiss::Configuration& config,
     return instance;
 }
 
+
+// helper methods for printing statistics
+std::ostream& printValueAndPercentage(std::ostream& s, size_t value, double percentage, const char* str)
+{
+    constexpr unsigned width = 6, precision = 4;
+    s << std::setw(width) << std::right << value      << " " << str << " ("
+      << std::setprecision(precision)   << percentage << "%) ";
+    return s;
+}
+
+std::ostream& printValue(std::ostream& s, size_t value, const char* str)
+{
+    constexpr unsigned width = 6;
+    s << std::setw(width) << std::right << value << " " << str << " ";
+    return s;
+}
+
 void
 cmm::MemoryInstanceManager::outputGeneralAccessStatistics() const
 {
 #ifdef CMM_OUTPUT_STATISTICS
-    // TODO: update statistics
-    constexpr unsigned width = 6, precision = 4;
-
     std::cout << "\nCache Performance:\n";
 
     for (std::unique_ptr<CacheInstance> const& ptr : m_cacheInstances)
     {
         CacheInstance const& cache = *ptr;
+
         // output statistics
         size_t totalHits   = cache.t_readHits + cache.t_writeHits;
         size_t totalMisses = cache.t_readMisses + cache.t_writeMisses;
 
         size_t total = totalHits + totalMisses;
 
-        // TODO: spearate read and writes
-
         // basic statistics
-        std::cout << " " << cache.name << ":\n  "
-                  << std::setw(width) << std::right << totalHits                     << " cache hits ("
-                  << std::setprecision(precision)   << (totalHits * 100.0) / total   << "%) and" "\n  "
-                  << std::setw(width) << std::right <<  totalMisses                  << " cache misses ("
-                  << std::setprecision(precision)   << (totalMisses * 100.0) / total << "%) with" "\n  "
-                  << std::setw(width) << std::right <<  cache.t_evictions            << " evictions ("
-                  << std::setprecision(precision)   << (cache.t_evictions * 100.0)
-                                                        / totalMisses                << "%)" "\n  "
-                  << std::setw(width) << std::right <<  cache.t_makeDirty            << " dirty writes and " "\n  "
-                  << std::setw(width) << std::right <<  cache.t_writeBacks           << " write backs"
-                  << std::endl;
+        std::cout << " " << cache.name << ":\n  ";
+        printValueAndPercentage(std::cout, totalHits, totalHits * 100.0 / total, "cache hits")                 << "with\n  ";
+        printValueAndPercentage(std::cout, cache.t_readHits, cache.t_readHits * 100.0 / totalHits, "read hits") << "\n  ";
+        printValueAndPercentage(std::cout, totalMisses, totalMisses * 100.0 / total, "cache misses")           << "with\n  ";
+        printValueAndPercentage(std::cout, cache.t_evictions, cache.t_evictions * 100.0 / totalMisses, "evictions")  << "\n  ";
+        printValue(std::cout, cache.t_makeDirty, "unqiue dirty writes") << "and\n  ";
+        printValue(std::cout, cache.t_writeBacks, "write backs") << "and\n  ";
+        printValue(std::cout, cache.t_invalidations, "invalidations") << "\n";
     }
 
     std::cout << "\nMemory Statistics:\n";
@@ -542,12 +551,13 @@ cmm::MemoryInstanceManager::outputGeneralAccessStatistics() const
     {
         MemoryInstance const& memory = *ptr;
 
-        // TODO: spearate read and writes
+        size_t total = memory.t_reads + memory.t_writes;
 
         // basic statistics
-        std::cout << " " << memory.name << ":\n  "
-                  << std::setw(width) << std::right << (memory.t_reads + memory.t_writes) << " memory accesses"
-                  << std::endl;
+        std::cout << " " << memory.name << ":\n  ";
+        printValue(std::cout, total, "memory accesses") << "with\n  ";
+        printValueAndPercentage(std::cout, memory.t_reads, memory.t_reads * 100.0 / total, "reads") << "and\n  ";
+        printValueAndPercentage(std::cout, memory.t_writes, memory.t_writes * 100.0 / total, "writes") << "\n";
     }
 
     std::cout << std::endl;
@@ -558,10 +568,9 @@ void
 cmm::MemoryInstanceManager::generateAccessStatistics() const
 {
 #ifdef CMM_OUTPUT_STATISTICS
-    // TODO: update statistics
+    // TODO: make output path predefined using .ini file?
 
     // find path to exe
-    // TODO: make output path predefined using ini file?
     char cwd[256];
     size_t len = readlink("/proc/self/exe", cwd, sizeof(cwd));
     if (len < 0 || len > sizeof(cwd)) return;
@@ -576,20 +585,20 @@ cmm::MemoryInstanceManager::generateAccessStatistics() const
     {
         CacheInstance const& cache = *ptr;
 
+        // create .csv file
         std::string filePath;
         std::copy(cwd, directory.base(), std::back_inserter(filePath));
         filePath += "histogram-" + cache.name + ".csv";
 
         std::cout << "creating cache histogram at " << filePath << std::endl;
 
-        // detailed cache statistics
         std::ofstream fs;
         fs.open(filePath, std::ios::out);
 
         if (!fs.is_open()) continue;
 
         // header
-        fs << "index," "ways-used," "hits," "evictions\n";
+        fs << "index," "ways_used," "total_hits," "read_hits," "evictions," "invalidations" "\n";
 
         CacheMemory const& cacheMemory = cache.cacheMemory();
 
@@ -597,18 +606,22 @@ cmm::MemoryInstanceManager::generateAccessStatistics() const
         for (size_t idx = 0; idx < cacheMemory.sets(); idx++)
         {
             auto cacheSet = cacheMemory.getCacheSet(CacheIndex{idx});
+
             // accumulate statistics of all ways
-            uint32_t hits = 0, evictions = 0, waysUsed = 0;
+            uint32_t waysUsed = 0, totalHits = 0, readHits = 0, evictions = 0, invalidations = 0;
             for (size_t way = 0; way < cacheMemory.ways(); way++)
             {
-                auto entry = cacheSet[way];
-                auto totalHits = entry.t_readHits + entry.t_writeHits;
-                if (totalHits > 0) waysUsed  += 1;
+                CacheEntry const& entry = cacheSet[way];
 
-                hits += totalHits;
+                uint32_t total = entry.t_readHits + entry.t_writeHits;
+                if (total > 0) waysUsed += 1;
+
+                readHits += entry.t_readHits;
+                totalHits += total;
                 evictions += entry.t_evictions;
+                invalidations += entry.t_invalidations;
             }
-            fs << std::hex << idx << std::dec << "," << waysUsed << "," << hits << "," << evictions << "\n";
+            fs << idx << "," << waysUsed << "," << totalHits << "," << readHits << "," << evictions << "," << invalidations << "\n";
         }
 
         fs << std::endl;

@@ -62,13 +62,13 @@ moveToTop(CacheSet set, size_t index)
     }
 }
 
-/// strategies that chose an entry to evict if all entries of a cache set are
+/// Strategies that chose an entry to evict if all entries of a cache set are
 /// used. May use the `CacheEntry::data` member to store information
 /// persistently.
 namespace eviction_strategy
 {
 
-/// selects pseudo-random cache entry using a 8 bit linear feedback shift
+/// Selects pseudo-random cache entry using a 8 bit linear feedback shift
 /// register (adopted from DCacheModel)
 inline auto lfsr8bit(const CacheMemory& tagMemory)
 {
@@ -85,7 +85,7 @@ inline auto lfsr8bit(const CacheMemory& tagMemory)
     };
 }
 
-/// choses a (pseudo-)random cache entry using built-in `rand()` method
+/// Chooses a (pseudo-)random cache entry using built-in `rand()` method
 inline auto random(const CacheMemory& tagMemory)
 {
     const size_t ways = tagMemory.ways();
@@ -94,7 +94,7 @@ inline auto random(const CacheMemory& tagMemory)
     };
 }
 
-/// choses the cache entry that was least frequently used
+/// Chooses the cache entry that was least frequently used
 /// NOTE: the current implemention may lead to strongly biased entries, as the
 /// counter does not decay or is capped
 inline auto lfu(const CacheMemory& tagMemory)
@@ -112,7 +112,7 @@ inline auto lfu(const CacheMemory& tagMemory)
     };
 }
 
-/// choses the cache entry that was least recently used
+/// Chooses the cache entry that was least recently used
 inline auto lru(const CacheMemory& tagMemory)
 {
     return [](CacheSet set) -> CacheEntry* {
@@ -122,7 +122,7 @@ inline auto lru(const CacheMemory& tagMemory)
     };
 }
 
-/// choses the cache entry that was most recently used (apperantly useful if
+/// Chooses the cache entry that was most recently used (apperantly useful if
 /// large datasets are searched repeatedly?)
 inline auto mru(const CacheMemory& tagMemory)
 {
@@ -148,7 +148,7 @@ inline auto plru(const CacheMemory& tagMemory)
     };
 }
 
-/// evicts the entries in the order they were added
+/// Evicts the entries in the order they were added
 /// (entries are sorted form oldest to newest)
 /// Assuming:
 /// 1. entries are placed into cache set from top to bottom
@@ -164,7 +164,7 @@ inline auto fifo(const CacheMemory& tagMemory)
     };
 }
 
-/// evicts the entry that was most recently added
+/// Evicts the entry that was most recently added
 /// (entries are sorted form oldest to newest)
 /// Assuming:
 /// - entries are placed into cache set from top to bottom
@@ -178,7 +178,7 @@ inline auto lifo(const CacheMemory& tagMemory)
 
 } // namespace eviction_strategy
 
-/// strategies that update the internal state of the cache set/entry once an
+/// Strategies that update the internal state of the cache set/entry once an
 /// entry us accessed, which may be required for the implementation of the
 /// eviction strategy. May use the `CacheEntry::data` member to store
 /// information persistently.
@@ -197,7 +197,7 @@ auto random = default_;
 auto fifo = default_;
 auto lifo = default_;
 
-/// updates the cache entry and set according to the least frequently used
+/// Updates the cache entry and set according to the least frequently used
 /// replacement strategy
 inline auto lfu()
 {
@@ -211,7 +211,7 @@ inline auto lfu()
     };
 }
 
-/// moves the most recently used entry to the top of the set, thus sorting
+/// Moves the most recently used entry to the top of the set, thus sorting
 /// the set from most recently used to least recently used
 inline auto lru()
 {
@@ -254,8 +254,9 @@ inline auto plru()
 
 } // namespace update_on_access_strategy
 
-/// strategies that are invoked when invalidating a cache entry. Depending
-/// on the eviction strategy certain data may need to be invalidated.
+/// Strategies that are invoked after invalidating a cache entry. Depending
+/// on the eviction strategy certain properties may need to be updated when
+/// invalidating an entry
 namespace update_on_invalidation_strategy
 {
 
@@ -295,12 +296,12 @@ auto lifo = fifo;
 
 } // namespace update_on_invalidation_strategy
 
-/// strategies that implement the behavior of a write policy.
+/// Strategies that implement the behavior of a write policy.
 namespace write_update_strategy
 {
 
-/// basic write through policy. Broadcasts invalidtion to all other
-/// caches that are registered (usually all caches on the same level are affected).
+/// Basic write through policy, broadcasts invalidtion to all other caches
+/// that are registered (usually all caches on the same level are affected).
 inline auto writeThrough()
 {
     return [](CacheInstance& cache,
@@ -315,12 +316,10 @@ inline auto writeThrough()
     };
 }
 
-/// basic write back policy.
+/// Basic write back policy.
 /// assuming:
-/// 1. cache is "alone" on its level no invalidations are
-///    necessary to other caches
-/// 2. next level is not accessed without prior access to this
-///    cache
+/// 1. cache is "alone" on its level no invalidations are necessary to other caches
+/// 2. next level is not accessed without prior access to this cache
 inline auto writeBack()
 {
     return [](CacheInstance& cache,

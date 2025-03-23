@@ -85,32 +85,65 @@ public:
      */
     MemoryInstance* findMemoryInstance(std::string const& name);
 
+    /**
+     * @brief Applies the configuration for the given port Id. Instantiates
+     * all memory and cache components accordingly. Sets the memory paths.
+     * @param config Config to apply
+     * @param portId Port id whose config to apply
+     * @param memoryPaths Memory paths to update
+     * @return success
+     */
     bool applyConfig(etiss::Configuration& config,
-                     std::vector<MemoryPath>& memoryPaths,
-                     std::string const& portId);
+                     std::string const& portId,
+                     std::vector<MemoryPath>& memoryPaths) noexcept(false);
 
     void generateAccessStatistics() const;
 
     void outputGeneralAccessStatistics() const;
 
-    std::vector<std::unique_ptr<CacheInstance>>  const& caches() const { return m_cacheInstances; }
-    std::vector<std::unique_ptr<MemoryInstance>> const& memories() const { return m_memoryInstances; }
+    /// getter for cache components
+    auto const& caches() const { return m_cacheInstances; }
+    /// getter for memory components
+    auto const& memories() const { return m_memoryInstances; }
 
 private:
 
+    // hide constructor -> must use `instance` function
     MemoryInstanceManager() = default;
-
+    /// cache instances
     std::vector<std::unique_ptr<CacheInstance>> m_cacheInstances;
+    /// memory instances
     std::vector<std::unique_ptr<MemoryInstance>> m_memoryInstances;
 
+    /**
+     * @brief Generates the component named `componentName` according to its
+     * specification. Attempts to find a component with the given name and
+     * returns said component.
+     * @param config Config to apply
+     * @param componentName Component name
+     * @return Pointer to generated component
+     */
     MemoryComponent* generateComponent(etiss::Configuration& config,
-                                       std::string const& componentName);
+                                       std::string const& componentName) noexcept(false);
 
+    /**
+     * @brief Generates a cache instance according to its config.
+     * @param config Config to apply
+     * @param name Name of the cache
+     * @return Cache instance pointer
+     */
     CacheInstance* generateCacheInstance(etiss::Configuration& config,
-                                         std::string const& name);
+                                         std::string const& name) noexcept(false);
 
+    /**
+     * @brief Generates a memory instance according to its config. Does not
+     * search cache instances.
+     * @param config Config to apply
+     * @param name Name of the cache
+     * @return Cache instance pointer
+     */
     MemoryInstance* generateMemoryInstance(etiss::Configuration& config,
-                                           std::string const& name);
+                                           std::string const& name) noexcept(false);
 };
 
 } // namespace cmm

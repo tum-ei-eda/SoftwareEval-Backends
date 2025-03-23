@@ -24,17 +24,14 @@
 namespace cmm
 {
 
+/**
+ * @brief The MemoryConfig struct. Helper struct to setup memory's parameters
+ * using explicitly named members.
+ */
 struct MemoryConfig
 {
     std::string name;
     Delay readDelay{}, writeDelay{};
-
-    inline MemoryConfig&
-    setName(std::string s) { name = std::move(s); return *this; }
-
-    constexpr inline MemoryConfig& setReadDelay(Delay v) { readDelay = v; return *this; }
-    constexpr inline MemoryConfig& setWriteDelay(Delay v) { writeDelay = v; return *this; }
-
 };
 
 /**

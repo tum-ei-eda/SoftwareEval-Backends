@@ -33,7 +33,7 @@ ConfigurableMemoryPort ::ConfigurableMemoryPort(std::string portId,
 {
     assert(m_handle);
 
-    m_handle->applyConfig(config, m_memoryPaths, name);
+    m_handle->applyConfig(config, name, m_memoryPaths);
 }
 
 int

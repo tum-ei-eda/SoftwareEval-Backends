@@ -35,6 +35,7 @@ class PerformanceEstimator: public Backend
   void initialize(void);
   void execute(void);
   void finalize(void);
+
   
  private:
   PerformanceModel* perfModel_ptr;

@@ -76,6 +76,10 @@ struct CacheEntry
         flags = CacheEntry::Invalid;
         tag   = CacheTag{0x0};
         data  = 0x0;
+
+        CMM_STATISTICS_ONLY(
+            t_invalidations++;
+        )
     }
 
     // only if statistics are desired
@@ -85,6 +89,8 @@ struct CacheEntry
         uint32_t t_writeHits  = 0;
         /// number of evictions
         uint32_t t_evictions = 0;
+        /// external invalidations
+        uint32_t t_invalidations = 0;
     )
 };
 

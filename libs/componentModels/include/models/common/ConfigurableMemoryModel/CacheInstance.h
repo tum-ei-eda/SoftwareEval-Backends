@@ -62,8 +62,7 @@ using WriteUpdateStrategy =
 
 /**
  * @brief The CacheConfig struct. Helper struct to setup cache's parameters
- * using explicit setters. Each setter returns a reference that can be used
- * for operator chaining.
+ * using explicitly named members.
  */
 struct CacheConfig
 {
@@ -74,25 +73,6 @@ struct CacheConfig
     UpdateOnAccessStrategy updateOnAccessStrategy{};
     UpdateOnInvalidationStrategy updateOnInvlidationStrategy{};
     Delay readHitDelay{}, readMissDelay{}, writeHitDelay{}, writeMissDelay{};
-
-    inline CacheConfig&
-    setName(std::string s) { name = std::move(s); return *this; }
-    inline  CacheConfig&
-    setCacheMemory(CacheMemory m) { memory = std::move(m); return *this; }
-
-    inline CacheConfig&
-    setEvictionStrategy(EvictionStrategy f) { evictionStrategy = std::move(f); return *this; }
-    inline CacheConfig&
-    setWriteUpdateStrategy(WriteUpdateStrategy f) { writeUpdateStrategy = std::move(f); return *this; }
-    inline CacheConfig&
-    setUpdateOnAccessStrategy(UpdateOnAccessStrategy f) { updateOnAccessStrategy = std::move(f); return *this; }
-    inline CacheConfig&
-    setUpdateOnInvalidationStrategy(UpdateOnInvalidationStrategy f) { updateOnInvlidationStrategy = std::move(f); return *this; }
-
-    constexpr inline CacheConfig& setReadHitDelay(Delay v) { readHitDelay = v; return *this; }
-    constexpr inline CacheConfig& setReadMissDelay(Delay v) { readMissDelay = v; return *this; }
-    constexpr inline CacheConfig& setWriteHitDelay(Delay v) { writeHitDelay = v; return *this; }
-    constexpr inline CacheConfig& setWriteMissDelay(Delay v) { writeMissDelay = v; return *this; }
 };
 
 /**
@@ -160,7 +140,7 @@ public:
         AccessResult result = performAccess(address, hierarchy, isWrite);
 
         CMM_STATISTICS_ONLY(
-            (result.isCacheHit) ? t_writeHits++ : t_writeMisses++;
+            (result.isCacheHit) ? t_readHits++ : t_readMisses++;
         )
 
         return result;
@@ -181,7 +161,7 @@ public:
         AccessResult result = performAccess(address, hierarchy, isWrite);
 
         CMM_STATISTICS_ONLY(
-            (result.isCacheHit) ? t_readHits++ : t_readMisses++;
+            (result.isCacheHit) ? t_writeHits++ : t_writeMisses++;
         )
 
         return result;
@@ -354,9 +334,10 @@ public:
         uint32_t t_readMisses = 0;
         uint32_t t_writeHits = 0;
         uint32_t t_writeMisses = 0;
+        uint32_t t_evictions = 0;
         uint32_t t_writeBacks = 0;
         uint32_t t_makeDirty = 0;
-        uint32_t t_evictions = 0;
+        uint32_t t_invalidations = 0;
     )
 };
 
@@ -443,6 +424,11 @@ CacheInstance::invalidate(MemoryAddress address, size_t blockSize)
     // reset flags
     lookup.entry->setFlag(CacheEntry::Invalid, false);
     lookup.entry->tag = CacheTag{0x0};
+
+    CMM_STATISTICS_ONLY(
+        t_invalidations++;
+        lookup.entry->t_invalidations;
+    )
 
     invokeUpdateOnInvalidationStrategy(lookup.set, lookup.entry);
 }
