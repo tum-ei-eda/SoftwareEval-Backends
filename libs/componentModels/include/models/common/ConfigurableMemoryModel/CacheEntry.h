@@ -20,6 +20,7 @@
 #include "./Utilities.h"
 
 #include <stdint.h>
+#include <limits>
 
 /// namespace for configurable memory model
 namespace cmm
@@ -50,7 +51,7 @@ struct CacheEntry
     using StatusFlags = uint32_t;
 
     /// tag part of all cache entries
-    CacheTag tag = CacheTag{0x0};
+    CacheTag tag = CacheTag{std::numeric_limits<uint64_t>::max()};
     /// status flags
     StatusFlags flags = Invalid;
     /// custom data (can be used for update/eviction strategy)
@@ -74,7 +75,7 @@ struct CacheEntry
     void invalidate()
     {
         flags = CacheEntry::Invalid;
-        tag   = CacheTag{0x0};
+        tag   = CacheTag{std::numeric_limits<uint64_t>::max()};
         data  = 0x0;
 
         CMM_STATISTICS_ONLY(

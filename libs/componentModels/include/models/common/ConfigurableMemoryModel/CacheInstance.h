@@ -422,12 +422,10 @@ CacheInstance::invalidate(MemoryAddress address, size_t blockSize)
     assert(!lookup.entry->hasFlag(CacheEntry::Dirty));
 
     // reset flags
-    lookup.entry->setFlag(CacheEntry::Invalid, false);
-    lookup.entry->tag = CacheTag{0x0};
+    lookup.entry->invalidate();
 
     CMM_STATISTICS_ONLY(
         t_invalidations++;
-        lookup.entry->t_invalidations;
     )
 
     invokeUpdateOnInvalidationStrategy(lookup.set, lookup.entry);
