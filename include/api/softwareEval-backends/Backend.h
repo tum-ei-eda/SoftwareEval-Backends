@@ -23,6 +23,9 @@
 #include <string>
 #include <fstream>
 
+// forward declrations
+namespace etiss { class Configuration; }
+
 class Streamer
 {
 public:
@@ -60,7 +63,7 @@ class Backend
 {
  public:
   Backend(): streamer() {};
-  ~Backend()=default;
+  virtual ~Backend() = default;
   
   virtual void connectChannel(Channel*)=0;
   virtual void initialize(void)=0;
