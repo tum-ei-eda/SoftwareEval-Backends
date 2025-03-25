@@ -16,7 +16,6 @@
 
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
 
-
 #ifndef SWEVAL_BACKENDS_CVA6_PERFORMANCE_MODEL_H
 #define SWEVAL_BACKENDS_CVA6_PERFORMANCE_MODEL_H
 

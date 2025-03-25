@@ -1,0 +1,95 @@
+/*
+ * Copyright 2024 Chair of EDA, Technical University of Munich
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *	 http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "models/common/ConfigurableMemoryModel.h"
+
+#include "models/common/ConfigurableMemoryModel/MemoryInstance.h"
+
+#include "etiss/Misc.h"
+
+#include <string>
+
+using MemoryComponent    = cmm::MemoryComponent;
+using ComponentHierarchy = cmm::ComponentHierarchy;
+
+ConfigurableMemoryPort ::ConfigurableMemoryPort(std::string portId,
+                                                PerformanceModel* parent_,
+                                                etiss::Configuration& config) :
+    ResourceModel(std::move(portId), parent_),
+    m_handle(MemoryInstanceManager::instance())
+{
+    assert(m_handle);
+
+    m_handle->applyConfig(config, name, m_memoryPaths);
+}
+
+int
+ConfigurableMemoryPort::readDelay()
+{
+    uint64_t address = addr_ptr[getInstrIndex()];
+
+    int delay = 0;
+
+    // assumes sorted memory paths
+    for (MemoryPath& path : m_memoryPaths)
+    {
+        if (!path.contains(address)) continue;
+
+        // traverse memory path
+        ComponentHierarchy hierarchy{&*path.components.begin(), &*path.components.end()};
+        while (hierarchy.hasNextComponent())
+        {
+            MemoryComponent* component = hierarchy.nextComponent();
+            assert(component);
+            hierarchy.advance();
+            cmm::AccessResult access = component->readAccess(address, hierarchy);
+            delay += access.delay;
+            if (access.accessCompleted) break;
+        }
+        break;
+    }
+
+    return delay;
+}
+
+int
+ConfigurableMemoryPort::writeDelay()
+{
+    uint64_t address = addr_ptr[getInstrIndex()];
+
+    int delay = 0;
+
+    // assumes sorted memory paths
+    for (MemoryPath& path : m_memoryPaths)
+    {
+        if (!path.contains(address)) continue;
+
+        // traverse memory path
+        ComponentHierarchy hierarchy{&*path.components.begin(), &*path.components.end()};
+        while (hierarchy.hasNextComponent())
+        {
+            MemoryComponent* component = hierarchy.nextComponent();
+            assert(component);
+            hierarchy = hierarchy.advance();
+            cmm::AccessResult access = component->writeAccess(address, hierarchy);
+            delay += access.delay;
+            if (access.accessCompleted) break;
+        }
+        break;
+    }
+
+    return delay;
+}

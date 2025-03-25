@@ -29,6 +29,11 @@
 
 #include <iostream> // TODO: For debug. Remove
 
+
+// forward declarations
+// TODO: Evaluate if this is still needed here!
+namespace etiss { class Configuration; }
+
 class MultiElementTimingVariable
 {
 public:
@@ -63,7 +68,7 @@ public:
     
     virtual uint64_t getCycleCount(void) = 0;
     virtual std::string getPipelineStream(void) = 0;
-    virtual std::string getPrintHeader(void) = 0; 
+    virtual std::string getPrintHeader(void) = 0;
   
     int instrIndex; // TODO: Make protected, with ConnectorModel as a friend?
 
@@ -90,7 +95,6 @@ class SchedulingFunction
 {
 public:
     SchedulingFunction(SchedulingFunctionSet*, std::string, int, std::function<void(PerformanceModel*)>);
-    ~SchedulingFunction();
 
     const int typeId;
     const std::string name;

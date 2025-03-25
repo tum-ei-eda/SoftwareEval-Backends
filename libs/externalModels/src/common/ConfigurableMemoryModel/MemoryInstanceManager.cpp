@@ -1,0 +1,631 @@
+/*
+ * Copyright 2024 Chair of EDA, Technical University of Munich
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *	 http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#include "models/common/ConfigurableMemoryModel/MemoryInstanceManager.h"
+#include "models/common/ConfigurableMemoryModel/CacheStrategies.h"
+
+#include "etiss/Misc.h"
+
+#include <cassert>
+#include <iostream>
+#include <iomanip>
+#include <fstream>
+#include <unistd.h>
+
+namespace
+{
+
+/// logs std::pair to console (required for std::map)
+template <typename T, typename U>
+inline std::ostream&
+operator<<(std::ostream& s, std::pair<T, U> const& t)
+{
+    return s << '(' << t.first << ", " << t.second << ')';
+}
+
+/// helper method to log iteator ranges to console
+template<typename Iter>
+void logIter(std::ostream& s,
+             Iter a, Iter b,
+             char const* pre,
+             char const* suf,
+             char const* sep = ", ") noexcept
+{
+    s << pre;
+    if (a != b) // not empty
+    {
+        Iter b_1 = std::next(a, std::distance(a, b)-1);
+        // log until nth - 1 element
+        std::for_each(a, b_1, [&s, sep](auto const& val){
+            s << val;
+            s << sep;
+        });
+        // log nth element
+        s << *b_1;
+    }
+    s << suf;
+}
+
+/// logs std::map to console
+template<typename K, typename V, typename... R>
+std::ostream& operator<<(std::ostream& s, std::map<K, V, R...> const& t)
+{
+    logIter(s, t.begin(), t.end(), "{\n ", "\n}\n", ",\n ");
+    return s;
+}
+
+/// logs std::vector to console
+template<typename T, typename... R>
+std::ostream& operator<<(std::ostream& s, std::vector<T, R...> const& t)
+{
+    logIter(s, t.begin(), t.end(), "(", ")", ", ");
+    return s;
+}
+
+/// checks if the config path exists and reads the value of type `T`
+template<typename T>
+bool loadFromConfig(etiss::Configuration& config, std::string const& path, T& value)
+{
+    if (!config.isSet(path))
+    {
+        std::cout << "WARNING: configuration '" << path
+                  << "' not defined!" << std::endl;
+        return false;
+    }
+
+    value = config.get<T>(path, T{});
+    return true;
+}
+
+/// checks if the config path exists and reads multiple strings from the config entry
+template<>
+bool loadFromConfig(etiss::Configuration& config, std::string const& path, std::vector<std::string>& list)
+{
+    // parse list of memory levels
+    std::string configString;
+    if (!loadFromConfig(config, path, configString)) return false;
+
+    auto iter = configString.begin();
+    auto end = configString.end();
+
+    while (iter != end)
+    {
+        auto substrEnd = std::find_if(iter, end, [](char c){ return std::isspace(c, std::locale()); });
+        if (iter == substrEnd) break;
+
+        // create substring until separator
+        list.emplace_back(iter, substrEnd);
+
+        // iter points to separator -> advance
+        iter = substrEnd;
+
+        // skip white spaces
+        while (iter != end && std::isspace(*iter, std::locale())) iter++;
+    }
+
+    return true;
+}
+
+} // namespace
+
+
+cmm::MemoryInstanceManager::~MemoryInstanceManager()
+{
+    outputGeneralAccessStatistics();
+    generateAccessStatistics();
+}
+
+std::shared_ptr<cmm::MemoryInstanceManager>
+cmm::MemoryInstanceManager::instance()
+{
+    static std::weak_ptr<cmm::MemoryInstanceManager> self{};
+    auto lock = self.lock();
+    // construct single instance if object is uninitialized or the instance was deleted
+    if (!lock)
+    {
+        lock = std::shared_ptr<MemoryInstanceManager>{new MemoryInstanceManager()};
+        self = lock;
+    }
+    assert(lock);
+    return lock;
+}
+
+cmm::CacheInstance*
+cmm::MemoryInstanceManager::findCacheInstance(std::string const& name)
+{
+    auto iter = std::find_if(m_cacheInstances.begin(),
+                             m_cacheInstances.end(),
+                             [&name](auto& instance){
+        return instance->name == name;
+    });
+    if (iter == m_cacheInstances.end()) return nullptr;
+    return iter->get();
+}
+
+cmm::MemoryInstance*
+cmm::MemoryInstanceManager::findMemoryInstance(std::string const& name)
+{
+    auto iter = std::find_if(m_memoryInstances.begin(), m_memoryInstances.end(),
+                             [&name](auto& instance){
+                                 return instance->name == name;
+                             });
+    if (iter == m_memoryInstances.end()) return nullptr;
+    return iter->get();
+}
+
+bool
+cmm::MemoryInstanceManager::applyConfig(etiss::Configuration& config,
+                                        std::string const& portId,
+                                        std::vector<MemoryPath>& memoryPaths)
+{
+    // print configuration set once
+    static auto log_once = [&config](){
+        std::cout << "INFO: configuration: " << config.listFullConfiguration() << std::endl;
+        return 0;
+    }();
+    (void)log_once;
+
+    std::cout << "INFO: configuring port '" << portId << "'..." << std::endl;
+
+    std::string configPath =  "plugin.perfEst.memory." + portId;
+
+    int nregions = -1;
+    if (!loadFromConfig(config, configPath + ".nregions", nregions) || nregions <= 0)
+    {
+        throw std::logic_error("'" + configPath + ".nregions' is not defined!");
+    }
+
+    memoryPaths.reserve(nregions);
+
+    for (int idx = 0; idx < nregions; idx++)
+    {
+        std::string regionConfigPath = configPath + ".region" + std::to_string(idx);
+
+        uint64_t endAddress = 0x0;
+        if (!loadFromConfig(config, regionConfigPath + ".end", endAddress) || endAddress <= 0x0)
+        {
+            throw std::logic_error("'" + regionConfigPath + ".end' is not defined!");
+        }
+
+        std::vector<std::string> instances;
+        if (!loadFromConfig(config, regionConfigPath + ".path", instances) || instances.empty())
+        {
+            throw std::logic_error("'" + regionConfigPath + ".path' is not defined!");
+        }
+
+        std::cout << "INFO: instantiating memory path (components: "
+                  << instances << ", address space: 0x"
+                  << std::hex << endAddress << std::dec << ")"
+                  << std::endl;
+
+        MemoryPath path;
+        path.endAddress = endAddress;
+        for (std::string const& instanceName : instances)
+        {
+            path.components.push_back(generateComponent(config, instanceName));
+        }
+
+        memoryPaths.push_back(path);
+    }
+
+    std::cout << std::endl;
+
+    return true;
+}
+
+cmm::MemoryComponent*
+cmm::MemoryInstanceManager::generateComponent(etiss::Configuration& config,
+                                              std::string const& componentName) noexcept(false)
+{
+    if (CacheInstance* cache = findCacheInstance(componentName))
+    {
+        std::cout << "INFO:  using cache instance: " << (void*)cache << std::endl;
+        return cache;
+    }
+    if (MemoryInstance* memory = findMemoryInstance(componentName))
+    {
+        std::cout << "INFO:  using memory instance: " << (void*)memory << std::endl;
+        return memory;
+    }
+
+    std::string configPath = "plugin.perfEst.memory.instance." + componentName;
+
+    std::string typeString;
+    if (!loadFromConfig(config, configPath + ".type", typeString))
+    {
+        throw std::logic_error("'" + configPath + ".type' is not defined!");
+    }
+
+    enum Type { Cache, Memory };
+
+    Type type;
+    if (typeString == "cache") type = Cache;
+    else if (typeString == "memory") type = Memory;
+    else throw std::logic_error("'" + configPath + ".type' is unkown: " + typeString);
+
+    switch (type)
+    {
+    case Cache:
+        return generateCacheInstance(config, componentName);
+    case Memory:
+        return generateMemoryInstance(config, componentName);
+    }
+
+    throw std::logic_error(std::string(__FUNCTION__) + ": Unreachable path!");
+}
+
+cmm::CacheInstance*
+cmm::MemoryInstanceManager::generateCacheInstance(etiss::Configuration& config,
+                                                  std::string const& name) noexcept(false)
+{
+    CacheConfig cacheConfig;
+    cacheConfig.name = name;
+
+    std::string configPath = "plugin.perfEst.memory.instance." + name;
+
+    std::cout << "INFO:  generating cache instance '" << name << "'..." << std::endl;
+
+    // allocate tag memory
+    size_t nsets = 0, nways = 0, lineSize = 0;
+
+    bool success = true;
+    success &= loadFromConfig(config, configPath + ".lineSize", lineSize);
+    success &= loadFromConfig(config, configPath + ".nsets", nsets);
+    success &= loadFromConfig(config, configPath + ".nways", nways);
+    if (!success)
+    {
+        throw std::logic_error("cache's memory specifications of '" + name + "' are invalid!");
+    }
+
+    std::cout << "INFO:   - allocating cache memory with "
+              << nsets << " entries x "
+              << nways << " ways..." << std::endl;
+
+    cacheConfig.memory.resize(nways, nsets, lineSize);
+
+    std::cout << "INFO:     -> "
+              << cacheConfig.memory.indexBits()  << " index bits, "
+              << cacheConfig.memory.offsetBits() << " offset bits" << std::endl;
+
+    // set delays
+    success &= loadFromConfig(config, configPath + ".delay.readHit",  cacheConfig.readHitDelay);
+    success &= loadFromConfig(config, configPath + ".delay.readMiss", cacheConfig.readMissDelay);
+    success &= loadFromConfig(config, configPath + ".delay.writeHit",  cacheConfig.writeHitDelay);
+    success &= loadFromConfig(config, configPath + ".delay.writeMiss", cacheConfig.writeMissDelay);
+    if (!success)
+    {
+        throw std::logic_error("cache's delay specifications of '" + name + "' are invalid!");
+    }
+
+    std::vector<std::string> cacheNamesToInvalidate;
+    if (!loadFromConfig(config, configPath + ".invalidationTargets", cacheNamesToInvalidate))
+    {
+        throw std::logic_error("'" + configPath + ".invalidationTargets' is not defined!");
+    }
+
+    // write policy
+    std::string writeStrategyName;
+    if (!loadFromConfig(config, configPath + ".writePolicy", writeStrategyName))
+    {
+        throw std::logic_error("'" + configPath + ".writePolicy' is not defined!");
+    }
+
+    std::cout << "INFO:   - using write policy '" << writeStrategyName << "'" << std::endl;
+
+    bool isNoAllocate = false;
+    bool isInvaliding = false;
+    WriteUpdateStrategy writeStrategy{};
+
+    if (writeStrategyName == "WB")
+    {
+        writeStrategy = write_update_strategy::writeBack();
+    }
+    else if (writeStrategyName == "WB-NA")
+    {
+        isNoAllocate = true;
+        writeStrategy = write_update_strategy::writeBack();
+    }
+    else if (writeStrategyName == "WT")
+    {
+        writeStrategy = write_update_strategy::writeBack();
+    }
+    else if (writeStrategyName == "WT-NA")
+    {
+        isNoAllocate = true;
+        writeStrategy = write_update_strategy::writeBack();
+    }
+    else if (writeStrategyName == "WB-NA-I")
+    {
+        isInvaliding = true;
+        writeStrategy = write_update_strategy::writeThrough();
+    }
+    else
+    {
+        throw std::logic_error(
+            std::string(__FUNCTION__) +
+            ": Write policy '" + writeStrategyName + "' is unkown!"
+        );
+    }
+
+    // replacement strategy
+    std::string evictionStrategyName;
+    if (!loadFromConfig(config, configPath + ".replacementStrategy", evictionStrategyName))
+    {
+        throw std::logic_error("'" + configPath + ".type' is not defined!");
+    }
+
+    std::cout << "INFO:   - using replacement strategy '" << evictionStrategyName << "'" << std::endl;
+
+    EvictionStrategy evictionStrategy{};
+    UpdateOnAccessStrategy updateStrategy{};
+    UpdateOnInvalidationStrategy invalidateStrategy{};
+
+    if (evictionStrategyName == "LFSR")
+    {
+        evictionStrategy   = eviction_strategy::lfsr8bit(cacheConfig.memory);
+        updateStrategy     = update_on_access_strategy::lfsr8bit();
+        invalidateStrategy = update_on_invalidation_strategy::lfsr8bit();
+    }
+    else if (evictionStrategyName == "RANDOM")
+    {
+        evictionStrategy   = eviction_strategy::random(cacheConfig.memory);
+        updateStrategy     = update_on_access_strategy::random();
+        invalidateStrategy = update_on_invalidation_strategy::random();
+    }
+    else if (evictionStrategyName == "LRU")
+    {
+        evictionStrategy   = eviction_strategy::lru(cacheConfig.memory);
+        updateStrategy     = update_on_access_strategy::lru();
+        invalidateStrategy = update_on_invalidation_strategy::lru();
+    }
+    else if (evictionStrategyName == "MRU")
+    {
+        evictionStrategy   = eviction_strategy::mru(cacheConfig.memory);
+        updateStrategy     = update_on_access_strategy::mru();
+        invalidateStrategy = update_on_invalidation_strategy::mru();
+    }
+    else if (evictionStrategyName == "PLRU")
+    {
+        evictionStrategy   = eviction_strategy::plru(cacheConfig.memory);
+        updateStrategy     = update_on_access_strategy::plru();
+        invalidateStrategy = update_on_invalidation_strategy::plru();
+    }
+    else if (evictionStrategyName == "FIFO")
+    {
+        evictionStrategy   = eviction_strategy::fifo(cacheConfig.memory);
+        updateStrategy     = update_on_access_strategy::fifo();
+        invalidateStrategy = update_on_invalidation_strategy::fifo();
+    }
+    else if (evictionStrategyName == "LIFO")
+    {
+        evictionStrategy   = eviction_strategy::lifo(cacheConfig.memory);
+        updateStrategy     = update_on_access_strategy::lifo();
+        invalidateStrategy = update_on_invalidation_strategy::lifo();
+    }
+    else if (evictionStrategyName == "LFU")
+    {
+        evictionStrategy   = eviction_strategy::lfu(cacheConfig.memory);
+        updateStrategy     = update_on_access_strategy::lfu();
+        invalidateStrategy = update_on_invalidation_strategy::lfu();
+    }
+    else
+    {
+        throw std::logic_error(
+            std::string(__FUNCTION__) +
+            ": Replacement strategy '" + evictionStrategyName + "' is unkown!"
+        );
+    }
+
+    // apply cache config
+    cacheConfig.evictionStrategy = std::move(evictionStrategy);
+    cacheConfig.writeUpdateStrategy = std::move(writeStrategy);
+    cacheConfig.updateOnAccessStrategy = std::move(updateStrategy);
+    cacheConfig.updateOnInvlidationStrategy = std::move(invalidateStrategy);
+
+    auto ptr =  isNoAllocate ?
+                    std::make_unique<CacheInstanceNoAllocate>(
+                        std::move(cacheConfig),
+                        isInvaliding
+                    ) :
+                    std::make_unique<CacheInstance>(
+                        std::move(cacheConfig)
+                    );
+    m_cacheInstances.push_back(std::move(ptr));
+
+    CacheInstance* instance = m_cacheInstances.back().get();
+
+    std::cout << "INFO:   - instance ptr: " << (void*)instance << std::endl;
+
+    std::cout << "INFO:  setting caches to invalidate..." << std::endl;
+
+    std::vector<CacheInstance*> cachesToInvalidate;
+    for (std::string const& otherName : cacheNamesToInvalidate)
+    {
+        CacheInstance* otherInstance = findCacheInstance(otherName);
+        if (!otherInstance)
+        {
+            otherInstance = generateCacheInstance(config, otherName);
+            assert(otherInstance);
+        }
+        cachesToInvalidate.emplace_back(otherInstance);
+    }
+    instance->setCachesToInvalidate(std::move(cachesToInvalidate));
+
+    return instance;
+}
+
+cmm::MemoryInstance*
+cmm::MemoryInstanceManager::generateMemoryInstance(etiss::Configuration& config,
+                                                   std::string const& name) noexcept(false)
+{
+    MemoryConfig memoryConfig;
+    memoryConfig.name = name;
+
+    std::string configPath = "plugin.perfEst.memory.instance." + name;
+
+    std::cout << "INFO:  generating memory instance '" << name << "'..." << std::endl;
+
+    // delays
+    bool success = true;
+    success &= loadFromConfig(config, configPath + ".delay.read", memoryConfig.readDelay);
+    success &= loadFromConfig(config, configPath + ".delay.write", memoryConfig.writeDelay);
+
+    if (!success)
+    {
+        throw std::logic_error("memory specifications of '" + name + "' are invalid!");
+    }
+
+    m_memoryInstances.push_back(
+        std::make_unique<MemoryInstance>(
+            std::move(memoryConfig)
+        )
+    );
+
+    MemoryInstance* instance = m_memoryInstances.back().get();
+
+    std::cout << "INFO:   instance ptr: " << (void*)instance << std::endl;
+
+    return instance;
+}
+
+
+// helper methods for printing statistics
+std::ostream& printValueAndPercentage(std::ostream& s, size_t value, double percentage, const char* str)
+{
+    constexpr unsigned width = 6, precision = 4;
+    s << std::setw(width) << std::right << value      << " " << str << " ("
+      << std::setprecision(precision)   << percentage << "%) ";
+    return s;
+}
+
+std::ostream& printValue(std::ostream& s, size_t value, const char* str)
+{
+    constexpr unsigned width = 6;
+    s << std::setw(width) << std::right << value << " " << str << " ";
+    return s;
+}
+
+void
+cmm::MemoryInstanceManager::outputGeneralAccessStatistics() const
+{
+#ifdef CMM_OUTPUT_STATISTICS
+    std::cout << "\nCache Performance:\n";
+
+    for (std::unique_ptr<CacheInstance> const& ptr : m_cacheInstances)
+    {
+        CacheInstance const& cache = *ptr;
+
+        // output statistics
+        size_t totalHits   = cache.t_readHits + cache.t_writeHits;
+        size_t totalMisses = cache.t_readMisses + cache.t_writeMisses;
+
+        size_t total = totalHits + totalMisses;
+
+        // basic statistics
+        std::cout << " " << cache.name << ":\n  ";
+        printValueAndPercentage(std::cout, totalHits, totalHits * 100.0 / total, "cache hits")                 << "with\n  ";
+        printValueAndPercentage(std::cout, cache.t_readHits, cache.t_readHits * 100.0 / totalHits, "read hits") << "\n  ";
+        printValueAndPercentage(std::cout, totalMisses, totalMisses * 100.0 / total, "cache misses")           << "with\n  ";
+        printValueAndPercentage(std::cout, cache.t_evictions, cache.t_evictions * 100.0 / totalMisses, "evictions")  << "\n  ";
+        printValue(std::cout, cache.t_makeDirty, "unqiue dirty writes") << "and\n  ";
+        printValue(std::cout, cache.t_writeBacks, "write backs") << "and\n  ";
+        printValue(std::cout, cache.t_invalidations, "invalidations") << "\n";
+    }
+
+    std::cout << "\nMemory Statistics:\n";
+
+    for (std::unique_ptr<MemoryInstance> const& ptr : m_memoryInstances)
+    {
+        MemoryInstance const& memory = *ptr;
+
+        size_t total = memory.t_reads + memory.t_writes;
+
+        // basic statistics
+        std::cout << " " << memory.name << ":\n  ";
+        printValue(std::cout, total, "memory accesses") << "with\n  ";
+        printValueAndPercentage(std::cout, memory.t_reads, memory.t_reads * 100.0 / total, "reads") << "and\n  ";
+        printValueAndPercentage(std::cout, memory.t_writes, memory.t_writes * 100.0 / total, "writes") << "\n";
+    }
+
+    std::cout << std::endl;
+#endif
+}
+
+void
+cmm::MemoryInstanceManager::generateAccessStatistics() const
+{
+#ifdef CMM_OUTPUT_STATISTICS
+    // TODO: make output path predefined using .ini file?
+
+    // find path to exe
+    char cwd[256];
+    size_t len = readlink("/proc/self/exe", cwd, sizeof(cwd));
+    if (len < 0 || len > sizeof(cwd)) return;
+
+    // find directory
+    auto rbegin = std::make_reverse_iterator(cwd + len);
+    auto rend = std::make_reverse_iterator(cwd);
+    auto directory = std::find(rbegin, rend, '/');
+    if (directory == rend) return;
+
+    for (std::unique_ptr<CacheInstance> const& ptr : m_cacheInstances)
+    {
+        CacheInstance const& cache = *ptr;
+
+        // create .csv file
+        std::string filePath;
+        std::copy(cwd, directory.base(), std::back_inserter(filePath));
+        filePath += "histogram-" + cache.name + ".csv";
+
+        std::cout << "creating cache histogram at " << filePath << std::endl;
+
+        std::ofstream fs;
+        fs.open(filePath, std::ios::out);
+
+        if (!fs.is_open()) continue;
+
+        // header
+        fs << "index," "ways_used," "total_hits," "read_hits," "evictions," "invalidations" "\n";
+
+        CacheMemory const& cacheMemory = cache.cacheMemory();
+
+        // data
+        for (size_t idx = 0; idx < cacheMemory.sets(); idx++)
+        {
+            auto cacheSet = cacheMemory.getCacheSet(CacheIndex{idx});
+
+            // accumulate statistics of all ways
+            uint32_t waysUsed = 0, totalHits = 0, readHits = 0, evictions = 0, invalidations = 0;
+            for (size_t way = 0; way < cacheMemory.ways(); way++)
+            {
+                CacheEntry const& entry = cacheSet[way];
+
+                uint32_t total = entry.t_readHits + entry.t_writeHits;
+                if (total > 0) waysUsed += 1;
+
+                readHits += entry.t_readHits;
+                totalHits += total;
+                evictions += entry.t_evictions;
+                invalidations += entry.t_invalidations;
+            }
+            fs << idx << "," << waysUsed << "," << totalHits << "," << readHits << "," << evictions << "," << invalidations << "\n";
+        }
+
+        fs << std::endl;
+        fs.close();
+    }
+#endif
+}
