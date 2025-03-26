@@ -25,13 +25,21 @@
 #include <cstdint>
 
 #include "PerformanceModel.h"
+#include "Channel.h"
+
+#include "models/common/StandardRegisterModel.h"
+#include "models/cva6/BranchPredictionModel.h"
+#include "models/cva6/ClobberModel.h"
+#include "models/cva6/DividerModel.h"
+#include "models/cva6/DividerUnsignedModel.h"
 
 #include "models/common/ConfigurableMemoryModel.h"
 
 #include "CVA6_PerformanceModel.h"
 
-class Channel;
+//class Channel;
 
+namespace TestCore{
 
 // replaces ICacheModel of CVA6
 class TestCore_IMemoryPort : public IMemoryPort
@@ -41,18 +49,20 @@ class TestCore_IMemoryPort : public IMemoryPort
         IMemoryPort(parent_, config)
     { }
 
-    void setIc(uint64_t c_)
+    void setIc_in(uint64_t c_)
     {
         // TODO: t_ic = isMiss ? c_ : 0; (see ICacheModel)
         t_ic = 0;
     };
-    uint64_t getIc(void) { return t_ic; };
+    uint64_t getIc_out(void) { return t_ic; };
 
 private:
 
     // Time when ICache releases block on miss
     uint64_t t_ic = 0;
 };
+
+extern SchedulingFunctionSet* TestCore_SchedulingFunctionSet;
 
 class TestCore_PerformanceModel : public PerformanceModel
 {
@@ -64,43 +74,63 @@ public:
      * @brief Instantiates the instruction set of this class once needed (lazy). 
      * Calling this function mutliple times yields the same instruction set pointer.
      */
-    static InstructionModelSet* instructionSet();
+    //static InstructionModelSet* instructionSet();
     
     TestCore_PerformanceModel(etiss::Configuration& config) :
-        PerformanceModel("TestCore", instructionSet())
-        ,regModel(this)
-        ,cbModel(this)
+        PerformanceModel("TestCore", TestCore_SchedulingFunctionSet)
+        ,IF_stage(3,0)
+	,IQ_stage(7,0)
+	,EX_stage(8,0)
+	,COM_stage(2,0)
+	,regModel(this)
+	,dynBranchPredModel(this)
+        ,clobberModel(this)
+	,divider(this)
+	,divider_u(this)
         ,iCacheModel(this, config)
         ,dCacheModel(this, config)
-        ,brPredModel(this)
-        ,divModel(this)
-        ,divUModel(this)
     {}
+  
+  // Single-Element Timing Variables
+  uint64_t PC_stage = 0;
+  uint64_t IF_substage_0 = 0;
+  uint64_t IF_substage_1 = 0;
+  uint64_t IF_substage_2 = 0;
+  uint64_t ID_stage = 0;
+  uint64_t IS_stage = 0;
+  uint64_t EX_substage_alu = 0;
+  uint64_t EX_substage_mul_i = 0;
+  uint64_t EX_substage_mul_o = 0;
+  uint64_t EX_substage_div = 0;
+  uint64_t EX_substage_lCtrl = 0;
+  uint64_t EX_substage_dCache = 0;
+  uint64_t EX_substage_lUnit = 0;
+  uint64_t EX_substage_sCtrl = 0;
+  uint64_t EX_substage_sUnit = 0;
 
-    CVA6_PcGenStage_Model PcGenStage;
-    CVA6_IfStage_Model IfStage;
-    CVA6_IqStage_Model IqStage;
-    CVA6_IdStage_Model IdStage;
-    CVA6_IsStage_Model IsStage;
-    CVA6_ExStage_Model ExStage;
-    CVA6_ComStage_Model ComStage;
+  // Multi-Element Timing Variables
+  MultiElementTimingVariable IF_stage;
+  MultiElementTimingVariable IQ_stage;
+  MultiElementTimingVariable EX_stage;
+  MultiElementTimingVariable COM_stage;
 
-    StandardRegisterModel regModel;
-    ClobberModel cbModel;
-    // ICacheModel iCacheModel;
-    TestCore_IMemoryPort iCacheModel;
-    // replaced DCacheModel
-    TestCore_DMemoryPort dCacheModel;
-    BranchPredictionModel brPredModel;
-    CVA6_DividerModel divModel;
-    CVA6_DividerUnsignedModel divUModel;
-
-    void connectChannel(Channel*) override;
-    uint64_t getCycleCount(void) override;
-    std::string getPipelineStream(void) override;
-    std::string getPrintHeader(void) override;
+  // External Resource Models
+  common::StandardRegisterModel regModel;
+  cva6::BranchPredictionModel dynBranchPredModel;
+  cva6::ClobberModel clobberModel;
+  //cva6::ICacheModel iCacheModel;
+  TestCore_IMemoryPort iCacheModel;
+  cva6::DividerModel divider;
+  cva6::DividerUnsignedModel divider_u;
+  //cva6::DCacheModel dCacheModel;
+  TestCore_DMemoryPort dCacheModel;
+  
+  void connectChannel(Channel*) override;
+  uint64_t getCycleCount(void) override;
+  std::string getPipelineStream(void) override;
+  std::string getPrintHeader(void) override;
 };
 
-
+} // namespace TestCore
 
 #endif // SWEVAL_BACKENDS_TEST_CORE_PERFORMANCE_MODEL_H

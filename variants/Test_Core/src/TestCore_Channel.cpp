@@ -42,9 +42,9 @@ TestCore_Channel::getTraceValueHook(std::string trVal_)
   {
     return brTarget;
   }
-  if(trVal_ == "memAddr")
+  if(trVal_ == "addr")
   {
-    return memAddr;
+    return addr;
   }
   if(trVal_ == "imm")
   {

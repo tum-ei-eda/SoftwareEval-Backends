@@ -93,13 +93,13 @@ Backend* Factory::getPerformanceEstimator(int var_, etiss::Configuration& config
   switch((var_t)var_)
   {
     case CV32E40P:
-      perfModel = new CV32E40P_PerformanceModel();
+      perfModel = new CV32E40P::CV32E40P_PerformanceModel();
       break;
     case TestCore:
-      perfModel = new TestCore_PerformanceModel(config_); // TODO: remove me
+      perfModel = new TestCore::TestCore_PerformanceModel(config_); // TODO: remove me
       break;
     case CVA6:
-      perfModel = new CVA6_PerformanceModel();
+      perfModel = new CVA6::CVA6_PerformanceModel();
       break;
     default: perfModel = nullptr;
   }

@@ -42,7 +42,7 @@ TestCore_Printer::connectChannel(Channel* ch_)
   rd_ptr = channel->rd;
   pc_ptr = channel->pc;
   brTarget_ptr = channel->brTarget;
-  memAddr_ptr = channel->memAddr;
+  memAddr_ptr = channel->addr;
   rs1_data_ptr = channel->rs1_data;
   rs2_data_ptr = channel->rs2_data;
 }

@@ -38,7 +38,7 @@ public:
   uint64_t rd [100];
   uint64_t pc [100];
   uint64_t brTarget [100];
-  uint64_t memAddr [100];
+  uint64_t addr [100];
   uint64_t imm [100];
   uint64_t rs1_data [100];
   uint64_t rs2_data [100];

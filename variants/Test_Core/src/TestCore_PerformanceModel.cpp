@@ -20,7 +20,7 @@
 #include "TestCore_PerformanceModel.h"
 
 #include "TestCore_Channel.h"
-#include "TestCore_InstructionModels.cpp"
+//#include "TestCore_InstructionModels.cpp"
 
 #include "Channel.h"
 
@@ -29,92 +29,110 @@
 #include <sstream>
 #include <cstdint>
 #include <chrono>
+#include <algorithm>
 
-InstructionModelSet*
-TestCore_PerformanceModel::instructionSet()
-{
-    // immediately invoked lambda function
-    //  initializes the instruction set exactly once and only when
-    //  this function is called
-    static InstructionModelSet* ptr = [=](){
-        static InstructionModelSet instrSet{"TestCore_InstrModelSet"};
-        initInstructionSet(&instrSet);
-        return &instrSet;
-    }();
-    return ptr;
-}
+namespace TestCore{
+
+// TODO: Benefits or remove?
+// InstructionModelSet*
+// TestCore_PerformanceModel::instructionSet()
+// {
+//     // immediately invoked lambda function
+//     //  initializes the instruction set exactly once and only when
+//     //  this function is called
+//     static InstructionModelSet* ptr = [=](){
+//         static InstructionModelSet instrSet{"TestCore_InstrModelSet"};
+//         initInstructionSet(&instrSet);
+//         return &instrSet;
+//     }();
+//     return ptr;
+// }
 
 void
 TestCore_PerformanceModel::connectChannel(Channel* channel_)
 {
     auto* channel = static_cast<TestCore_Channel*>(channel_);
-
+    
     regModel.rs1_ptr = channel->rs1;
     regModel.rs2_ptr = channel->rs2;
     regModel.rd_ptr = channel->rd;
+    
+    dynBranchPredModel.pc_ptr = channel->pc;
+    dynBranchPredModel.brTarget_ptr = channel->brTarget;
+    dynBranchPredModel.rs1_ptr = channel->rs1;
+    dynBranchPredModel.rd_ptr = channel->rd;
+    dynBranchPredModel.imm_ptr = channel->imm;
 
-    cbModel.rd_ptr = channel->rd;
-
+    clobberModel.rd_ptr = channel->rd;
+    
     iCacheModel.pc_ptr = channel->pc;
-
-    dCacheModel.addr_ptr = channel->memAddr;
-
-    brPredModel.pc_ptr = channel->pc;
-    brPredModel.brTarget_ptr = channel->brTarget;
-    brPredModel.rs1_ptr = channel->rs1;
-    brPredModel.rd_ptr = channel->rd;
-    brPredModel.imm_ptr = channel->imm;
-
-    divModel.rs1_data_ptr = channel->rs1_data;
-    divModel.rs2_data_ptr = channel->rs2_data;
-
-    divUModel.rs1_data_ptr = channel->rs1_data;
-    divUModel.rs2_data_ptr = channel->rs2_data;
+    
+    divider.rs1_data_ptr = channel->rs1_data;
+    divider.rs2_data_ptr = channel->rs2_data;
+    
+    divider_u.rs1_data_ptr = channel->rs1_data;
+    divider_u.rs2_data_ptr = channel->rs2_data;
+    
+    dCacheModel.addr_ptr = channel->addr;
 }
 
 uint64_t
 TestCore_PerformanceModel::getCycleCount()
 {
-    return ComStage.get_leaveStage();
+  return std::max({
+		   PC_stage 
+		   ,IF_stage.get(1)
+		   ,IF_substage_0
+		   ,IF_substage_1
+		   ,IF_substage_2
+		   ,IQ_stage.get(1)
+		   ,ID_stage
+		   ,IS_stage
+		   ,EX_stage.get(1)
+		   ,EX_substage_alu
+		   ,EX_substage_mul_i
+		   ,EX_substage_mul_o
+		   ,EX_substage_div
+		   ,EX_substage_lCtrl
+		   ,EX_substage_dCache
+		   ,EX_substage_lUnit
+		   ,EX_substage_sCtrl
+		   ,EX_substage_sUnit
+		   ,COM_stage.get(1)
+    });
 }
 
 std::string
 TestCore_PerformanceModel::getPipelineStream(void)
 {
-    std::stringstream ret_strs;
-
-    ret_strs << PcGenStage.getStageInfo();
-    ret_strs << "," << IfStage.getStageInfo();
-    ret_strs << "," << IqStage.getStageInfo();
-    ret_strs << "," << IdStage.getStageInfo();
-    ret_strs << "," << IsStage.getStageInfo();
-    ret_strs << "," << ExStage.getStageInfo();
-    ret_strs << "," << ComStage.getStageInfo();
-    ret_strs << "," << brPredModel.getInfo_mispredict();
-    ret_strs << "," << brPredModel.getInfo_taken();
-    ret_strs << "," << brPredModel.getInfo_predictedTaken();
-    ret_strs << "," << brPredModel.getInfo_pc_pt();
-    ret_strs << "," << brPredModel.getInfo_pc_mp();
-    return ret_strs.str();
+  std::stringstream ret_strs;
+  
+  ret_strs << PC_stage; 
+  ret_strs << "," << IF_stage.get(1);
+  ret_strs << "," << IQ_stage.get(1);
+  ret_strs << "," << ID_stage;
+  ret_strs << "," << IS_stage;
+  ret_strs << "," << EX_stage.get(1);
+  ret_strs << "," << COM_stage.get(1);
+  ret_strs << std::endl;
+  return ret_strs.str();
 }
 
 std::string
 TestCore_PerformanceModel::getPrintHeader(void)
 {
-    std::stringstream ret_strs;
+  std::stringstream ret_strs;
+  
+  ret_strs << "PC_stage"; 
+  ret_strs << "," << "IF_stage";
+  ret_strs << "," << "IQ_stage";
+  ret_strs << "," << "ID_stage";
+  ret_strs << "," << "IS_stage";
+  ret_strs << "," << "EX_stage";
+  ret_strs << "," << "COM_stage";
+  ret_strs << std::endl;
+  return ret_strs.str();
 
-    ret_strs << "PCGEN";
-    ret_strs << "," << "IF";
-    ret_strs << "," << "IQ";
-    ret_strs << "," << "ID";
-    ret_strs << "," << "IS";
-    ret_strs << "," << "EX";
-    ret_strs << "," << "COM";
-    ret_strs << "," << "mispredict";
-    ret_strs << "," << "taken";
-    ret_strs << "," << "predictedTaken";
-    ret_strs << "," << "cyc_pc_pt";
-    ret_strs << "," << "cyc_pc_mp";
-    ret_strs << std::endl;
-    return ret_strs.str();
 }
+
+} // namespace TestCore
