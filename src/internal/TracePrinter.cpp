@@ -47,7 +47,7 @@ void TracePrinter::execute(void)
   for(int instr_i=0; instr_i < instrCnt; instr_i++)
   {
     streamer.stream(printer_ptr->callInstrPrintFunc(ch_typeId_ptr[instr_i]));
-    streamer.stream("\n"); // TODO: Move line break to instruction printer?
+    //streamer.stream("\n"); // TODO: Move line break to instruction printer?
 
     printer_ptr->update();
   }

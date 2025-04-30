@@ -16,34 +16,33 @@
 
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
+                   
+#ifndef SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
+#define SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
 
-#include "CV32E40P_Channel.h"
+#include "Printer.h"
 
-void *CV32E40P_Channel::getTraceValueHook(std::string trVal_)
+#include "Channel.h"
+
+#include <string>
+#include <cstdint>
+
+class AssemblyTrace_RV64_Printer : public Printer
 {
-  if(trVal_ == "rs1")
-  {
-    return rs1;
-  }
-  if(trVal_ == "rs2")
-  {
-    return rs2;
-  }
-  if(trVal_ == "rd")
-  {
-    return rd;
-  }
-  if(trVal_ == "pc")
-  {
-    return pc;
-  }
-  if(trVal_ == "brTarget")
-  {
-    return brTarget;
-  }
-  if(trVal_ == "rs2_data")
-  {
-    return rs2_data;
-  }
-  return nullptr;
-}
+public:
+
+  AssemblyTrace_RV64_Printer();
+
+  virtual void connectChannel(Channel*);
+  virtual std::string getPrintHeader(void);
+
+  int get_pc(void){ return pc_ptr[instrIndex]; };
+  std::string get_assembly(void){ return assembly_ptr[instrIndex]; };
+
+private:
+
+  int* pc_ptr;
+  char (*assembly_ptr)[50];
+};
+
+#endif // SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H

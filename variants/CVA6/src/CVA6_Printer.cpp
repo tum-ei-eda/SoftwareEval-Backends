@@ -58,6 +58,7 @@ std::string CVA6_Printer::getPrintHeader(void)
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs1_data" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs2_data" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "addr" << " | ";
+  caption_strs << std::endl;
 
   return caption_strs.str();
 }

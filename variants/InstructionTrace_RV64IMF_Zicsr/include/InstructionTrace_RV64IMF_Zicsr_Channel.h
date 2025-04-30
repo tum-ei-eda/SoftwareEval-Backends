@@ -17,8 +17,8 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
 
-#ifndef SWEVAL_BACKENDS_CV32E40P_CHANNEL_H
-#define SWEVAL_BACKENDS_CV32E40P_CHANNEL_H
+#ifndef SWEVAL_BACKENDS_INSTRUCTIONTRACE_RV64IMF_ZICSR_CHANNEL_H
+#define SWEVAL_BACKENDS_INSTRUCTIONTRACE_RV64IMF_ZICSR_CHANNEL_H
 
 #include "Channel.h"
 
@@ -26,21 +26,27 @@
 #include <stdbool.h>
 #include <cstdint>
 
-class CV32E40P_Channel: public Channel
+class InstructionTrace_RV64IMF_Zicsr_Channel: public Channel
 {
 public:
 
-  CV32E40P_Channel() {};
-  ~CV32E40P_Channel() {};
+  InstructionTrace_RV64IMF_Zicsr_Channel() {};
+  ~InstructionTrace_RV64IMF_Zicsr_Channel() {};
 
-  uint64_t rs1 [100];
-  uint64_t rs2 [100];
-  uint64_t rd [100];
-  uint64_t pc [100];
-  uint64_t brTarget [100];
-  uint64_t rs2_data [100];
+  int pc [100];
+  int code [100];
+  char assembly [100] [75];
+  int imm [100];
+  int rs1_data [100];
+  int rs2_data [100];
+  int rs3_data [100];
+  int rd_data [100];
+  int jump_pc [100];
+  int csr [100];
+  int csr_reg [100];
+  int mem_addr [100];
 
   virtual void *getTraceValueHook(std::string);
 };
 
-#endif // SWEVAL_BACKENDS_CV32E40P_CHANNEL_H
+#endif // SWEVAL_BACKENDS_INSTRUCTIONTRACE_RV64IMF_ZICSR_CHANNEL_H

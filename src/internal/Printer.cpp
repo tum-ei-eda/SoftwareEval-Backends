@@ -20,24 +20,18 @@
 
 Printer::Printer(std::string name_, InstructionPrinterSet* instrPrinterSet_) : name(name_), instrPrinterSet(instrPrinterSet_)
 {
-  //std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
-  //std::cout << "Creating printer: " << name << "\n";
-  //std::cout << " - Creating printer-function map:\n";
-  
   instrPrinterSet->foreach([this](InstructionPrinter &instr)
   {
 
     auto it = instrPrintFunc_map.find(instr.id);
     if(it != instrPrintFunc_map.end())
     {
-      //std::cout << "\tERROR: Cannot add" << instr.id << ". ID already registered.\n";
+      std::cout << "\tERROR: Cannot add instruction printer for instr-ID " << instr.id << ". ID already registered.\n";
       return;
     }
     instrPrintFunc_map[instr.id] = instr.printFunc;
-    //std::cout << "\tAdding instruction type " << instr.id << " to monitor-function map\n";
     
   });
-  //std::cout << "\n\n++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n\n";
 }
 
 std::string Printer::callInstrPrintFunc(int typeId_)

@@ -17,33 +17,26 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
 
-#include "CV32E40P_Channel.h"
+#ifndef SWEVAL_BACKENDS_ASSEMBLYTRACE_RV32_CHANNEL_H
+#define SWEVAL_BACKENDS_ASSEMBLYTRACE_RV32_CHANNEL_H
 
-void *CV32E40P_Channel::getTraceValueHook(std::string trVal_)
+#include "Channel.h"
+
+#include <string>
+#include <stdbool.h>
+#include <cstdint>
+
+class AssemblyTrace_RV32_Channel: public Channel
 {
-  if(trVal_ == "rs1")
-  {
-    return rs1;
-  }
-  if(trVal_ == "rs2")
-  {
-    return rs2;
-  }
-  if(trVal_ == "rd")
-  {
-    return rd;
-  }
-  if(trVal_ == "pc")
-  {
-    return pc;
-  }
-  if(trVal_ == "brTarget")
-  {
-    return brTarget;
-  }
-  if(trVal_ == "rs2_data")
-  {
-    return rs2_data;
-  }
-  return nullptr;
-}
+public:
+
+  AssemblyTrace_RV32_Channel() {};
+  ~AssemblyTrace_RV32_Channel() {};
+
+  int pc [100];
+  char assembly [100] [50];
+
+  virtual void *getTraceValueHook(std::string);
+};
+
+#endif // SWEVAL_BACKENDS_ASSEMBLYTRACE_RV32_CHANNEL_H

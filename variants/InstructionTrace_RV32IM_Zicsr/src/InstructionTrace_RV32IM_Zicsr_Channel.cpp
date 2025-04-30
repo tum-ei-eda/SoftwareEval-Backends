@@ -17,33 +17,53 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
 
-#include "CV32E40P_Channel.h"
+#include "InstructionTrace_RV32IM_Zicsr_Channel.h"
 
-void *CV32E40P_Channel::getTraceValueHook(std::string trVal_)
+void *InstructionTrace_RV32IM_Zicsr_Channel::getTraceValueHook(std::string trVal_)
 {
-  if(trVal_ == "rs1")
-  {
-    return rs1;
-  }
-  if(trVal_ == "rs2")
-  {
-    return rs2;
-  }
-  if(trVal_ == "rd")
-  {
-    return rd;
-  }
   if(trVal_ == "pc")
   {
     return pc;
   }
-  if(trVal_ == "brTarget")
+  if(trVal_ == "code")
   {
-    return brTarget;
+    return code;
+  }
+  if(trVal_ == "assembly")
+  {
+    return assembly;
+  }
+  if(trVal_ == "imm")
+  {
+    return imm;
+  }
+  if(trVal_ == "rs1_data")
+  {
+    return rs1_data;
   }
   if(trVal_ == "rs2_data")
   {
     return rs2_data;
+  }
+  if(trVal_ == "rd_data")
+  {
+    return rd_data;
+  }
+  if(trVal_ == "jump_pc")
+  {
+    return jump_pc;
+  }
+  if(trVal_ == "csr")
+  {
+    return csr;
+  }
+  if(trVal_ == "csr_reg")
+  {
+    return csr_reg;
+  }
+  if(trVal_ == "mem_addr")
+  {
+    return mem_addr;
   }
   return nullptr;
 }
