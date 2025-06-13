@@ -73,3 +73,9 @@ void PerformanceEstimator::finalize(void)
 
   streamer.closeStream();
 }
+
+int64_t PerformanceEstimator::getEstimatedCycleCount(void)
+{
+  // std::cout << "PerformanceEstimator::getEstimatedCycleCount" << std::endl;
+  return perfModel_ptr->getCycleCount();
+}

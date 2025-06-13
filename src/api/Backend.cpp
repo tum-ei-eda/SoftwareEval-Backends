@@ -115,3 +115,9 @@ void Backend::activateStreamToFile(std::string fileNameBase_, std::string outDir
   streamer.activate();
   streamer.setOutFile(fileNameBase_, outDir_, filePostfix_, maxFileSize_);
 }
+
+int64_t Backend::getEstimatedCycleCount(void)
+{
+  // std::cout << "Backend::getEstimatedCycleCount" << std::endl;
+  return 0;
+}
