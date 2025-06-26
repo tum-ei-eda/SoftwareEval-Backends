@@ -17,6 +17,7 @@
 #ifndef SWEVAL_BACKENDS_CHANNEL_H
 #define SWEVAL_BACKENDS_CHANNEL_H
 
+#include <cstdint>
 #include <string>
 #include <stdbool.h>
 

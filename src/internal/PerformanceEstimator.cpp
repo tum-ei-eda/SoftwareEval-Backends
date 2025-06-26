@@ -50,6 +50,7 @@ void PerformanceEstimator::execute(void)
   for(int instr_i=0; instr_i < instrCnt; instr_i++)
   {
     perfModel_ptr->callSchedulingFunction(ch_typeId_ptr[instr_i]);
+    // std::cout << perfModel_ptr->getWbCycles() << "\n";
     perfModel_ptr->update();
 
     if(streamer.isActive())
