@@ -21,6 +21,7 @@
 
 #include <stdbool.h>
 #include <cstdint>
+#include <string>
 
 #include "PerformanceModel.h"
 
@@ -42,11 +43,13 @@ public:
   void setIc_in(uint64_t c_) { t_ic = isMiss ? c_ : 0; };
   uint64_t getIc_out(void) { return t_ic; };
 
-  std::string getInfo_miss(void) { return std::to_string(isMiss); };
+  // Tracing API
+  std::string getInfoHeader();
+  std::string getInfoStream();
   
   // Trace value
   uint64_t* pc_ptr;
-
+  
 private:
   
   // Cache state

@@ -95,14 +95,17 @@ uint64_t CVA6_PerformanceModel::getCycleCount(void)
 std::string CVA6_PerformanceModel::getPipelineStream(void)
 {
   std::stringstream ret_strs;
-  
-  ret_strs << PC_stage; 
+  ret_strs << entrancePoint;
+  ret_strs << "," << PC_stage;
   ret_strs << "," << IF_stage.get(1);
   ret_strs << "," << IQ_stage.get(1);
   ret_strs << "," << ID_stage;
   ret_strs << "," << IS_stage;
   ret_strs << "," << EX_stage.get(1);
   ret_strs << "," << COM_stage.get(1);
+  ret_strs << "," << dynBranchPredModel.getInfoStream();
+  ret_strs << "," << iCacheModel.getInfoStream();
+  ret_strs << "," << dCacheModel.getInfoStream();
   ret_strs << std::endl;
   return ret_strs.str();
 }
@@ -110,14 +113,17 @@ std::string CVA6_PerformanceModel::getPipelineStream(void)
 std::string CVA6_PerformanceModel::getPrintHeader(void)
 {
   std::stringstream ret_strs;
-  
-  ret_strs << "PC_stage"; 
+  ret_strs << "Enter";
+  ret_strs << "," << "PC_stage";
   ret_strs << "," << "IF_stage";
   ret_strs << "," << "IQ_stage";
   ret_strs << "," << "ID_stage";
   ret_strs << "," << "IS_stage";
   ret_strs << "," << "EX_stage";
   ret_strs << "," << "COM_stage";
+  ret_strs << "," << dynBranchPredModel.getInfoHeader();
+  ret_strs << "," << iCacheModel.getInfoHeader();
+  ret_strs << "," << dCacheModel.getInfoHeader();
   ret_strs << std::endl;
   return ret_strs.str();
 }

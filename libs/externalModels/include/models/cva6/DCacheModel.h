@@ -21,6 +21,7 @@
 
 #include <stdbool.h>
 #include <cstdint>
+#include <string>
 
 #include "PerformanceModel.h"
 
@@ -40,8 +41,9 @@ public:
   DCacheModel(PerformanceModel* parent_) : ResourceModel("ICacheModel", parent_), CACHE_DELAY(1), MEMORY_DELAY(7), NOT_CACHABLE_DELAY(9) {};
   virtual int getDelay(void);
 
-  // Info print
-  std::string getInfo_miss(void) { return std::to_string(isMiss); };
+  // Tracing API
+  std::string getInfoHeader();
+  std::string getInfoStream();
   
   // Trace value
   uint64_t* addr_ptr;

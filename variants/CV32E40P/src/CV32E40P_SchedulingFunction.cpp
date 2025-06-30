@@ -72,6 +72,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -119,6 +121,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -166,6 +170,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -213,6 +219,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -260,6 +268,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -307,6 +317,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -354,6 +366,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -401,6 +415,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -448,6 +464,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -495,6 +513,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -539,6 +559,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -583,6 +605,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -627,6 +651,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -671,6 +697,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -715,6 +743,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -759,6 +789,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -803,6 +835,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -847,6 +881,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -891,6 +927,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -932,6 +970,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -973,6 +1013,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1020,6 +1062,8 @@ perfModel->regModel.setXd(n_MUL);
 uint64_t n_EX_stage = n_MUL;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1067,6 +1111,8 @@ perfModel->regModel.setXd(n_MULH);
 uint64_t n_EX_stage = n_MULH;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1114,6 +1160,8 @@ perfModel->regModel.setXd(n_MULH);
 uint64_t n_EX_stage = n_MULH;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1161,6 +1209,8 @@ perfModel->regModel.setXd(n_MULH);
 uint64_t n_EX_stage = n_MULH;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1208,6 +1258,8 @@ perfModel->regModel.setXd(n_DIV);
 uint64_t n_EX_stage = n_DIV;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1255,6 +1307,8 @@ perfModel->regModel.setXd(n_DIV);
 uint64_t n_EX_stage = n_DIV;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1302,6 +1356,8 @@ perfModel->regModel.setXd(n_DIVU);
 uint64_t n_EX_stage = n_DIVU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1349,6 +1405,8 @@ perfModel->regModel.setXd(n_DIVU);
 uint64_t n_EX_stage = n_DIVU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1393,6 +1451,8 @@ perfModel->regModel.setXd(n_CSR);
 uint64_t n_EX_stage = n_CSR;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1437,6 +1497,8 @@ perfModel->regModel.setXd(n_CSR);
 uint64_t n_EX_stage = n_CSR;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1481,6 +1543,8 @@ perfModel->regModel.setXd(n_CSR);
 uint64_t n_EX_stage = n_CSR;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1522,6 +1586,8 @@ perfModel->regModel.setXd(n_CSR);
 uint64_t n_EX_stage = n_CSR;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1563,6 +1629,8 @@ perfModel->regModel.setXd(n_CSR);
 uint64_t n_EX_stage = n_CSR;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1604,6 +1672,8 @@ perfModel->regModel.setXd(n_CSR);
 uint64_t n_EX_stage = n_CSR;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1657,6 +1727,8 @@ n_DPort_W = n_EX_stage + 1;
 uint64_t n_WB_stage = n_DPort_W;
 perfModel->WB_stage = n_WB_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1710,6 +1782,8 @@ n_DPort_W = n_EX_stage + 1;
 uint64_t n_WB_stage = n_DPort_W;
 perfModel->WB_stage = n_WB_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1763,6 +1837,8 @@ n_DPort_W = n_EX_stage + 1;
 uint64_t n_WB_stage = n_DPort_W;
 perfModel->WB_stage = n_WB_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1814,6 +1890,8 @@ perfModel->regModel.setXd(n_DPort_R);
 uint64_t n_WB_stage = n_DPort_R;
 perfModel->WB_stage = n_WB_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1865,6 +1943,8 @@ perfModel->regModel.setXd(n_DPort_R);
 uint64_t n_WB_stage = n_DPort_R;
 perfModel->WB_stage = n_WB_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1916,6 +1996,8 @@ perfModel->regModel.setXd(n_DPort_R);
 uint64_t n_WB_stage = n_DPort_R;
 perfModel->WB_stage = n_WB_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -1967,6 +2049,8 @@ perfModel->regModel.setXd(n_DPort_R);
 uint64_t n_WB_stage = n_DPort_R;
 perfModel->WB_stage = n_WB_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2018,6 +2102,8 @@ perfModel->regModel.setXd(n_DPort_R);
 uint64_t n_WB_stage = n_DPort_R;
 perfModel->WB_stage = n_WB_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2065,6 +2151,8 @@ perfModel->staBranchPredModel.setPc_np(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2112,6 +2200,8 @@ perfModel->staBranchPredModel.setPc_np(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2159,6 +2249,8 @@ perfModel->staBranchPredModel.setPc_np(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2206,6 +2298,8 @@ perfModel->staBranchPredModel.setPc_np(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2253,6 +2347,8 @@ perfModel->staBranchPredModel.setPc_np(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2300,6 +2396,8 @@ perfModel->staBranchPredModel.setPc_np(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2327,6 +2425,8 @@ uint64_t n_IF_stage;
 n_IF_stage = std::max({n_IPort_R, n_PCGen});
 perfModel->IF_stage = n_IF_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2369,6 +2469,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 
@@ -2413,6 +2515,8 @@ perfModel->regModel.setXd(n_ALU);
 uint64_t n_EX_stage = n_ALU;
 perfModel->EX_stage = n_EX_stage;
 
+  // Dump Entrance point for info print (tracing)
+  perfModel->entrancePoint = n_Enter;
   }
 );
 

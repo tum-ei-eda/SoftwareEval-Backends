@@ -20,6 +20,7 @@
 #include "PerformanceModel.h"
 
 #include <stdbool.h>
+#include <string>
 
 namespace common{
 
@@ -34,12 +35,19 @@ public:
     void setPc_p(uint64_t pc_p_);
     void setPc_np(uint64_t pc_np_);
     uint64_t getPc(void);
-    
+
+    // Tracing API
+    std::string getInfoHeader(); 
+    std::string getInfoStream();
+  
 private:
     uint64_t pc_p = 0;
     uint64_t pc_np = 0;
     uint64_t branchTarget = 0;
     bool branchInstr = false;
+    // Status variables for info-print (tracing)
+    bool mispredicted_info = false;
+    uint64_t pc_info = 0;
 };
 
 } //namespace common

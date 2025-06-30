@@ -19,6 +19,8 @@
 #include "models/cva6/BranchPredictionModel.h"
 
 #include <cstdint>
+#include <string>
+#include <sstream>
 
 namespace cva6{
 
@@ -189,6 +191,7 @@ uint64_t BranchPredictionModel::getPc_mp(void)
     // In case of mispredict: Return time when corrected address is available (t_pc_mp)
     if(isMispredict)
     {
+      pc_info = t_pc_mp;
       return t_pc_mp;
     }
   }
@@ -218,6 +221,7 @@ uint64_t BranchPredictionModel::getPc_mp(void)
     // On mispredict: Return time when corrected address is available (t_pc_mp)
     if(isMispredict)
     {
+      pc_info = t_pc_mp;
       return t_pc_mp;
     }
   }
@@ -236,7 +240,7 @@ uint64_t BranchPredictionModel::getPc_pt(void)
     branch_flag = false;
     if(!isMispredict & isTaken)
     {
-      pc_pt = t_pc_pt;
+      pc_info = t_pc_pt;
       return t_pc_pt;
     }   
   }
@@ -245,7 +249,7 @@ uint64_t BranchPredictionModel::getPc_pt(void)
   if(jump_flag)
   {
     jump_flag = false;
-    pc_pt = t_pc_pt;
+    pc_info = t_pc_pt;
     return t_pc_pt;
   }
 
@@ -256,14 +260,32 @@ uint64_t BranchPredictionModel::getPc_pt(void)
     return_flag = false;
     if(!isMispredict)
     {
-      pc_pt = t_pc_pt;
+      pc_info = t_pc_pt;
       return t_pc_pt;
     }
   }
   
   // Default: Branch/Jump was not correctly predicted
-  pc_pt = 0;
+  pc_info = 0;
   return 0; // Use 0 to disregard the pc_pt connector in any max operation
 }
 
+std::string BranchPredictionModel::getInfoHeader()
+{
+  std::stringstream ret_strs;
+  ret_strs << "br:taken";
+  ret_strs << "," << "br:mispredict";
+  ret_strs << "," << "br:pc_avail";
+  return ret_strs.str();
+}
+
+std::string BranchPredictionModel::getInfoStream()
+{
+  std::stringstream ret_strs;
+  ret_strs << isTaken;
+  ret_strs << "," << isMispredict;
+  ret_strs << "," << pc_info;
+  return ret_strs.str();
+}
+  
 } // namespace cva6

@@ -19,6 +19,8 @@
 #include "models/cva6/DCacheModel.h"
 
 #include <cstdint>
+#include <string>
+#include <sstream>
 
 namespace cva6{
 
@@ -27,7 +29,7 @@ int DCacheModel::getDelay(void)
   uint64_t addr = addr_ptr[getInstrIndex()];
 
   // TODO: Robert's model calculates an additional delay here if address is blocked by a preceding store!
-
+  
   if(!cachable(addr))
   {
     isMiss = true;
@@ -92,4 +94,18 @@ int DCacheModel::lfsr(void)
     return (shift_state & 0x07);
 }
 
+std::string DCacheModel::getInfoHeader()
+{
+  std::stringstream ret_strs;
+  ret_strs << "L1D:miss";
+  return ret_strs.str();
+}
+
+std::string DCacheModel::getInfoStream()
+{
+  std::stringstream ret_strs;
+  ret_strs << isMiss;  
+  return ret_strs.str();
+} 
+  
 } // namespace cva6

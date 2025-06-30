@@ -17,11 +17,15 @@
 #include "models/common/StaticBranchPredictModel.h"
 
 #include <cstdint>
+#include <string>
+#include <sstream>
 
 namespace common{
 
 void StaticBranchPredictModel::setPc_p(uint64_t pc_p_)
 {
+  // Every instruction calls setPc_p, so assume it is not a branch
+  branchInstr = false;
   pc_p = pc_p_;
 }
 
@@ -34,16 +38,21 @@ void StaticBranchPredictModel::setPc_np(uint64_t pc_np_)
 
 uint64_t StaticBranchPredictModel::getPc(void)
 {
+  // Set info print default
+  mispredicted_info = false;
+  pc_info = pc_p;
   if(!branchInstr)
   {
     return pc_p;
   }
   else
   {
-    branchInstr = false;
     // Always predict branch-not-taken
     if(pc_ptr[getInstrIndex()] == branchTarget)
     {
+      // Set info print for misprediction
+      mispredicted_info = true;
+      pc_info = pc_np;
       return pc_np;
     }
     else
@@ -53,4 +62,21 @@ uint64_t StaticBranchPredictModel::getPc(void)
   }
 }
 
+std::string StaticBranchPredictModel::getInfoHeader()
+{
+  std::stringstream ret_strs;
+  ret_strs << "br:mispredict";
+  ret_strs << "," << "br:pc_avail";
+  return ret_strs.str();
+}
+
+std::string StaticBranchPredictModel::getInfoStream()
+{
+  std::stringstream ret_strs;
+  ret_strs << mispredicted_info;
+  ret_strs << "," << pc_info;
+  return ret_strs.str();
+}
+
+    
 } // namespace common

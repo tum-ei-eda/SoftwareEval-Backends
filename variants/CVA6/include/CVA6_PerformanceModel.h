@@ -57,6 +57,9 @@ public:
     ,dCacheModel(this)
   {};
 
+  // Entrance-point "timing variable" (only used for info-stream)
+  uint64_t entrancePoint = 0;
+
   // Single-Element Timing Variables
   uint64_t PC_stage = 0;
   uint64_t IF_substage_0 = 0;

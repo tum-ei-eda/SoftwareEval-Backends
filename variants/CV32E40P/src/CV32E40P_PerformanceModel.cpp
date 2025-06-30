@@ -66,11 +66,12 @@ uint64_t CV32E40P_PerformanceModel::getCycleCount(void)
 std::string CV32E40P_PerformanceModel::getPipelineStream(void)
 {
   std::stringstream ret_strs;
-  
-  ret_strs << IF_stage; 
+  ret_strs << entrancePoint;
+  ret_strs << "," << IF_stage;
   ret_strs << "," << ID_stage;
   ret_strs << "," << EX_stage;
   ret_strs << "," << WB_stage;
+  ret_strs << "," << staBranchPredModel.getInfoStream();
   ret_strs << std::endl;
   return ret_strs.str();
 }
@@ -78,11 +79,12 @@ std::string CV32E40P_PerformanceModel::getPipelineStream(void)
 std::string CV32E40P_PerformanceModel::getPrintHeader(void)
 {
   std::stringstream ret_strs;
-  
-  ret_strs << "IF_stage"; 
+  ret_strs << "Enter";
+  ret_strs << "," << "IF_stage";
   ret_strs << "," << "ID_stage";
   ret_strs << "," << "EX_stage";
   ret_strs << "," << "WB_stage";
+  ret_strs << "," << staBranchPredModel.getInfoHeader();
   ret_strs << std::endl;
   return ret_strs.str();
 }

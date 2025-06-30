@@ -109,13 +109,10 @@ public:
   uint64_t getPc_mp(void);
   uint64_t getPc_pt(void);
 
-  // Used for model evaluation TODO: Delete?
-  std::string getInfo_mispredict(void) { return std::to_string(isMispredict); };
-  std::string getInfo_taken(void) { return std::to_string(isTaken); };
-  //std::string getInfo_predictedTaken(void) { return std::to_string(branchPredictedTaken); };
-  //std::string getInfo_pc_pt(void) { return std::to_string(t_pc_pt); };
-  //std::string getInfo_pc_mp(void) { return std::to_string(t_pc_mp); };
-  
+  // Tracing API
+  std::string getInfoHeader();
+  std::string getInfoStream();
+    
   // Trace values
   uint64_t* pc_ptr;
   uint64_t* brTarget_ptr;
@@ -147,8 +144,8 @@ private:
   bool isCall(void) { return ( (rd_ptr[getInstrIndex()] == 1) | (rd_ptr[getInstrIndex()] == 5) ); };
   bool isReturn(void) {return ( (rs1_ptr[getInstrIndex()] != rd_ptr[getInstrIndex()]) & ((rs1_ptr[getInstrIndex()] == 1) | (rs1_ptr[getInstrIndex()] == 5)) ); };
   
-  // TODO: Use for model evaluation. DELETE!
-  uint64_t pc_pt = 0;
+  // Status variable for info stream
+  uint64_t pc_info = 0;
   
 };
 

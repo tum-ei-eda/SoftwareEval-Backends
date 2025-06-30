@@ -47,6 +47,9 @@ public:
     ,divider_u(this)
   {};
 
+  // Entrance-point "timing variable" (only used for info-stream)
+  uint64_t entrancePoint = 0;
+
   // Single-Element Timing Variables
   uint64_t IF_stage = 0;
   uint64_t ID_stage = 0;

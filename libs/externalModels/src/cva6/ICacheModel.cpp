@@ -17,6 +17,8 @@
 // TODO: Proof-of-concept model, taken from Robert (more or less)!
 
 #include <cstdint>
+#include <string>
+#include <sstream>
 
 #include "models/cva6/ICacheModel.h"
 
@@ -84,4 +86,18 @@ int ICacheModel::lfsr(void)
     return (shift_state & 0x03);
 }
 
+std::string ICacheModel::getInfoHeader()
+{
+  std::stringstream ret_strs;
+  ret_strs << "L1I:miss";
+  return ret_strs.str();
+}
+
+std::string ICacheModel::getInfoStream()
+{
+  std::stringstream ret_strs;
+  ret_strs << isMiss;
+  return ret_strs.str();
+} 
+  
 } // namespace cva6
