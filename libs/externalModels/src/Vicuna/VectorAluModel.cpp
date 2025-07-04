@@ -15,17 +15,16 @@
  */
 
 #include "models/Vicuna/VectorAluModel.h"
+#include "models/Vicuna/VectorConfig.h"
 #include <cstdint>
 
-namespace Vicuna
-{
+namespace Vicuna {
 
-int VectorAluModel::getDelay(void)
-{
-    static constexpr auto vlen = 1024;
-    static constexpr auto vLaneWidth = 32;
-    static constexpr auto cyclesPerRegister = vlen / vLaneWidth;
-    return cyclesPerRegister * decodeLmul();
+int VectorAluModel::getDelay(void) {
+  static constexpr auto cyclesPerRegister =
+      VectorConfig::vlen / VectorConfig::vLaneWidth;
+  auto lmul = decodeLmul();
+  return cyclesPerRegister * lmul;
 }
 
 /**
@@ -33,18 +32,16 @@ int VectorAluModel::getDelay(void)
  *
  * @returns The LMUL
  */
-auto VectorAluModel::decodeLmul() -> uint64_t
-{
-    uint64_t vtype = vtype_ptr[getInstrIndex()];
-    static constexpr auto fractionalLmulBitmask = 0b100;
-    auto isFractionalLmul = vtype & fractionalLmulBitmask;
-    if (isFractionalLmul)
-    {
-        return 1;
-    }
+auto VectorAluModel::decodeLmul() -> uint64_t {
+  uint64_t vtype = vtype_ptr[getInstrIndex()];
+  static constexpr auto fractionalLmulBitmask = 0b100;
+  auto isFractionalLmul = vtype & fractionalLmulBitmask;
+  if (isFractionalLmul) {
+    return 1;
+  }
 
-    static constexpr auto lmulValueBitmask = 0b11;
-    return 1 << (vtype & lmulValueBitmask);
+  static constexpr auto lmulValueBitmask = 0b11;
+  return 1 << (vtype & lmulValueBitmask);
 }
 
 } // namespace Vicuna

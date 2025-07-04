@@ -15,24 +15,36 @@
  */
 
 #include "models/Vicuna/VectorMemVregSignal.h"
+#include "models/Vicuna/VectorConfig.h"
 #include <cstdint>
 
-namespace Vicuna {
+namespace Vicuna
+{
 
-int VectorMemVregSignal::getDelay(void) {
+int VectorMemVregSignal::getDelay(void)
+{
+    auto storeWidth = width_ptr[getInstrIndex()];
 
-  static constexpr auto vlen = 1024;
-  static constexpr auto vMemWidth = 32;
-  auto storeWidth = width_ptr[getInstrIndex()];
+    uint64_t n_register_elements = VectorConfig::vlen / decodeSew();
 
-  uint64_t n_register_elements = vlen / decodeSew();
+    uint64_t vtype = vtype_ptr[getInstrIndex()];
+    static constexpr auto fractionalLmulBitmask = 0b100;
+    auto isFractionalLmul = vtype & fractionalLmulBitmask;
 
-  // Elements per store: (MemWidth / SEW) / (VsWidth / SEW) = (MemWidth * SEW) /
-  // (VsWidth * SEW) = MemWidth / VsWidth
-  auto elements_per_store = vMemWidth / storeWidth;
+    // Elements per store: (MemWidth / SEW) / (VsWidth / SEW) = (MemWidth * SEW) /
+    // (VsWidth * SEW) = MemWidth / VsWidth
+    auto elements_per_store = VectorConfig::vMemWidth / storeWidth;
+    auto shift = 0;
 
-  // Vector registers are ready for further instructions after the first register is done
-  return n_register_elements / elements_per_store;
+    if (isFractionalLmul)
+    {
+        auto encodedLmul = vtype & 0b11;
+        shift = 4 - encodedLmul;
+    }
+
+    // Vector registers are ready for further instructions after the first
+    // register is done
+    return VectorConfig::vlen / VectorConfig::vMemWidth;
 }
 
 /**
@@ -40,11 +52,12 @@ int VectorMemVregSignal::getDelay(void) {
  *
  * @returns The SEW
  */
-auto VectorMemVregSignal::decodeSew() -> uint64_t {
-  uint64_t vtype = vtype_ptr[getInstrIndex()];
-  uint64_t vsew = (vtype >> 3) & 0b11;
-  // SEW can be calculated by shifting 8 left by the register value (vsew)
-  return 8 << vsew;
+auto VectorMemVregSignal::decodeSew() -> uint64_t
+{
+    uint64_t vtype = vtype_ptr[getInstrIndex()];
+    uint64_t vsew = (vtype >> 3) & 0b11;
+    // SEW can be calculated by shifting 8 left by the register value (vsew)
+    return 8 << vsew;
 }
 
 } // namespace Vicuna

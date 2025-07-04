@@ -3,11 +3,6 @@
 namespace Vicuna {
 
 int PackUnpack::getDelay(void) {
-  // TODO: constants should be configured somewhere else
-  // TODO: pack & unpack: vlen/lane_width * lmul
-  static constexpr auto vlen = 1024;
-  static constexpr auto vLaneWidth = 32;
-  static constexpr auto packFactor = vlen / vLaneWidth;
   auto lmul = decodeLmul();
   return lmul;
 }

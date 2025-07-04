@@ -15,22 +15,47 @@
  */
 
 #include "models/Vicuna/VectorStoreModel.h"
+#include "models/Vicuna/VectorConfig.h"
 #include <cstdint>
 
-namespace Vicuna {
+namespace Vicuna
+{
 
-int VectorStoreModel::getDelay(void) {
-  static constexpr auto vlen = 1024;
-  static constexpr auto vMemWidth = 32;
-  auto storeWidth = width_ptr[getInstrIndex()];
+int VectorStoreModel::getDelay(void)
+{
+    auto lsWidth = width_ptr[getInstrIndex()];
+    auto decodedInfo = decodeInfo();
 
-  uint64_t n_register_elements = vlen / decodeSew();
+    uint64_t n_register_elements = VectorConfig::vlen / decodedInfo.sew;
 
-  // Elements per store: (MemWidth / SEW) / (VsWidth / SEW) = (MemWidth * SEW) / (VsWidth * SEW)
-  // = MemWidth / VsWidth
-  auto elements_per_store = vMemWidth / storeWidth;
+    // Elements per store: (MemWidth / SEW) / (VsWidth / SEW) = (MemWidth * SEW) /
+    // (VsWidth * SEW) = MemWidth / VsWidth
+    auto elements_per_store = VectorConfig::vMemWidth / lsWidth;
+    auto delay = 0;
 
-  return (n_register_elements * decodeLmul()) / elements_per_store;
+    if (decodedInfo.fractionalLmul){
+      delay = (n_register_elements >> (4 - decodedInfo.encodedLmul)) / elements_per_store;
+      return delay;
+    }
+
+    delay = (n_register_elements * decodedInfo.lmul) / elements_per_store;
+    return 32 * decodedInfo.lmul;
+}
+
+auto VectorStoreModel::decodeInfo() -> DecodedInfo
+{
+    auto decodedInfo = DecodedInfo{};
+    uint64_t vtype = vtype_ptr[getInstrIndex()];
+    static constexpr auto fractionalLmulBitmask = 0b100;
+    static constexpr auto encodedLmulBitmask = 0b11;
+    decodedInfo.fractionalLmul = (vtype & fractionalLmulBitmask) != 0;
+    decodedInfo.encodedLmul = vtype & encodedLmulBitmask;
+    decodedInfo.lmul = 1 << decodedInfo.encodedLmul;
+
+    uint64_t encodedSew = (vtype >> 3) & 0b11;
+    decodedInfo.sew = 8 << encodedSew;
+
+    return decodedInfo;
 }
 
 /**
@@ -38,16 +63,18 @@ int VectorStoreModel::getDelay(void) {
  *
  * @returns The LMUL
  */
-auto VectorStoreModel::decodeLmul() -> uint64_t {
-  uint64_t vtype = vtype_ptr[getInstrIndex()];
-  static constexpr auto fractionalLmulBitmask = 0b100;
-  auto isFractionalLmul = vtype & fractionalLmulBitmask;
-  if (isFractionalLmul) {
-    return 1;
-  }
+auto VectorStoreModel::decodeLmul() -> uint64_t
+{
+    uint64_t vtype = vtype_ptr[getInstrIndex()];
+    static constexpr auto fractionalLmulBitmask = 0b100;
+    auto isFractionalLmul = vtype & fractionalLmulBitmask;
+    if (isFractionalLmul)
+    {
+        return 1;
+    }
 
-  static constexpr auto lmulValueBitmask = 0b11;
-  return 1 << (vtype & lmulValueBitmask);
+    static constexpr auto lmulValueBitmask = 0b11;
+    return 1 << (vtype & lmulValueBitmask);
 }
 
 /**
@@ -55,22 +82,12 @@ auto VectorStoreModel::decodeLmul() -> uint64_t {
  *
  * @returns The SEW
  */
-auto VectorStoreModel::decodeSew() -> uint64_t {
-  uint64_t vtype = vtype_ptr[getInstrIndex()];
-  uint64_t vsew = (vtype >> 3) & 0b11;
-  // SEW can be calculated by shifting 8 left by the register value (vsew)
-  return 8 << vsew;
+auto VectorStoreModel::decodeSew() -> uint64_t
+{
+    uint64_t vtype = vtype_ptr[getInstrIndex()];
+    uint64_t vsew = (vtype >> 3) & 0b11;
+    // SEW can be calculated by shifting 8 left by the register value (vsew)
+    return 8 << vsew;
 }
-
-// /**
-//  * @brief Decode load/store width from instruction assembly.
-//  *
-//  * @returns The width
-//  */
-// auto VectorStoreModel::decodeWidth() -> uint64_t {
-//   uint64_t instr = assembly_ptr[getInstrIndex()];
-//   uint64_t width_encoded = (instr >> 12) & 0b111;
-//   return 8 << width_encoded;
-// }
 
 } // namespace Vicuna

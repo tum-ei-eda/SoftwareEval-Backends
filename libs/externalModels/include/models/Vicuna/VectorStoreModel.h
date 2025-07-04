@@ -4,23 +4,32 @@
 
 #include "PerformanceModel.h"
 
-namespace Vicuna {
+namespace Vicuna
+{
 
-class VectorStoreModel : public ResourceModel {
-public:
-  VectorStoreModel(PerformanceModel *parent_)
-      : ResourceModel("VectorStoreModel", parent_){};
+struct DecodedInfo
+{
+    uint64_t sew = 8;
+    uint64_t lmul = 1;
+    uint64_t encodedLmul = 0b00;
+    bool fractionalLmul = false;
+};
 
-  uint64_t *vtype_ptr;
-  uint64_t *width_ptr;
-  uint64_t *vl_ptr;
+class VectorStoreModel : public ResourceModel
+{
+  public:
+    VectorStoreModel(PerformanceModel *parent_) : ResourceModel("VectorStoreModel", parent_){};
 
-  int getDelay(void);
+    uint64_t *vtype_ptr;
+    uint64_t *width_ptr;
+    uint64_t *vl_ptr;
 
-private:
-  auto decodeLmul() -> uint64_t;
-  auto decodeSew() -> uint64_t;
-  // auto decodeWidth() -> uint64_t;
+    int getDelay(void);
+
+  private:
+    auto decodeLmul() -> uint64_t;
+    auto decodeSew() -> uint64_t;
+    auto decodeInfo() -> DecodedInfo;
 };
 
 } // namespace Vicuna

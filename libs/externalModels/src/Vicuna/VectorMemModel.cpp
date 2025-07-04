@@ -15,45 +15,45 @@
  */
 
 #include "models/Vicuna/VectorMemModel.h"
+#include "models/Vicuna/VectorConfig.h"
 #include <cstdint>
 
 namespace Vicuna {
 
 int VectorMemModel::getDelay(void) {
-  // // TODO: regWithToLaneFactor should be configured somewhere else
-  // static constexpr auto vlen = 1024;
-  // static constexpr auto vMemWidth = 32;
-
-  // auto sew = decodeSew();
-  // auto lmul = decodeLmul();
-  // auto loadWidth = width_ptr[getInstrIndex()];
-  // auto vl = vl_ptr[getInstrIndex()];
-
-  // uint64_t n_register_elements = vlen / decodeSew();
-  // auto delay = 0;
-
-  // if (lmul & 0b100) {
-  //   // Fractional LMUL
-  //   auto shift = 4 - (lmul & 0b11);
-  //   delay = ((loadWidth * n_register_elements) >> shift) / vMemWidth;
-  // } else {
-  //   // Multiplicative LMUL
-  //   auto shift = (lmul & 0b11);
-  //   delay = ((loadWidth * n_register_elements) << shift) / vMemWidth;
-  // }
-  // return delay;
-
-  static constexpr auto vlen = 1024;
-  static constexpr auto vMemWidth = 32;
   auto lsWidth = width_ptr[getInstrIndex()];
+  auto decodedInfo = decodeInfo();
 
-  uint64_t n_register_elements = vlen / decodeSew();
+  uint64_t n_register_elements = VectorConfig::vlen / decodedInfo.sew;
 
   // Elements per store: (MemWidth / SEW) / (VsWidth / SEW) = (MemWidth * SEW) /
   // (VsWidth * SEW) = MemWidth / VsWidth
-  auto elements_per_store = vMemWidth / lsWidth;
+  auto elements_per_store = VectorConfig::vMemWidth / lsWidth;
+  auto delay = 0;
 
-  return (n_register_elements * decodeLmul()) / elements_per_store;
+  if (decodedInfo.fractionalLmul) {
+    delay = (n_register_elements >> (4 - decodedInfo.encodedLmul)) /
+            elements_per_store;
+    return delay;
+  }
+
+  delay = (n_register_elements * decodedInfo.lmul) / elements_per_store;
+  return delay;
+}
+
+auto VectorMemModel::decodeInfo() -> DecodedInfoLoad {
+  auto decodedInfo = DecodedInfoLoad{};
+  uint64_t vtype = vtype_ptr[getInstrIndex()];
+  static constexpr auto fractionalLmulBitmask = 0b100;
+  static constexpr auto encodedLmulBitmask = 0b11;
+  decodedInfo.fractionalLmul = (vtype & fractionalLmulBitmask) != 0;
+  decodedInfo.encodedLmul = vtype & encodedLmulBitmask;
+  decodedInfo.lmul = 1 << decodedInfo.encodedLmul;
+
+  uint64_t encodedSew = (vtype >> 3) & 0b11;
+  decodedInfo.sew = 8 << encodedSew;
+
+  return decodedInfo;
 }
 
 /**

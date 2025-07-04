@@ -15,23 +15,23 @@
  */
 
 #include "models/Vicuna/VectorDividerModel.h"
+#include "models/Vicuna/VectorConfig.h"
 #include <cstdint>
 
-namespace Vicuna
-{
+namespace Vicuna {
 
-int VectorDividerModel::getDelay(void)
-{
-    // TODO: constants should be configured somewhere else
-    static constexpr uint64_t vlen = 1024;
-    static constexpr uint64_t vLaneWidth = 32;
-    static constexpr uint64_t packFactor = vlen / vLaneWidth;
-    static constexpr uint64_t divider_cycles = 32;
-    uint64_t n_register_elements = vlen / decodeSew();
-    uint64_t lmul = decodeLmul();
-    uint64_t n_divisions = n_register_elements * lmul;
-    // TODO: explain
-    return n_divisions * (divider_cycles + 3) - ((lmul - 1) * divider_cycles);
+int VectorDividerModel::getDelay(void) {
+  // TODO: constants should be configured somewhere else
+  
+  static constexpr uint64_t packFactor = VectorConfig::vlen / VectorConfig::vLaneWidth;
+  static constexpr uint64_t divider_cycles = 32;
+  uint64_t n_register_elements = VectorConfig::vlen / decodeSew();
+  uint64_t lmul = decodeLmul();
+  uint64_t n_divisions = n_register_elements * lmul;
+  // TODO: explain
+  auto delay =
+      n_divisions * (divider_cycles + 3) - ((lmul - 1) * divider_cycles);
+  return delay;
 }
 
 /**
@@ -39,18 +39,16 @@ int VectorDividerModel::getDelay(void)
  *
  * @returns The LMUL
  */
-auto VectorDividerModel::decodeLmul() -> uint64_t
-{
-    uint64_t vtype = vtype_ptr[getInstrIndex()];
-    static constexpr uint64_t fractionalLmulBitmask = 0b100;
-    uint64_t isFractionalLmul = vtype & fractionalLmulBitmask;
-    if (isFractionalLmul)
-    {
-        return 1;
-    }
+auto VectorDividerModel::decodeLmul() -> uint64_t {
+  uint64_t vtype = vtype_ptr[getInstrIndex()];
+  static constexpr uint64_t fractionalLmulBitmask = 0b100;
+  uint64_t isFractionalLmul = vtype & fractionalLmulBitmask;
+  if (isFractionalLmul) {
+    return 1;
+  }
 
-    static constexpr uint64_t lmulValueBitmask = 0b11;
-    return 1 << (vtype & lmulValueBitmask);
+  static constexpr uint64_t lmulValueBitmask = 0b11;
+  return 1 << (vtype & lmulValueBitmask);
 }
 
 /**
@@ -58,12 +56,11 @@ auto VectorDividerModel::decodeLmul() -> uint64_t
  *
  * @returns The SEW
  */
-auto VectorDividerModel::decodeSew() -> uint64_t
-{
-    uint64_t vtype = vtype_ptr[getInstrIndex()];
-    uint64_t vsew = (vtype >> 3) & 0b11;
-    // SEW can be calculated by shifting 8 left by the register value (vsew)
-    return 8 << vsew;
+auto VectorDividerModel::decodeSew() -> uint64_t {
+  uint64_t vtype = vtype_ptr[getInstrIndex()];
+  uint64_t vsew = (vtype >> 3) & 0b11;
+  // SEW can be calculated by shifting 8 left by the register value (vsew)
+  return 8 << vsew;
 }
 
 } // namespace Vicuna
