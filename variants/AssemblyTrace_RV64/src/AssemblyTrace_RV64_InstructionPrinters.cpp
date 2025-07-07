@@ -19,23 +19,23 @@
 #include "Printer.h"
 #include "Channel.h"
 
-#include "AssemblyTrace_Printer.h"
+#include "AssemblyTrace_RV64_Printer.h"
 
 #include <sstream>
 #include <string>
 #include <iomanip>
 
-InstructionPrinterSet *AssemblyTrace_InstrPrinterSet = new InstructionPrinterSet("AssemblyTrace_InstrPrinterSet");
+InstructionPrinterSet *AssemblyTrace_RV64_InstrPrinterSet = new InstructionPrinterSet("AssemblyTrace_RV64_InstrPrinterSet");
 
 static InstructionPrinter *instrPrinter__DEF = new InstructionPrinter(
-  AssemblyTrace_InstrPrinterSet,
+  AssemblyTrace_RV64_InstrPrinterSet,
   "_DEF",
   0,
   [](Printer* printer_){
     std::stringstream ret_strs;
-    AssemblyTrace_Printer* printer = static_cast<AssemblyTrace_Printer*>(printer_);
+    AssemblyTrace_RV64_Printer* printer = static_cast<AssemblyTrace_RV64_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " ; ";
-    ret_strs << std::setfill(' ') << std::setw(250) << std::left << printer->get_assembly() << " ; ";
+    ret_strs << std::setfill(' ') << std::setw(150) << std::left << printer->get_assembly() << " ; ";
     return ret_strs.str();
   }
 );

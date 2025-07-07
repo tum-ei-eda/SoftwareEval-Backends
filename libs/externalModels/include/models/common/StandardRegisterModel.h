@@ -21,27 +21,30 @@
 
 #include "PerformanceModel.h"
 
-namespace common{
+namespace common {
 
-class StandardRegisterModel : public ConnectorModel
-{
+class StandardRegisterModel : public ConnectorModel {
 public:
-  StandardRegisterModel(PerformanceModel* parent_) : ConnectorModel("StandardRegisterModel", parent_) {};
+  StandardRegisterModel(PerformanceModel *parent_)
+      : ConnectorModel("StandardRegisterModel", parent_){};
 
-  uint64_t* rs1_ptr;
-  uint64_t* rs2_ptr;
-  uint64_t* rd_ptr;
+  uint64_t *rs1_ptr;
+  uint64_t *rs2_ptr;
+  uint64_t *rd_ptr;
 
   // TODO: Consider corner-case rd = 0?
-  
-  uint64_t getXa(void){ return registerModel[rs1_ptr[getInstrIndex()]]; };
-  uint64_t getXb(void){ return registerModel[rs2_ptr[getInstrIndex()]]; };
-  void setXd(uint64_t xd_) { registerModel[rd_ptr[getInstrIndex()]] = xd_; };
+
+  uint64_t getXa(void) { return registerModel[rs1_ptr[getInstrIndex()]]; };
+  uint64_t getXb(void) { return registerModel[rs2_ptr[getInstrIndex()]]; };
+  void setXd(uint64_t xd_) {
+    auto rd_val = rd_ptr[getInstrIndex()];
+    registerModel[rd_val] = xd_;
+  };
 
 private:
-  uint64_t registerModel [64] = {0};
+  uint64_t registerModel[64] = {0};
 };
 
 } // namespace common
-  
-#endif //COMMON_STANDARD_REGISTER_PREDICT_MODEL_H
+
+#endif // COMMON_STANDARD_REGISTER_PREDICT_MODEL_H

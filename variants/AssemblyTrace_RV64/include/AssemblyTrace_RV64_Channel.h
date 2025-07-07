@@ -16,8 +16,8 @@
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
 
-#ifndef SWEVAL_BACKENDS_ASSEMBLYTRACE_CHANNEL_H
-#define SWEVAL_BACKENDS_ASSEMBLYTRACE_CHANNEL_H
+#ifndef SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_CHANNEL_H
+#define SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_CHANNEL_H
 
 #include "Channel.h"
 
@@ -25,17 +25,17 @@
 #include <stdbool.h>
 #include <cstdint>
 
-class AssemblyTrace_Channel: public Channel
+class AssemblyTrace_RV64_Channel: public Channel
 {
 public:
 
-  AssemblyTrace_Channel() {};
-  ~AssemblyTrace_Channel() {};
+  AssemblyTrace_RV64_Channel() {};
+  ~AssemblyTrace_RV64_Channel() {};
 
   int pc [100];
-  char assembly [100] [250];
+  char assembly [100] [150];
 
   virtual void *getTraceValueHook(std::string);
 };
 
-#endif // SWEVAL_BACKENDS_ASSEMBLYTRACE_CHANNEL_H
+#endif // SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_CHANNEL_H

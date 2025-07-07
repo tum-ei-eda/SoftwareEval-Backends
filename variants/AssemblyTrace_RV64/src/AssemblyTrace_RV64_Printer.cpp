@@ -16,33 +16,33 @@
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
 
-#include "AssemblyTrace_Printer.h"
+#include "AssemblyTrace_RV64_Printer.h"
 
 #include "Printer.h"
 
-#include "AssemblyTrace_Channel.h"
+#include "AssemblyTrace_RV64_Channel.h"
 
 #include <iostream>
 #include <iomanip>
 
-extern InstructionPrinterSet* AssemblyTrace_InstrPrinterSet;
+extern InstructionPrinterSet* AssemblyTrace_RV64_InstrPrinterSet;
 
-AssemblyTrace_Printer::AssemblyTrace_Printer(): Printer("AssemblyTrace_Printer", AssemblyTrace_InstrPrinterSet)
+AssemblyTrace_RV64_Printer::AssemblyTrace_RV64_Printer(): Printer("AssemblyTrace_RV64_Printer", AssemblyTrace_RV64_InstrPrinterSet)
 {}
 
-void AssemblyTrace_Printer::connectChannel(Channel* ch_)
+void AssemblyTrace_RV64_Printer::connectChannel(Channel* ch_)
 {
-  AssemblyTrace_Channel* channel = static_cast<AssemblyTrace_Channel*>(ch_);
+  AssemblyTrace_RV64_Channel* channel = static_cast<AssemblyTrace_RV64_Channel*>(ch_);
   
   pc_ptr = channel->pc;
   assembly_ptr = channel->assembly;
 }
 
-std::string AssemblyTrace_Printer::getPrintHeader(void)
+std::string AssemblyTrace_RV64_Printer::getPrintHeader(void)
 {
   std::stringstream caption_strs;	
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "pc" << " ; ";
-  caption_strs << std::setfill(' ') << std::setw(250) << std::left << "assembly" << " ; ";
+  caption_strs << std::setfill(' ') << std::setw(150) << std::left << "assembly" << " ; ";
 
   return caption_strs.str();
 }

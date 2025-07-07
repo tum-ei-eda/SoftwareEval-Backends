@@ -15,9 +15,9 @@
  */
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
-
-#ifndef ASSEMBLYTRACE_PRINTER_H
-#define ASSEMBLYTRACE_PRINTER_H
+                   
+#ifndef SWEVAL_BACKENDS_ASSEMBLYTRACE_PRINTER_H
+#define SWEVAL_BACKENDS_ASSEMBLYTRACE_PRINTER_H
 
 #include "Printer.h"
 
@@ -39,8 +39,9 @@ public:
   std::string get_assembly(void){ return assembly_ptr[instrIndex]; };
 
 private:
-  uint64_t* pc_ptr;
-  char (*assembly_ptr)[50];
+
+  int* pc_ptr;
+  char (*assembly_ptr)[250];
 };
 
-#endif // ASSEMBLYTRACE_PRINTER_H
+#endif // SWEVAL_BACKENDS_ASSEMBLYTRACE_PRINTER_H

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "AssemblyTrace_Channel.h"
+#include "AssemblyTrace_RV64_Channel.h"
 
-void *AssemblyTrace_Channel::getTraceValueHook(std::string trVal_)
+void *AssemblyTrace_RV64_Channel::getTraceValueHook(std::string trVal_)
 {
   if(trVal_ == "pc")
   {

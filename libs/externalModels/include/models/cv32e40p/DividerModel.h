@@ -21,15 +21,15 @@
 
 #include "PerformanceModel.h"
 
-namespace cv32e40p{
+namespace cv32e40p {
 
-class DividerModel : public ResourceModel
-{
+class DividerModel : public ResourceModel {
 public:
-  DividerModel(PerformanceModel* parent_) : ResourceModel("DividerModel", parent_) {};
+  DividerModel(PerformanceModel *parent_)
+      : ResourceModel("DividerModel", parent_){};
 
-  uint64_t* rs2_data_ptr;
-  
+  uint64_t *rs2_data_ptr;
+
   int getDelay(void);
 
 private:
@@ -37,5 +37,5 @@ private:
 };
 
 } // namespace cv32e40p
-  
+
 #endif // CV32E40P_DIVIDER_MODEL_H

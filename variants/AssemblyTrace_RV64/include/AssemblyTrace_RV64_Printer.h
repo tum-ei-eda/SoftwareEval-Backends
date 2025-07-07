@@ -15,27 +15,33 @@
  */
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
+                   
+#ifndef SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
+#define SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
 
-#ifndef SWEVAL_BACKENDS_ASSEMBLYTRACE_CHANNEL_H
-#define SWEVAL_BACKENDS_ASSEMBLYTRACE_CHANNEL_H
+#include "Printer.h"
 
 #include "Channel.h"
 
 #include <string>
-#include <stdbool.h>
 #include <cstdint>
 
-class AssemblyTrace_Channel: public Channel
+class AssemblyTrace_RV64_Printer : public Printer
 {
 public:
 
-  AssemblyTrace_Channel() {};
-  ~AssemblyTrace_Channel() {};
+  AssemblyTrace_RV64_Printer();
 
-  int pc [100];
-  char assembly [100] [250];
+  virtual void connectChannel(Channel*);
+  virtual std::string getPrintHeader(void);
 
-  virtual void *getTraceValueHook(std::string);
+  int get_pc(void){ return pc_ptr[instrIndex]; };
+  std::string get_assembly(void){ return assembly_ptr[instrIndex]; };
+
+private:
+
+  int* pc_ptr;
+  char (*assembly_ptr)[150];
 };
 
-#endif // SWEVAL_BACKENDS_ASSEMBLYTRACE_CHANNEL_H
+#endif // SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
