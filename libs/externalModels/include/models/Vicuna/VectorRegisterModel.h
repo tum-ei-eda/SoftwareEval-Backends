@@ -111,7 +111,7 @@ public:
     auto emul = getLmul();
     auto groupTimestamp = baseTimestamp_ + (emul * cyclesPerRegister); 
     for (size_t i = 0; i < emul; i++) {
-      vectorRegisterModel[registerBaseIndex + i] = groupTimestamp;
+      vectorRegisterModel[registerBaseIndex + i] = groupTimestamp - (32 * (emul - 1));
     }
   }
 
@@ -133,61 +133,8 @@ public:
     vectorRegisterModel[vd_ptr[getInstrIndex()]] = vd_;
   };
 
-  uint64_t getWawBlock(void) {
-    uint64_t vtype = vtype_ptr[getInstrIndex()];
-    static constexpr auto fractionalLmulBitmask = 0b100;
-    auto isFractionalLmul = vtype & fractionalLmulBitmask;
-    auto lmul = 1;
-    auto baseIndex = vd_ptr[getInstrIndex()];
-
-    if (!isFractionalLmul && ((vtype && 0b11) != 0)) {
-      static constexpr auto lmulValueBitmask = 0b11;
-      lmul = 1 << (vtype & lmulValueBitmask);
-    }
-
-    return wawBlock[baseIndex + (lmul - 1)];
-  };
-
-  void setWawBlockLs(uint64_t wawBlockLs_) {
-    uint64_t vtype = vtype_ptr[getInstrIndex()];
-    uint64_t lsWidth = width_ptr[getInstrIndex()];
-    static constexpr auto memWidth = 32;
-    static constexpr auto increment = memWidth;
-    auto emulFactor = lsWidth / getSew();
-    auto emul = emulFactor * getLmul();
-    auto baseIndex = vd_ptr[getInstrIndex()];
-
-    for (int i = emul - 1; i >= 0; i--) {
-      auto x = i;
-      wawBlock[baseIndex + i] = wawBlockLs_ - (increment * ((emul - 1) - i));
-    }
-  };
-
-  void setWawBlock(uint64_t wawBlock_) {
-    uint64_t vtype = vtype_ptr[getInstrIndex()];
-    static constexpr auto fractionalLmulBitmask = 0b100;
-    auto isFractionalLmul = vtype & fractionalLmulBitmask;
-    auto lmul = 1;
-    auto baseIndex = vd_ptr[getInstrIndex()];
-    auto baseTimestamp = vectorRegisterModel[baseIndex];
-    auto increment = 0;
-
-    if (!isFractionalLmul && ((vtype & 0b11) != 0)) {
-      static constexpr auto lmulValueBitmask = 0b11;
-      lmul = 1 << (vtype & lmulValueBitmask);
-      // LMUL > 1
-      increment = (wawBlock_ - baseTimestamp) / (lmul - 1);
-    }
-
-    wawBlock[baseIndex] = baseTimestamp;
-    for (size_t i = 1; i < lmul; i++) {
-      wawBlock[baseIndex + i] = baseTimestamp + (i * increment);
-    }
-  };
-
 private:
   std::array<uint64_t, 64> vectorRegisterModel = {0};
-  std::array<uint64_t, 64> wawBlock = {0};
 
   auto log2(uint64_t value) -> uint64_t {
     auto result = 0;

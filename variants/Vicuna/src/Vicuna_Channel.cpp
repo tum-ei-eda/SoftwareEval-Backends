@@ -46,6 +46,14 @@ void *Vicuna_Channel::getTraceValueHook(std::string trVal_)
   {
     return vd;
   }
+  if(trVal_ == "vtype")
+  {
+    return vtype;
+  }
+  if(trVal_ == "width")
+  {
+    return width;
+  }
   if(trVal_ == "pc")
   {
     return pc;
@@ -54,17 +62,9 @@ void *Vicuna_Channel::getTraceValueHook(std::string trVal_)
   {
     return brTarget;
   }
-  if(trVal_ == "vtype")
-  {
-    return vtype;
-  }
   if(trVal_ == "vl")
   {
     return vl;
-  }
-  if(trVal_ == "width")
-  {
-    return width;
   }
   if(trVal_ == "rs2_data")
   {

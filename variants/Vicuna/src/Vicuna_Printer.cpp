@@ -41,11 +41,11 @@ void Vicuna_Printer::connectChannel(Channel* ch_)
   vs2_ptr = channel->vs2;
   vs3_ptr = channel->vs3;
   vd_ptr = channel->vd;
+  vtype_ptr = channel->vtype;
+  width_ptr = channel->width;
   pc_ptr = channel->pc;
   brTarget_ptr = channel->brTarget;
-  vtype_ptr = channel->vtype;
   vl_ptr = channel->vl;
-  width_ptr = channel->width;
   rs2_data_ptr = channel->rs2_data;
 }
 
@@ -59,11 +59,11 @@ std::string Vicuna_Printer::getPrintHeader(void)
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "vs2" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "vs3" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "vd" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "vtype" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "width" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "pc" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "brTarget" << " | ";
-  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "vtype" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "vl" << " | ";
-  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "width" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs2_data" << " | ";
 
   return caption_strs.str();

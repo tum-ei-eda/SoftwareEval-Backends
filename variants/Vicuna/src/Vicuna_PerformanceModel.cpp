@@ -32,12 +32,14 @@
 #include "models/Vicuna/VectorRegisterModel.h"
 #include "models/common/StaticBranchPredictModel.h"
 #include "models/Vicuna/VectorMemModel.h"
+#include "models/Vicuna/VectorStoreModel.h"
 #include "models/Vicuna/VectorAluModel.h"
 #include "models/Vicuna/VectorDividerModel.h"
 #include "models/Vicuna/VectorSignaller.h"
 #include "models/Vicuna/PackUnpack.h"
 #include "models/cv32e40p/DividerModel.h"
 #include "models/cv32e40p/DividerUnsignedModel.h"
+#include "models/Vicuna/VectorMemVregSignal.h"
 
 namespace Vicuna{
 
@@ -53,6 +55,8 @@ void Vicuna_PerformanceModel::connectChannel(Channel* channel_)
   vectorRegModel.vs2_ptr = channel->vs2;
   vectorRegModel.vs3_ptr = channel->vs3;
   vectorRegModel.vd_ptr = channel->vd;
+  vectorRegModel.vtype_ptr = channel->vtype;
+  vectorRegModel.width_ptr = channel->width;
 
   staBranchPredModel.pc_ptr = channel->pc;
   staBranchPredModel.brTarget_ptr = channel->brTarget;
@@ -60,6 +64,10 @@ void Vicuna_PerformanceModel::connectChannel(Channel* channel_)
   vectorMemModel.vtype_ptr = channel->vtype;
   vectorMemModel.vl_ptr = channel->vl;
   vectorMemModel.width_ptr = channel->width;
+
+  vectorStoreModel.vtype_ptr = channel->vtype;
+  vectorStoreModel.vl_ptr = channel->vl;
+  vectorStoreModel.width_ptr = channel->width;
 
   vectorAluModel.vtype_ptr = channel->vtype;
 
@@ -71,6 +79,9 @@ void Vicuna_PerformanceModel::connectChannel(Channel* channel_)
   divider.rs2_data_ptr = channel->rs2_data;
 
   divider_u.rs2_data_ptr = channel->rs2_data;
+
+  vectorMemVregSignal.vtype_ptr = channel->vtype;
+  vectorMemVregSignal.width_ptr = channel->width;
 
 }
 
