@@ -50,9 +50,13 @@ void *Vicuna_Channel::getTraceValueHook(std::string trVal_)
   {
     return vtype;
   }
-  if(trVal_ == "width")
+  if(trVal_ == "lsWidth")
   {
-    return width;
+    return lsWidth;
+  }
+  if(trVal_ == "isWidening")
+  {
+    return isWidening;
   }
   if(trVal_ == "pc")
   {

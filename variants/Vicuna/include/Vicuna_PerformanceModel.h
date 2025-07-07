@@ -31,14 +31,12 @@
 #include "models/Vicuna/VectorRegisterModel.h"
 #include "models/common/StaticBranchPredictModel.h"
 #include "models/Vicuna/VectorMemModel.h"
-#include "models/Vicuna/VectorStoreModel.h"
 #include "models/Vicuna/VectorAluModel.h"
 #include "models/Vicuna/VectorDividerModel.h"
 #include "models/Vicuna/VectorSignaller.h"
 #include "models/Vicuna/PackUnpack.h"
 #include "models/cv32e40p/DividerModel.h"
 #include "models/cv32e40p/DividerUnsignedModel.h"
-#include "models/Vicuna/VectorMemVregSignal.h"
 
 namespace Vicuna{
 
@@ -56,14 +54,12 @@ public:
     ,vectorRegModel(this)
     ,staBranchPredModel(this)
     ,vectorMemModel(this)
-    ,vectorStoreModel(this)
     ,vectorAluModel(this)
     ,vectorDividerModel(this)
     ,vectorSignaller(this)
     ,packUnpack(this)
     ,divider(this)
     ,divider_u(this)
-    ,vectorMemVregSignal(this)
   {};
 
   // Single-Element Timing Variables
@@ -90,14 +86,12 @@ public:
   Vicuna::VectorRegisterModel vectorRegModel;
   common::StaticBranchPredictModel staBranchPredModel;
   Vicuna::VectorMemModel vectorMemModel;
-  Vicuna::VectorStoreModel vectorStoreModel;
   Vicuna::VectorAluModel vectorAluModel;
   Vicuna::VectorDividerModel vectorDividerModel;
   Vicuna::VectorSignaller vectorSignaller;
   Vicuna::PackUnpack packUnpack;
   cv32e40p::DividerModel divider;
   cv32e40p::DividerUnsignedModel divider_u;
-  Vicuna::VectorMemVregSignal vectorMemVregSignal;
 
   virtual void connectChannel(Channel*);
   virtual uint64_t getCycleCount(void);

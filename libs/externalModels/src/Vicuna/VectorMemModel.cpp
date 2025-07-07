@@ -21,7 +21,7 @@
 namespace Vicuna {
 
 int VectorMemModel::getDelay(void) {
-  auto lsWidth = width_ptr[getInstrIndex()];
+  auto lsWidth = lsWidth_ptr[getInstrIndex()];
   auto decodedInfo = decodeInfo();
 
   uint64_t n_register_elements = VectorConfig::vlen / decodedInfo.sew;

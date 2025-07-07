@@ -43,6 +43,7 @@ static InstructionPrinter *instrPrinter_add = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -60,6 +61,7 @@ static InstructionPrinter *instrPrinter_sub = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -89,6 +91,7 @@ static InstructionPrinter *instrPrinter_xor = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -106,6 +109,7 @@ static InstructionPrinter *instrPrinter_or = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -135,6 +139,7 @@ static InstructionPrinter *instrPrinter_and = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -152,6 +157,7 @@ static InstructionPrinter *instrPrinter_slt = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -181,6 +187,7 @@ static InstructionPrinter *instrPrinter_sltu = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -198,6 +205,7 @@ static InstructionPrinter *instrPrinter_sll = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -227,6 +235,7 @@ static InstructionPrinter *instrPrinter_srl = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -244,6 +253,7 @@ static InstructionPrinter *instrPrinter_sra = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -273,6 +283,7 @@ static InstructionPrinter *instrPrinter_addi = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -290,6 +301,7 @@ static InstructionPrinter *instrPrinter_xori = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -319,6 +331,7 @@ static InstructionPrinter *instrPrinter_ori = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -336,6 +349,7 @@ static InstructionPrinter *instrPrinter_andi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -365,6 +379,7 @@ static InstructionPrinter *instrPrinter_slti = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -382,6 +397,7 @@ static InstructionPrinter *instrPrinter_sltiu = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -411,6 +427,7 @@ static InstructionPrinter *instrPrinter_slli = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -428,6 +445,7 @@ static InstructionPrinter *instrPrinter_srli = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -457,6 +475,7 @@ static InstructionPrinter *instrPrinter_srai = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -474,6 +493,7 @@ static InstructionPrinter *instrPrinter_auipc = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -503,6 +523,7 @@ static InstructionPrinter *instrPrinter_lui = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -520,6 +541,7 @@ static InstructionPrinter *instrPrinter_mul = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -549,6 +571,7 @@ static InstructionPrinter *instrPrinter_mulh = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -566,6 +589,7 @@ static InstructionPrinter *instrPrinter_mulhu = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -595,6 +619,7 @@ static InstructionPrinter *instrPrinter_mulhsu = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -612,6 +637,7 @@ static InstructionPrinter *instrPrinter_div = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -641,6 +667,7 @@ static InstructionPrinter *instrPrinter_rem = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -658,6 +685,7 @@ static InstructionPrinter *instrPrinter_divu = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -687,6 +715,7 @@ static InstructionPrinter *instrPrinter_remu = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -704,6 +733,7 @@ static InstructionPrinter *instrPrinter_csrrw = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -733,6 +763,7 @@ static InstructionPrinter *instrPrinter_csrrs = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -750,6 +781,7 @@ static InstructionPrinter *instrPrinter_csrrc = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -779,6 +811,7 @@ static InstructionPrinter *instrPrinter_csrrwi = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -796,6 +829,7 @@ static InstructionPrinter *instrPrinter_csrrsi = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -825,6 +859,7 @@ static InstructionPrinter *instrPrinter_csrrci = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -841,6 +876,7 @@ static InstructionPrinter *instrPrinter_sb = new InstructionPrinter(
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -871,6 +907,7 @@ static InstructionPrinter *instrPrinter_sh = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -887,6 +924,7 @@ static InstructionPrinter *instrPrinter_sw = new InstructionPrinter(
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -917,6 +955,7 @@ static InstructionPrinter *instrPrinter_lw = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -934,6 +973,7 @@ static InstructionPrinter *instrPrinter_lh = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -963,6 +1003,7 @@ static InstructionPrinter *instrPrinter_lhu = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -980,6 +1021,7 @@ static InstructionPrinter *instrPrinter_lb = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1009,6 +1051,7 @@ static InstructionPrinter *instrPrinter_lbu = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1025,6 +1068,7 @@ static InstructionPrinter *instrPrinter_beq = new InstructionPrinter(
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1055,6 +1099,7 @@ static InstructionPrinter *instrPrinter_bne = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1071,6 +1116,7 @@ static InstructionPrinter *instrPrinter_blt = new InstructionPrinter(
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1101,6 +1147,7 @@ static InstructionPrinter *instrPrinter_bge = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1117,6 +1164,7 @@ static InstructionPrinter *instrPrinter_bltu = new InstructionPrinter(
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1147,6 +1195,7 @@ static InstructionPrinter *instrPrinter_bgeu = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_brTarget() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1169,7 +1218,8 @@ static InstructionPrinter *instrPrinter_vle32_v = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_width() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_lsWidth() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vl() << " | ";
@@ -1192,7 +1242,8 @@ static InstructionPrinter *instrPrinter_vle16_v = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_width() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_lsWidth() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vl() << " | ";
@@ -1215,7 +1266,8 @@ static InstructionPrinter *instrPrinter_vle8_v = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_width() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_lsWidth() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vl() << " | ";
@@ -1238,7 +1290,8 @@ static InstructionPrinter *instrPrinter_vse32_u = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs3() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_width() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_lsWidth() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vl() << " | ";
@@ -1261,7 +1314,8 @@ static InstructionPrinter *instrPrinter_vse16_u = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs3() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_width() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_lsWidth() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vl() << " | ";
@@ -1284,7 +1338,8 @@ static InstructionPrinter *instrPrinter_vse8_u = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs3() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_width() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_lsWidth() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vl() << " | ";
@@ -1307,6 +1362,7 @@ static InstructionPrinter *instrPrinter_vdiv_vv = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1331,6 +1387,7 @@ static InstructionPrinter *instrPrinter_vdivu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1353,6 +1410,7 @@ static InstructionPrinter *instrPrinter_vremu_vv = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1377,6 +1435,7 @@ static InstructionPrinter *instrPrinter_vrem_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1399,6 +1458,7 @@ static InstructionPrinter *instrPrinter_vdiv_vx = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1423,6 +1483,7 @@ static InstructionPrinter *instrPrinter_vdivu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1445,6 +1506,7 @@ static InstructionPrinter *instrPrinter_vremu_vx = new InstructionPrinter(
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1469,6 +1531,7 @@ static InstructionPrinter *instrPrinter_vrem_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1492,6 +1555,7 @@ static InstructionPrinter *instrPrinter_vmv_v_i = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1515,6 +1579,7 @@ static InstructionPrinter *instrPrinter_vadd_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1538,6 +1603,7 @@ static InstructionPrinter *instrPrinter_vsub_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1545,9 +1611,9 @@ static InstructionPrinter *instrPrinter_vsub_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwaddu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vadc_vvm = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwaddu_vv",
+  "vadc_vvm",
   66,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1561,6 +1627,7 @@ static InstructionPrinter *instrPrinter_vwaddu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1568,9 +1635,9 @@ static InstructionPrinter *instrPrinter_vwaddu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwsubu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmadc_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwsubu_vv",
+  "vmadc_vv",
   67,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1584,6 +1651,7 @@ static InstructionPrinter *instrPrinter_vwsubu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1591,9 +1659,9 @@ static InstructionPrinter *instrPrinter_vwsubu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwadd_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsbc_vvm = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwadd_vv",
+  "vsbc_vvm",
   68,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1607,6 +1675,7 @@ static InstructionPrinter *instrPrinter_vwadd_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1614,9 +1683,9 @@ static InstructionPrinter *instrPrinter_vwadd_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwsub_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmsbc_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwsub_vv",
+  "vmsbc_vv",
   69,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1630,6 +1699,7 @@ static InstructionPrinter *instrPrinter_vwsub_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1637,9 +1707,9 @@ static InstructionPrinter *instrPrinter_vwsub_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vadc_vvm = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vand_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vadc_vvm",
+  "vand_vv",
   70,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1653,6 +1723,7 @@ static InstructionPrinter *instrPrinter_vadc_vvm = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1660,9 +1731,9 @@ static InstructionPrinter *instrPrinter_vadc_vvm = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmadc_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vor_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmadc_vv",
+  "vor_vv",
   71,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1676,6 +1747,7 @@ static InstructionPrinter *instrPrinter_vmadc_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1683,9 +1755,9 @@ static InstructionPrinter *instrPrinter_vmadc_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsbc_vvm = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vxor_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsbc_vvm",
+  "vxor_vv",
   72,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1699,6 +1771,7 @@ static InstructionPrinter *instrPrinter_vsbc_vvm = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1706,9 +1779,9 @@ static InstructionPrinter *instrPrinter_vsbc_vvm = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsbc_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsll_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsbc_vv",
+  "vsll_vv",
   73,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1722,6 +1795,7 @@ static InstructionPrinter *instrPrinter_vmsbc_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1729,9 +1803,9 @@ static InstructionPrinter *instrPrinter_vmsbc_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vand_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsrl_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vand_vv",
+  "vsrl_vv",
   74,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1745,6 +1819,7 @@ static InstructionPrinter *instrPrinter_vand_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1752,9 +1827,9 @@ static InstructionPrinter *instrPrinter_vand_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vor_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsra_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vor_vv",
+  "vsra_vv",
   75,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1768,6 +1843,7 @@ static InstructionPrinter *instrPrinter_vor_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1775,9 +1851,9 @@ static InstructionPrinter *instrPrinter_vor_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vxor_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmseq_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vxor_vv",
+  "vmseq_vv",
   76,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1791,6 +1867,7 @@ static InstructionPrinter *instrPrinter_vxor_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1798,9 +1875,9 @@ static InstructionPrinter *instrPrinter_vxor_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsll_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmsne_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsll_vv",
+  "vmsne_vv",
   77,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1814,6 +1891,7 @@ static InstructionPrinter *instrPrinter_vsll_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1821,9 +1899,9 @@ static InstructionPrinter *instrPrinter_vsll_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsrl_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmsltu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsrl_vv",
+  "vmsltu_vv",
   78,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1837,6 +1915,7 @@ static InstructionPrinter *instrPrinter_vsrl_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1844,9 +1923,9 @@ static InstructionPrinter *instrPrinter_vsrl_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsra_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmslt_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsra_vv",
+  "vmslt_vv",
   79,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1860,6 +1939,7 @@ static InstructionPrinter *instrPrinter_vsra_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1867,9 +1947,9 @@ static InstructionPrinter *instrPrinter_vsra_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmseq_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmsleu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmseq_vv",
+  "vmsleu_vv",
   80,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1883,6 +1963,7 @@ static InstructionPrinter *instrPrinter_vmseq_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1890,9 +1971,9 @@ static InstructionPrinter *instrPrinter_vmseq_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsne_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmsle_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsne_vv",
+  "vmsle_vv",
   81,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1906,6 +1987,7 @@ static InstructionPrinter *instrPrinter_vmsne_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1913,9 +1995,9 @@ static InstructionPrinter *instrPrinter_vmsne_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsltu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vminu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsltu_vv",
+  "vminu_vv",
   82,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1929,6 +2011,7 @@ static InstructionPrinter *instrPrinter_vmsltu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1936,9 +2019,9 @@ static InstructionPrinter *instrPrinter_vmsltu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmslt_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmin_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmslt_vv",
+  "vmin_vv",
   83,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1952,6 +2035,7 @@ static InstructionPrinter *instrPrinter_vmslt_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1959,9 +2043,9 @@ static InstructionPrinter *instrPrinter_vmslt_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsleu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmaxu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsleu_vv",
+  "vmaxu_vv",
   84,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1975,6 +2059,7 @@ static InstructionPrinter *instrPrinter_vmsleu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -1982,9 +2067,9 @@ static InstructionPrinter *instrPrinter_vmsleu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsle_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmax_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsle_vv",
+  "vmax_vv",
   85,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -1998,6 +2083,7 @@ static InstructionPrinter *instrPrinter_vmsle_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2005,9 +2091,9 @@ static InstructionPrinter *instrPrinter_vmsle_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vminu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmul_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vminu_vv",
+  "vmul_vv",
   86,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2021,6 +2107,7 @@ static InstructionPrinter *instrPrinter_vminu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2028,9 +2115,9 @@ static InstructionPrinter *instrPrinter_vminu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmin_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmulh_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmin_vv",
+  "vmulh_vv",
   87,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2044,6 +2131,7 @@ static InstructionPrinter *instrPrinter_vmin_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2051,9 +2139,9 @@ static InstructionPrinter *instrPrinter_vmin_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmaxu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmulhu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmaxu_vv",
+  "vmulhu_vv",
   88,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2067,6 +2155,7 @@ static InstructionPrinter *instrPrinter_vmaxu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2074,9 +2163,9 @@ static InstructionPrinter *instrPrinter_vmaxu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmax_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmulhsu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmax_vv",
+  "vmulhsu_vv",
   89,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2090,6 +2179,7 @@ static InstructionPrinter *instrPrinter_vmax_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2097,9 +2187,9 @@ static InstructionPrinter *instrPrinter_vmax_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmul_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwmul_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmul_vv",
+  "vwmul_vv",
   90,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2113,6 +2203,7 @@ static InstructionPrinter *instrPrinter_vmul_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2120,9 +2211,9 @@ static InstructionPrinter *instrPrinter_vmul_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmulh_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwmulu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmulh_vv",
+  "vwmulu_vv",
   91,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2136,6 +2227,7 @@ static InstructionPrinter *instrPrinter_vmulh_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2143,9 +2235,9 @@ static InstructionPrinter *instrPrinter_vmulh_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmulhu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwmulsu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmulhu_vv",
+  "vwmulsu_vv",
   92,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2159,6 +2251,7 @@ static InstructionPrinter *instrPrinter_vmulhu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2166,9 +2259,9 @@ static InstructionPrinter *instrPrinter_vmulhu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmulhsu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmacc_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmulhsu_vv",
+  "vmacc_vv",
   93,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2182,6 +2275,7 @@ static InstructionPrinter *instrPrinter_vmulhsu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2189,9 +2283,9 @@ static InstructionPrinter *instrPrinter_vmulhsu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwmul_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vnmsac_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwmul_vv",
+  "vnmsac_vv",
   94,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2205,6 +2299,7 @@ static InstructionPrinter *instrPrinter_vwmul_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2212,9 +2307,9 @@ static InstructionPrinter *instrPrinter_vwmul_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwmulu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmadd_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwmulu_vv",
+  "vmadd_vv",
   95,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2228,6 +2323,7 @@ static InstructionPrinter *instrPrinter_vwmulu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2235,9 +2331,9 @@ static InstructionPrinter *instrPrinter_vwmulu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwmulsu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vnmsub_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwmulsu_vv",
+  "vnmsub_vv",
   96,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2251,6 +2347,7 @@ static InstructionPrinter *instrPrinter_vwmulsu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2258,9 +2355,9 @@ static InstructionPrinter *instrPrinter_vwmulsu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmacc_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwmaccu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmacc_vv",
+  "vwmaccu_vv",
   97,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2274,6 +2371,7 @@ static InstructionPrinter *instrPrinter_vmacc_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2281,9 +2379,9 @@ static InstructionPrinter *instrPrinter_vmacc_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vnmsac_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwmacc_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vnmsac_vv",
+  "vwmacc_vv",
   98,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2297,6 +2395,7 @@ static InstructionPrinter *instrPrinter_vnmsac_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2304,9 +2403,9 @@ static InstructionPrinter *instrPrinter_vnmsac_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmadd_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwmaccsu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmadd_vv",
+  "vwmaccsu_vv",
   99,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2320,6 +2419,7 @@ static InstructionPrinter *instrPrinter_vmadd_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2327,9 +2427,9 @@ static InstructionPrinter *instrPrinter_vmadd_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vnmsub_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmerge_vvm = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vnmsub_vv",
+  "vmerge_vvm",
   100,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2343,6 +2443,7 @@ static InstructionPrinter *instrPrinter_vnmsub_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2350,9 +2451,9 @@ static InstructionPrinter *instrPrinter_vnmsub_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwmaccu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsaddu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwmaccu_vv",
+  "vsaddu_vv",
   101,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2366,6 +2467,7 @@ static InstructionPrinter *instrPrinter_vwmaccu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2373,9 +2475,9 @@ static InstructionPrinter *instrPrinter_vwmaccu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwmacc_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsadd_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwmacc_vv",
+  "vsadd_vv",
   102,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2389,6 +2491,7 @@ static InstructionPrinter *instrPrinter_vwmacc_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2396,9 +2499,9 @@ static InstructionPrinter *instrPrinter_vwmacc_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwmaccsu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vssubu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwmaccsu_vv",
+  "vssubu_vv",
   103,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2412,6 +2515,7 @@ static InstructionPrinter *instrPrinter_vwmaccsu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2419,9 +2523,9 @@ static InstructionPrinter *instrPrinter_vwmaccsu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmerge_vvm = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vssub_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmerge_vvm",
+  "vssub_vv",
   104,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2435,6 +2539,7 @@ static InstructionPrinter *instrPrinter_vmerge_vvm = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2442,9 +2547,9 @@ static InstructionPrinter *instrPrinter_vmerge_vvm = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsaddu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vaaddu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsaddu_vv",
+  "vaaddu_vv",
   105,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2458,6 +2563,7 @@ static InstructionPrinter *instrPrinter_vsaddu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2465,9 +2571,9 @@ static InstructionPrinter *instrPrinter_vsaddu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsadd_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vaadd_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsadd_vv",
+  "vaadd_vv",
   106,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2481,6 +2587,7 @@ static InstructionPrinter *instrPrinter_vsadd_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2488,9 +2595,9 @@ static InstructionPrinter *instrPrinter_vsadd_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vssubu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vasubu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vssubu_vv",
+  "vasubu_vv",
   107,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2504,6 +2611,7 @@ static InstructionPrinter *instrPrinter_vssubu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2511,9 +2619,9 @@ static InstructionPrinter *instrPrinter_vssubu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vssub_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vasub_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vssub_vv",
+  "vasub_vv",
   108,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2527,6 +2635,7 @@ static InstructionPrinter *instrPrinter_vssub_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2534,9 +2643,9 @@ static InstructionPrinter *instrPrinter_vssub_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vaaddu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsmul_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vaaddu_vv",
+  "vsmul_vv",
   109,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2550,6 +2659,7 @@ static InstructionPrinter *instrPrinter_vaaddu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2557,9 +2667,9 @@ static InstructionPrinter *instrPrinter_vaaddu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vaadd_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vssrl_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vaadd_vv",
+  "vssrl_vv",
   110,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2573,6 +2683,7 @@ static InstructionPrinter *instrPrinter_vaadd_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2580,9 +2691,9 @@ static InstructionPrinter *instrPrinter_vaadd_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vasubu_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vssra_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vasubu_vv",
+  "vssra_vv",
   111,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2596,6 +2707,7 @@ static InstructionPrinter *instrPrinter_vasubu_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2603,9 +2715,9 @@ static InstructionPrinter *instrPrinter_vasubu_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vasub_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vrgather_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vasub_vv",
+  "vrgather_vv",
   112,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2619,6 +2731,7 @@ static InstructionPrinter *instrPrinter_vasub_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2626,9 +2739,9 @@ static InstructionPrinter *instrPrinter_vasub_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsmul_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vrgatherei16_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsmul_vv",
+  "vrgatherei16_vv",
   113,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2642,6 +2755,7 @@ static InstructionPrinter *instrPrinter_vsmul_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2649,9 +2763,9 @@ static InstructionPrinter *instrPrinter_vsmul_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vssrl_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwaddu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vssrl_vv",
+  "vwaddu_vv",
   114,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2665,6 +2779,7 @@ static InstructionPrinter *instrPrinter_vssrl_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2672,9 +2787,9 @@ static InstructionPrinter *instrPrinter_vssrl_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vssra_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwsubu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vssra_vv",
+  "vwsubu_vv",
   115,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2688,6 +2803,7 @@ static InstructionPrinter *instrPrinter_vssra_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2695,9 +2811,9 @@ static InstructionPrinter *instrPrinter_vssra_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vrgather_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwadd_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vrgather_vv",
+  "vwadd_vv",
   116,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2711,6 +2827,7 @@ static InstructionPrinter *instrPrinter_vrgather_vv = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2718,9 +2835,9 @@ static InstructionPrinter *instrPrinter_vrgather_vv = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vrgatherei16_vv = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vwsub_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vrgatherei16_vv",
+  "vwsub_vv",
   117,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2734,6 +2851,103 @@ static InstructionPrinter *instrPrinter_vrgatherei16_vv = new InstructionPrinter
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwaddu_w_vv = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwaddu_w_vv",
+  118,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwsubu_w_vv = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwsubu_w_vv",
+  119,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwadd_w_vv = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwadd_w_vv",
+  120,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwsub_w_vv = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwsub_w_vv",
+  121,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2744,98 +2958,6 @@ static InstructionPrinter *instrPrinter_vrgatherei16_vv = new InstructionPrinter
 static InstructionPrinter *instrPrinter_vadd_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vadd_vx",
-  118,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vsub_vx = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vsub_vx",
-  119,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vrsub_vx = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vrsub_vx",
-  120,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vwaddu_vx = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vwaddu_vx",
-  121,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vwsubu_vx = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vwsubu_vx",
   122,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2849,6 +2971,7 @@ static InstructionPrinter *instrPrinter_vwsubu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2856,9 +2979,9 @@ static InstructionPrinter *instrPrinter_vwsubu_vx = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwadd_vx = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsub_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwadd_vx",
+  "vsub_vx",
   123,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2872,6 +2995,7 @@ static InstructionPrinter *instrPrinter_vwadd_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2879,9 +3003,9 @@ static InstructionPrinter *instrPrinter_vwadd_vx = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vwsub_vx = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vrsub_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vwsub_vx",
+  "vrsub_vx",
   124,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -2895,6 +3019,7 @@ static InstructionPrinter *instrPrinter_vwsub_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2918,6 +3043,7 @@ static InstructionPrinter *instrPrinter_vadc_vxm = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2941,6 +3067,7 @@ static InstructionPrinter *instrPrinter_vmadc_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2964,6 +3091,7 @@ static InstructionPrinter *instrPrinter_vsbc_vxm = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -2987,6 +3115,7 @@ static InstructionPrinter *instrPrinter_vmsbc_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3010,6 +3139,7 @@ static InstructionPrinter *instrPrinter_vand_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3033,6 +3163,7 @@ static InstructionPrinter *instrPrinter_vor_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3056,6 +3187,7 @@ static InstructionPrinter *instrPrinter_vxor_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3079,6 +3211,7 @@ static InstructionPrinter *instrPrinter_vsll_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3102,6 +3235,7 @@ static InstructionPrinter *instrPrinter_vsrl_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3125,6 +3259,7 @@ static InstructionPrinter *instrPrinter_vsra_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3148,6 +3283,7 @@ static InstructionPrinter *instrPrinter_vmseq_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3171,6 +3307,7 @@ static InstructionPrinter *instrPrinter_vmsne_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3194,6 +3331,7 @@ static InstructionPrinter *instrPrinter_vmsltu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3217,6 +3355,7 @@ static InstructionPrinter *instrPrinter_vmslt_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3240,6 +3379,7 @@ static InstructionPrinter *instrPrinter_vmsleu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3263,6 +3403,7 @@ static InstructionPrinter *instrPrinter_vmsle_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3286,6 +3427,7 @@ static InstructionPrinter *instrPrinter_vmsgtu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3309,6 +3451,7 @@ static InstructionPrinter *instrPrinter_vmsgt_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3332,6 +3475,7 @@ static InstructionPrinter *instrPrinter_vminu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3355,6 +3499,7 @@ static InstructionPrinter *instrPrinter_vmin_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3378,6 +3523,7 @@ static InstructionPrinter *instrPrinter_vmaxu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3401,6 +3547,7 @@ static InstructionPrinter *instrPrinter_vmax_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3424,6 +3571,7 @@ static InstructionPrinter *instrPrinter_vmul_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3447,6 +3595,7 @@ static InstructionPrinter *instrPrinter_vmulh_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3470,6 +3619,7 @@ static InstructionPrinter *instrPrinter_vmulhu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3493,6 +3643,7 @@ static InstructionPrinter *instrPrinter_vmulhsu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3516,6 +3667,7 @@ static InstructionPrinter *instrPrinter_vwmul_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3539,6 +3691,7 @@ static InstructionPrinter *instrPrinter_vwmulu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3562,6 +3715,7 @@ static InstructionPrinter *instrPrinter_vwmulsu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3585,6 +3739,7 @@ static InstructionPrinter *instrPrinter_vmacc_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3608,6 +3763,7 @@ static InstructionPrinter *instrPrinter_vnmsac_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3631,6 +3787,7 @@ static InstructionPrinter *instrPrinter_vmadd_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3654,6 +3811,7 @@ static InstructionPrinter *instrPrinter_vnmsub_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3677,6 +3835,7 @@ static InstructionPrinter *instrPrinter_vwmaccu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3700,6 +3859,7 @@ static InstructionPrinter *instrPrinter_vwmacc_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3723,6 +3883,7 @@ static InstructionPrinter *instrPrinter_vwmaccsu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3746,6 +3907,7 @@ static InstructionPrinter *instrPrinter_vwmaccus_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3769,6 +3931,7 @@ static InstructionPrinter *instrPrinter_vmerge_vxm = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3792,6 +3955,7 @@ static InstructionPrinter *instrPrinter_vsaddu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3815,6 +3979,7 @@ static InstructionPrinter *instrPrinter_vsadd_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3838,6 +4003,7 @@ static InstructionPrinter *instrPrinter_vssubu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3861,6 +4027,7 @@ static InstructionPrinter *instrPrinter_vssub_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3884,6 +4051,7 @@ static InstructionPrinter *instrPrinter_vaaddu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3907,6 +4075,7 @@ static InstructionPrinter *instrPrinter_vaadd_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3930,6 +4099,7 @@ static InstructionPrinter *instrPrinter_vasubu_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3953,6 +4123,7 @@ static InstructionPrinter *instrPrinter_vasub_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3976,6 +4147,7 @@ static InstructionPrinter *instrPrinter_vsmul_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -3999,6 +4171,7 @@ static InstructionPrinter *instrPrinter_vssrl_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4022,6 +4195,7 @@ static InstructionPrinter *instrPrinter_vssra_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4045,6 +4219,7 @@ static InstructionPrinter *instrPrinter_vslideup_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4068,6 +4243,7 @@ static InstructionPrinter *instrPrinter_vslidedown_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4091,6 +4267,7 @@ static InstructionPrinter *instrPrinter_vslide1up_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4114,6 +4291,199 @@ static InstructionPrinter *instrPrinter_vslide1down_vx = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwaddu_vx = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwaddu_vx",
+  178,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwsubu_vx = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwsubu_vx",
+  179,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwadd_vx = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwadd_vx",
+  180,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwsub_vx = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwsub_vx",
+  181,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwaddu_w_vx = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwaddu_w_vx",
+  182,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwsubu_w_vx = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwsubu_w_vx",
+  183,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwadd_w_vx = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwadd_w_vx",
+  184,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vwsub_w_vx = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vwsub_w_vx",
+  185,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4124,190 +4494,6 @@ static InstructionPrinter *instrPrinter_vslide1down_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vadd_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vadd_vi",
-  178,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vrsub_vi = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vrsub_vi",
-  179,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vadc_vim = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vadc_vim",
-  180,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vmadc_vi = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vmadc_vi",
-  181,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vand_vi = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vand_vi",
-  182,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vor_vi = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vor_vi",
-  183,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vxor_vi = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vxor_vi",
-  184,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vsll_vi = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vsll_vi",
-  185,
-  [](Printer* printer_){
-    std::stringstream ret_strs;
-    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
-    return ret_strs.str();
-  }
-);
-static InstructionPrinter *instrPrinter_vsrl_vi = new InstructionPrinter(
-  Vicuna_InstrPrinterSet,
-  "vsrl_vi",
   186,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4321,6 +4507,7 @@ static InstructionPrinter *instrPrinter_vsrl_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4328,9 +4515,9 @@ static InstructionPrinter *instrPrinter_vsrl_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsra_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vrsub_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsra_vi",
+  "vrsub_vi",
   187,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4344,6 +4531,7 @@ static InstructionPrinter *instrPrinter_vsra_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4351,9 +4539,9 @@ static InstructionPrinter *instrPrinter_vsra_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmseq_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vadc_vim = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmseq_vi",
+  "vadc_vim",
   188,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4367,6 +4555,7 @@ static InstructionPrinter *instrPrinter_vmseq_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4374,9 +4563,9 @@ static InstructionPrinter *instrPrinter_vmseq_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsne_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmadc_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsne_vi",
+  "vmadc_vi",
   189,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4390,6 +4579,7 @@ static InstructionPrinter *instrPrinter_vmsne_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4397,9 +4587,9 @@ static InstructionPrinter *instrPrinter_vmsne_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsleu_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vand_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsleu_vi",
+  "vand_vi",
   190,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4413,6 +4603,7 @@ static InstructionPrinter *instrPrinter_vmsleu_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4420,9 +4611,9 @@ static InstructionPrinter *instrPrinter_vmsleu_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsle_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vor_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsle_vi",
+  "vor_vi",
   191,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4436,6 +4627,7 @@ static InstructionPrinter *instrPrinter_vmsle_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4443,9 +4635,9 @@ static InstructionPrinter *instrPrinter_vmsle_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsgtu_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vxor_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsgtu_vi",
+  "vxor_vi",
   192,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4459,6 +4651,7 @@ static InstructionPrinter *instrPrinter_vmsgtu_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4466,9 +4659,9 @@ static InstructionPrinter *instrPrinter_vmsgtu_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmsgt_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsll_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmsgt_vi",
+  "vsll_vi",
   193,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4482,6 +4675,7 @@ static InstructionPrinter *instrPrinter_vmsgt_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4489,9 +4683,9 @@ static InstructionPrinter *instrPrinter_vmsgt_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vmerge_vim = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsrl_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vmerge_vim",
+  "vsrl_vi",
   194,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4505,6 +4699,7 @@ static InstructionPrinter *instrPrinter_vmerge_vim = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4512,9 +4707,9 @@ static InstructionPrinter *instrPrinter_vmerge_vim = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsaddu_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vsra_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsaddu_vi",
+  "vsra_vi",
   195,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4528,6 +4723,7 @@ static InstructionPrinter *instrPrinter_vsaddu_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4535,9 +4731,9 @@ static InstructionPrinter *instrPrinter_vsaddu_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vsadd_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmseq_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vsadd_vi",
+  "vmseq_vi",
   196,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4551,6 +4747,7 @@ static InstructionPrinter *instrPrinter_vsadd_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4558,9 +4755,9 @@ static InstructionPrinter *instrPrinter_vsadd_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vssrl_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmsne_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vssrl_vi",
+  "vmsne_vi",
   197,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4574,6 +4771,7 @@ static InstructionPrinter *instrPrinter_vssrl_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4581,9 +4779,9 @@ static InstructionPrinter *instrPrinter_vssrl_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vssra_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmsleu_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vssra_vi",
+  "vmsleu_vi",
   198,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4597,6 +4795,7 @@ static InstructionPrinter *instrPrinter_vssra_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4604,9 +4803,9 @@ static InstructionPrinter *instrPrinter_vssra_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vslideup_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmsle_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vslideup_vi",
+  "vmsle_vi",
   199,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4620,6 +4819,7 @@ static InstructionPrinter *instrPrinter_vslideup_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4627,9 +4827,9 @@ static InstructionPrinter *instrPrinter_vslideup_vi = new InstructionPrinter(
     return ret_strs.str();
   }
 );
-static InstructionPrinter *instrPrinter_vslidedown_vi = new InstructionPrinter(
+static InstructionPrinter *instrPrinter_vmsgtu_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
-  "vslidedown_vi",
+  "vmsgtu_vi",
   200,
   [](Printer* printer_){
     std::stringstream ret_strs;
@@ -4643,6 +4843,199 @@ static InstructionPrinter *instrPrinter_vslidedown_vi = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vmsgt_vi = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vmsgt_vi",
+  201,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vmerge_vim = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vmerge_vim",
+  202,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vsaddu_vi = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vsaddu_vi",
+  203,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vsadd_vi = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vsadd_vi",
+  204,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vssrl_vi = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vssrl_vi",
+  205,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vssra_vi = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vssra_vi",
+  206,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vslideup_vi = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vslideup_vi",
+  207,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vslidedown_vi = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vslidedown_vi",
+  208,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4653,13 +5046,14 @@ static InstructionPrinter *instrPrinter_vslidedown_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsetivli = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsetivli",
-  201,
+  209,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4676,13 +5070,14 @@ static InstructionPrinter *instrPrinter_vsetivli = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsetvli = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsetvli",
-  202,
+  210,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4699,13 +5094,14 @@ static InstructionPrinter *instrPrinter_vsetvli = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsetvl = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsetvl",
-  203,
+  211,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4722,10 +5118,11 @@ static InstructionPrinter *instrPrinter_vsetvl = new InstructionPrinter(
 static InstructionPrinter *instrPrinter__def = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "_def",
-  204,
+  212,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4745,13 +5142,14 @@ static InstructionPrinter *instrPrinter__def = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_jal = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "jal",
-  205,
+  213,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
@@ -4768,13 +5166,14 @@ static InstructionPrinter *instrPrinter_jal = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_jalr = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "jalr",
-  206,
+  214,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";

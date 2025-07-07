@@ -21,7 +21,7 @@ class VectorMemModel : public ResourceModel
     VectorMemModel(PerformanceModel *parent_) : ResourceModel("VectorMemModel", parent_){};
 
     uint64_t *vtype_ptr;
-    uint64_t *width_ptr;
+    uint64_t *lsWidth_ptr;
     uint64_t *vl_ptr;
 
     int getDelay(void);

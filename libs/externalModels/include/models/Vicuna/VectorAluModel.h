@@ -12,6 +12,7 @@ public:
       : ResourceModel("VectorAluModel", parent_){};
 
   uint64_t *vtype_ptr;
+  uint64_t *isWidening_ptr;
 
   int getDelay(void);
 

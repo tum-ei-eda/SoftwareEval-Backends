@@ -43,7 +43,8 @@ public:
   uint64_t get_vs3(void){ return vs3_ptr[instrIndex]; };
   uint64_t get_vd(void){ return vd_ptr[instrIndex]; };
   uint64_t get_vtype(void){ return vtype_ptr[instrIndex]; };
-  uint64_t get_width(void){ return width_ptr[instrIndex]; };
+  uint64_t get_lsWidth(void){ return lsWidth_ptr[instrIndex]; };
+  uint64_t get_isWidening(void){ return isWidening_ptr[instrIndex]; };
   uint64_t get_pc(void){ return pc_ptr[instrIndex]; };
   uint64_t get_brTarget(void){ return brTarget_ptr[instrIndex]; };
   uint64_t get_vl(void){ return vl_ptr[instrIndex]; };
@@ -59,7 +60,8 @@ private:
   uint64_t* vs3_ptr;
   uint64_t* vd_ptr;
   uint64_t* vtype_ptr;
-  uint64_t* width_ptr;
+  uint64_t* lsWidth_ptr;
+  uint64_t* isWidening_ptr;
   uint64_t* pc_ptr;
   uint64_t* brTarget_ptr;
   uint64_t* vl_ptr;

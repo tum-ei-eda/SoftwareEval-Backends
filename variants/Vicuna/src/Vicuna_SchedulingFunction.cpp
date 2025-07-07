@@ -4166,442 +4166,10 @@ perfModel->V_RES_stage = n_V_RES_stage;
   }
 );
 
-static SchedulingFunction *schedulingFunction_vwaddu_vv = new SchedulingFunction(
-  Vicuna_SchedulingFunctionSet,
-  "vwaddu_vv",
-  66,
-  [](PerformanceModel* perfModel_){
-  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
-  // Enter
-uint64_t n_Enter = perfModel->IF_stage;
-// IPort_R
-uint64_t n_IPort_R;
-uint64_t n_IPort_R_max;
-n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_IPort_R = n_IPort_R_max + 1;
-// PCGen
-uint64_t n_PCGen;
-uint64_t n_PCGen_max;
-n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_PCGen = n_PCGen_max + 1;
-perfModel->staBranchPredModel.setPc_p(n_PCGen);
-// IF_stage
-uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
-perfModel->IF_stage = n_IF_stage;
-// Decoder
-uint64_t n_Decoder;
-n_Decoder = n_IF_stage + 1;
-// ID_stage
-uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
-perfModel->ID_stage = n_ID_stage;
-// Dispatcher
-uint64_t n_Dispatcher;
-n_Dispatcher = n_ID_stage + 1;
-// uA_V_DISP_Req_Vs1
-uint64_t n_uA_V_DISP_Req_Vs1;
-n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
-// uA_V_DISP_Req_Vs2
-uint64_t n_uA_V_DISP_Req_Vs2;
-n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
-// uA_V_DISP_Req_MaxVdGroup
-uint64_t n_uA_V_DISP_Req_MaxVdGroup;
-n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
-// uA_V_DISP_Req_Vset_Signal
-uint64_t n_uA_V_DISP_Req_Vset_Signal;
-n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
-// uA_R_SIG_Req_Xif_Signal
-uint64_t n_uA_R_SIG_Req_Xif_Signal;
-n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
-// R_SIG_Queue
-uint64_t n_R_SIG_Queue;
-n_R_SIG_Queue = n_ID_stage + 1;
-// V_DISP_stage
-uint64_t n_V_DISP_stage;
-n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
-perfModel->V_DISP_stage.set(n_V_DISP_stage);
-// R_SIG_stage
-uint64_t n_R_SIG_stage;
-n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
-perfModel->R_SIG_stage.set(n_R_SIG_stage);
-// V_ALU_Unpacker
-uint64_t n_V_ALU_Unpacker;
-n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
-// R_RET_Retirer
-uint64_t n_R_RET_Retirer;
-n_R_RET_Retirer = n_R_SIG_stage + 1;
-// V_EX_ALU_Unpack_substage
-uint64_t n_V_EX_ALU_Unpack_substage;
-n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
-perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
-// R_RET_stage
-uint64_t n_R_RET_stage = n_R_RET_Retirer;
-perfModel->R_RET_stage = n_R_RET_stage;
-// V_ALU
-uint64_t n_V_ALU;
-n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
-// V_ALU_RegWriter
-uint64_t n_V_ALU_RegWriter;
-n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
-perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
-// V_EX_ALU_Op_substage
-uint64_t n_V_EX_ALU_Op_substage;
-n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
-perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
-// V_ALU_Packer
-uint64_t n_V_ALU_Packer;
-n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
-// V_EX_stage
-uint64_t n_V_EX_stage;
-n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
-perfModel->V_EX_stage.set(n_V_EX_stage);
-perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
-// V_WB_Pass
-uint64_t n_V_WB_Pass;
-n_V_WB_Pass = n_V_EX_stage + 1;
-// V_WB_stage
-uint64_t n_V_WB_stage;
-n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
-perfModel->V_WB_stage = n_V_WB_stage;
-// V_Result
-uint64_t n_V_Result;
-n_V_Result = n_V_WB_stage + 1;
-// V_RES_stage
-uint64_t n_V_RES_stage = n_V_Result;
-perfModel->V_RES_stage = n_V_RES_stage;
-
-  }
-);
-
-static SchedulingFunction *schedulingFunction_vwsubu_vv = new SchedulingFunction(
-  Vicuna_SchedulingFunctionSet,
-  "vwsubu_vv",
-  67,
-  [](PerformanceModel* perfModel_){
-  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
-  // Enter
-uint64_t n_Enter = perfModel->IF_stage;
-// IPort_R
-uint64_t n_IPort_R;
-uint64_t n_IPort_R_max;
-n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_IPort_R = n_IPort_R_max + 1;
-// PCGen
-uint64_t n_PCGen;
-uint64_t n_PCGen_max;
-n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_PCGen = n_PCGen_max + 1;
-perfModel->staBranchPredModel.setPc_p(n_PCGen);
-// IF_stage
-uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
-perfModel->IF_stage = n_IF_stage;
-// Decoder
-uint64_t n_Decoder;
-n_Decoder = n_IF_stage + 1;
-// ID_stage
-uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
-perfModel->ID_stage = n_ID_stage;
-// Dispatcher
-uint64_t n_Dispatcher;
-n_Dispatcher = n_ID_stage + 1;
-// uA_V_DISP_Req_Vs1
-uint64_t n_uA_V_DISP_Req_Vs1;
-n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
-// uA_V_DISP_Req_Vs2
-uint64_t n_uA_V_DISP_Req_Vs2;
-n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
-// uA_V_DISP_Req_MaxVdGroup
-uint64_t n_uA_V_DISP_Req_MaxVdGroup;
-n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
-// uA_V_DISP_Req_Vset_Signal
-uint64_t n_uA_V_DISP_Req_Vset_Signal;
-n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
-// uA_R_SIG_Req_Xif_Signal
-uint64_t n_uA_R_SIG_Req_Xif_Signal;
-n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
-// R_SIG_Queue
-uint64_t n_R_SIG_Queue;
-n_R_SIG_Queue = n_ID_stage + 1;
-// V_DISP_stage
-uint64_t n_V_DISP_stage;
-n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
-perfModel->V_DISP_stage.set(n_V_DISP_stage);
-// R_SIG_stage
-uint64_t n_R_SIG_stage;
-n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
-perfModel->R_SIG_stage.set(n_R_SIG_stage);
-// V_ALU_Unpacker
-uint64_t n_V_ALU_Unpacker;
-n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
-// R_RET_Retirer
-uint64_t n_R_RET_Retirer;
-n_R_RET_Retirer = n_R_SIG_stage + 1;
-// V_EX_ALU_Unpack_substage
-uint64_t n_V_EX_ALU_Unpack_substage;
-n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
-perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
-// R_RET_stage
-uint64_t n_R_RET_stage = n_R_RET_Retirer;
-perfModel->R_RET_stage = n_R_RET_stage;
-// V_ALU
-uint64_t n_V_ALU;
-n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
-// V_ALU_RegWriter
-uint64_t n_V_ALU_RegWriter;
-n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
-perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
-// V_EX_ALU_Op_substage
-uint64_t n_V_EX_ALU_Op_substage;
-n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
-perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
-// V_ALU_Packer
-uint64_t n_V_ALU_Packer;
-n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
-// V_EX_stage
-uint64_t n_V_EX_stage;
-n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
-perfModel->V_EX_stage.set(n_V_EX_stage);
-perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
-// V_WB_Pass
-uint64_t n_V_WB_Pass;
-n_V_WB_Pass = n_V_EX_stage + 1;
-// V_WB_stage
-uint64_t n_V_WB_stage;
-n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
-perfModel->V_WB_stage = n_V_WB_stage;
-// V_Result
-uint64_t n_V_Result;
-n_V_Result = n_V_WB_stage + 1;
-// V_RES_stage
-uint64_t n_V_RES_stage = n_V_Result;
-perfModel->V_RES_stage = n_V_RES_stage;
-
-  }
-);
-
-static SchedulingFunction *schedulingFunction_vwadd_vv = new SchedulingFunction(
-  Vicuna_SchedulingFunctionSet,
-  "vwadd_vv",
-  68,
-  [](PerformanceModel* perfModel_){
-  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
-  // Enter
-uint64_t n_Enter = perfModel->IF_stage;
-// IPort_R
-uint64_t n_IPort_R;
-uint64_t n_IPort_R_max;
-n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_IPort_R = n_IPort_R_max + 1;
-// PCGen
-uint64_t n_PCGen;
-uint64_t n_PCGen_max;
-n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_PCGen = n_PCGen_max + 1;
-perfModel->staBranchPredModel.setPc_p(n_PCGen);
-// IF_stage
-uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
-perfModel->IF_stage = n_IF_stage;
-// Decoder
-uint64_t n_Decoder;
-n_Decoder = n_IF_stage + 1;
-// ID_stage
-uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
-perfModel->ID_stage = n_ID_stage;
-// Dispatcher
-uint64_t n_Dispatcher;
-n_Dispatcher = n_ID_stage + 1;
-// uA_V_DISP_Req_Vs1
-uint64_t n_uA_V_DISP_Req_Vs1;
-n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
-// uA_V_DISP_Req_Vs2
-uint64_t n_uA_V_DISP_Req_Vs2;
-n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
-// uA_V_DISP_Req_MaxVdGroup
-uint64_t n_uA_V_DISP_Req_MaxVdGroup;
-n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
-// uA_V_DISP_Req_Vset_Signal
-uint64_t n_uA_V_DISP_Req_Vset_Signal;
-n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
-// uA_R_SIG_Req_Xif_Signal
-uint64_t n_uA_R_SIG_Req_Xif_Signal;
-n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
-// R_SIG_Queue
-uint64_t n_R_SIG_Queue;
-n_R_SIG_Queue = n_ID_stage + 1;
-// V_DISP_stage
-uint64_t n_V_DISP_stage;
-n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
-perfModel->V_DISP_stage.set(n_V_DISP_stage);
-// R_SIG_stage
-uint64_t n_R_SIG_stage;
-n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
-perfModel->R_SIG_stage.set(n_R_SIG_stage);
-// V_ALU_Unpacker
-uint64_t n_V_ALU_Unpacker;
-n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
-// R_RET_Retirer
-uint64_t n_R_RET_Retirer;
-n_R_RET_Retirer = n_R_SIG_stage + 1;
-// V_EX_ALU_Unpack_substage
-uint64_t n_V_EX_ALU_Unpack_substage;
-n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
-perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
-// R_RET_stage
-uint64_t n_R_RET_stage = n_R_RET_Retirer;
-perfModel->R_RET_stage = n_R_RET_stage;
-// V_ALU
-uint64_t n_V_ALU;
-n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
-// V_ALU_RegWriter
-uint64_t n_V_ALU_RegWriter;
-n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
-perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
-// V_EX_ALU_Op_substage
-uint64_t n_V_EX_ALU_Op_substage;
-n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
-perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
-// V_ALU_Packer
-uint64_t n_V_ALU_Packer;
-n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
-// V_EX_stage
-uint64_t n_V_EX_stage;
-n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
-perfModel->V_EX_stage.set(n_V_EX_stage);
-perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
-// V_WB_Pass
-uint64_t n_V_WB_Pass;
-n_V_WB_Pass = n_V_EX_stage + 1;
-// V_WB_stage
-uint64_t n_V_WB_stage;
-n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
-perfModel->V_WB_stage = n_V_WB_stage;
-// V_Result
-uint64_t n_V_Result;
-n_V_Result = n_V_WB_stage + 1;
-// V_RES_stage
-uint64_t n_V_RES_stage = n_V_Result;
-perfModel->V_RES_stage = n_V_RES_stage;
-
-  }
-);
-
-static SchedulingFunction *schedulingFunction_vwsub_vv = new SchedulingFunction(
-  Vicuna_SchedulingFunctionSet,
-  "vwsub_vv",
-  69,
-  [](PerformanceModel* perfModel_){
-  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
-  // Enter
-uint64_t n_Enter = perfModel->IF_stage;
-// IPort_R
-uint64_t n_IPort_R;
-uint64_t n_IPort_R_max;
-n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_IPort_R = n_IPort_R_max + 1;
-// PCGen
-uint64_t n_PCGen;
-uint64_t n_PCGen_max;
-n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_PCGen = n_PCGen_max + 1;
-perfModel->staBranchPredModel.setPc_p(n_PCGen);
-// IF_stage
-uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
-perfModel->IF_stage = n_IF_stage;
-// Decoder
-uint64_t n_Decoder;
-n_Decoder = n_IF_stage + 1;
-// ID_stage
-uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
-perfModel->ID_stage = n_ID_stage;
-// Dispatcher
-uint64_t n_Dispatcher;
-n_Dispatcher = n_ID_stage + 1;
-// uA_V_DISP_Req_Vs1
-uint64_t n_uA_V_DISP_Req_Vs1;
-n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
-// uA_V_DISP_Req_Vs2
-uint64_t n_uA_V_DISP_Req_Vs2;
-n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
-// uA_V_DISP_Req_MaxVdGroup
-uint64_t n_uA_V_DISP_Req_MaxVdGroup;
-n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
-// uA_V_DISP_Req_Vset_Signal
-uint64_t n_uA_V_DISP_Req_Vset_Signal;
-n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
-// uA_R_SIG_Req_Xif_Signal
-uint64_t n_uA_R_SIG_Req_Xif_Signal;
-n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
-// R_SIG_Queue
-uint64_t n_R_SIG_Queue;
-n_R_SIG_Queue = n_ID_stage + 1;
-// V_DISP_stage
-uint64_t n_V_DISP_stage;
-n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
-perfModel->V_DISP_stage.set(n_V_DISP_stage);
-// R_SIG_stage
-uint64_t n_R_SIG_stage;
-n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
-perfModel->R_SIG_stage.set(n_R_SIG_stage);
-// V_ALU_Unpacker
-uint64_t n_V_ALU_Unpacker;
-n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
-// R_RET_Retirer
-uint64_t n_R_RET_Retirer;
-n_R_RET_Retirer = n_R_SIG_stage + 1;
-// V_EX_ALU_Unpack_substage
-uint64_t n_V_EX_ALU_Unpack_substage;
-n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
-perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
-// R_RET_stage
-uint64_t n_R_RET_stage = n_R_RET_Retirer;
-perfModel->R_RET_stage = n_R_RET_stage;
-// V_ALU
-uint64_t n_V_ALU;
-n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
-// V_ALU_RegWriter
-uint64_t n_V_ALU_RegWriter;
-n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
-perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
-// V_EX_ALU_Op_substage
-uint64_t n_V_EX_ALU_Op_substage;
-n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
-perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
-// V_ALU_Packer
-uint64_t n_V_ALU_Packer;
-n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
-// V_EX_stage
-uint64_t n_V_EX_stage;
-n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
-perfModel->V_EX_stage.set(n_V_EX_stage);
-perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
-// V_WB_Pass
-uint64_t n_V_WB_Pass;
-n_V_WB_Pass = n_V_EX_stage + 1;
-// V_WB_stage
-uint64_t n_V_WB_stage;
-n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
-perfModel->V_WB_stage = n_V_WB_stage;
-// V_Result
-uint64_t n_V_Result;
-n_V_Result = n_V_WB_stage + 1;
-// V_RES_stage
-uint64_t n_V_RES_stage = n_V_Result;
-perfModel->V_RES_stage = n_V_RES_stage;
-
-  }
-);
-
 static SchedulingFunction *schedulingFunction_vadc_vvm = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vadc_vvm",
-  70,
+  66,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -4709,7 +4277,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmadc_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmadc_vv",
-  71,
+  67,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -4817,7 +4385,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsbc_vvm = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsbc_vvm",
-  72,
+  68,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -4925,7 +4493,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsbc_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsbc_vv",
-  73,
+  69,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -5033,7 +4601,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vand_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vand_vv",
-  74,
+  70,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -5141,7 +4709,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vor_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vor_vv",
-  75,
+  71,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -5249,7 +4817,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vxor_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vxor_vv",
-  76,
+  72,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -5357,7 +4925,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsll_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsll_vv",
-  77,
+  73,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -5465,7 +5033,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsrl_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsrl_vv",
-  78,
+  74,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -5573,7 +5141,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsra_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsra_vv",
-  79,
+  75,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -5681,7 +5249,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmseq_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmseq_vv",
-  80,
+  76,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -5789,7 +5357,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsne_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsne_vv",
-  81,
+  77,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -5897,7 +5465,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsltu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsltu_vv",
-  82,
+  78,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6005,7 +5573,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmslt_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmslt_vv",
-  83,
+  79,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6113,7 +5681,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsleu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsleu_vv",
-  84,
+  80,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6221,7 +5789,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsle_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsle_vv",
-  85,
+  81,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6329,7 +5897,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vminu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vminu_vv",
-  86,
+  82,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6437,7 +6005,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmin_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmin_vv",
-  87,
+  83,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6545,7 +6113,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmaxu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmaxu_vv",
-  88,
+  84,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6653,7 +6221,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmax_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmax_vv",
-  89,
+  85,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6761,7 +6329,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmul_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmul_vv",
-  90,
+  86,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6869,7 +6437,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmulh_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmulh_vv",
-  91,
+  87,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -6977,7 +6545,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmulhu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmulhu_vv",
-  92,
+  88,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -7085,7 +6653,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmulhsu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmulhsu_vv",
-  93,
+  89,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -7193,7 +6761,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vwmul_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vwmul_vv",
-  94,
+  90,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -7301,7 +6869,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vwmulu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vwmulu_vv",
-  95,
+  91,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -7409,7 +6977,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vwmulsu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vwmulsu_vv",
-  96,
+  92,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -7517,7 +7085,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmacc_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmacc_vv",
-  97,
+  93,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -7625,7 +7193,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vnmsac_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vnmsac_vv",
-  98,
+  94,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -7733,7 +7301,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmadd_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmadd_vv",
-  99,
+  95,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -7841,7 +7409,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vnmsub_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vnmsub_vv",
-  100,
+  96,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -7949,7 +7517,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vwmaccu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vwmaccu_vv",
-  101,
+  97,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -8057,7 +7625,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vwmacc_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vwmacc_vv",
-  102,
+  98,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -8165,7 +7733,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vwmaccsu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vwmaccsu_vv",
-  103,
+  99,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -8273,7 +7841,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmerge_vvm = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmerge_vvm",
-  104,
+  100,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -8381,7 +7949,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsaddu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsaddu_vv",
-  105,
+  101,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -8489,7 +8057,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsadd_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsadd_vv",
-  106,
+  102,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -8597,7 +8165,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vssubu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vssubu_vv",
-  107,
+  103,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -8705,7 +8273,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vssub_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vssub_vv",
-  108,
+  104,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -8813,7 +8381,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vaaddu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vaaddu_vv",
-  109,
+  105,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -8921,7 +8489,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vaadd_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vaadd_vv",
-  110,
+  106,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -9029,7 +8597,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vasubu_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vasubu_vv",
-  111,
+  107,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -9137,7 +8705,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vasub_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vasub_vv",
-  112,
+  108,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -9245,7 +8813,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsmul_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsmul_vv",
-  113,
+  109,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -9353,7 +8921,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vssrl_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vssrl_vv",
-  114,
+  110,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -9461,7 +9029,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vssra_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vssra_vv",
-  115,
+  111,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -9569,7 +9137,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vrgather_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vrgather_vv",
-  116,
+  112,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -9677,7 +9245,871 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vrgatherei16_vv = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vrgatherei16_vv",
+  113,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs1
+uint64_t n_uA_V_DISP_Req_Vs1;
+n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwaddu_vv = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwaddu_vv",
+  114,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs1
+uint64_t n_uA_V_DISP_Req_Vs1;
+n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwsubu_vv = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwsubu_vv",
+  115,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs1
+uint64_t n_uA_V_DISP_Req_Vs1;
+n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwadd_vv = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwadd_vv",
+  116,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs1
+uint64_t n_uA_V_DISP_Req_Vs1;
+n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwsub_vv = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwsub_vv",
   117,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs1
+uint64_t n_uA_V_DISP_Req_Vs1;
+n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwaddu_w_vv = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwaddu_w_vv",
+  118,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs1
+uint64_t n_uA_V_DISP_Req_Vs1;
+n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwsubu_w_vv = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwsubu_w_vv",
+  119,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs1
+uint64_t n_uA_V_DISP_Req_Vs1;
+n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwadd_w_vv = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwadd_w_vv",
+  120,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs1
+uint64_t n_uA_V_DISP_Req_Vs1;
+n_uA_V_DISP_Req_Vs1 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs1()});
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs1, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwsub_w_vv = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwsub_w_vv",
+  121,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -9785,7 +10217,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vadd_vx = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vadd_vx",
-  118,
+  122,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -9893,7 +10325,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsub_vx = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsub_vx",
-  119,
+  123,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -10001,438 +10433,6 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vrsub_vx = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vrsub_vx",
-  120,
-  [](PerformanceModel* perfModel_){
-  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
-  // Enter
-uint64_t n_Enter = perfModel->IF_stage;
-// IPort_R
-uint64_t n_IPort_R;
-uint64_t n_IPort_R_max;
-n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_IPort_R = n_IPort_R_max + 1;
-// PCGen
-uint64_t n_PCGen;
-uint64_t n_PCGen_max;
-n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_PCGen = n_PCGen_max + 1;
-perfModel->staBranchPredModel.setPc_p(n_PCGen);
-// IF_stage
-uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
-perfModel->IF_stage = n_IF_stage;
-// Decoder
-uint64_t n_Decoder;
-n_Decoder = n_IF_stage + 1;
-// uA_ID_Req_SReg_A
-uint64_t n_uA_ID_Req_SReg_A;
-n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
-// ID_stage
-uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
-perfModel->ID_stage = n_ID_stage;
-// Dispatcher
-uint64_t n_Dispatcher;
-n_Dispatcher = n_ID_stage + 1;
-// uA_V_DISP_Req_Vs2
-uint64_t n_uA_V_DISP_Req_Vs2;
-n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
-// uA_V_DISP_Req_MaxVdGroup
-uint64_t n_uA_V_DISP_Req_MaxVdGroup;
-n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
-// uA_V_DISP_Req_Vset_Signal
-uint64_t n_uA_V_DISP_Req_Vset_Signal;
-n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
-// uA_R_SIG_Req_Xif_Signal
-uint64_t n_uA_R_SIG_Req_Xif_Signal;
-n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
-// R_SIG_Queue
-uint64_t n_R_SIG_Queue;
-n_R_SIG_Queue = n_ID_stage + 1;
-// V_DISP_stage
-uint64_t n_V_DISP_stage;
-n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
-perfModel->V_DISP_stage.set(n_V_DISP_stage);
-// R_SIG_stage
-uint64_t n_R_SIG_stage;
-n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
-perfModel->R_SIG_stage.set(n_R_SIG_stage);
-// V_ALU_Unpacker
-uint64_t n_V_ALU_Unpacker;
-n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
-// R_RET_Retirer
-uint64_t n_R_RET_Retirer;
-n_R_RET_Retirer = n_R_SIG_stage + 1;
-// V_EX_ALU_Unpack_substage
-uint64_t n_V_EX_ALU_Unpack_substage;
-n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
-perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
-// R_RET_stage
-uint64_t n_R_RET_stage = n_R_RET_Retirer;
-perfModel->R_RET_stage = n_R_RET_stage;
-// V_ALU
-uint64_t n_V_ALU;
-n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
-// V_ALU_RegWriter
-uint64_t n_V_ALU_RegWriter;
-n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
-perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
-// V_EX_ALU_Op_substage
-uint64_t n_V_EX_ALU_Op_substage;
-n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
-perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
-// V_ALU_Packer
-uint64_t n_V_ALU_Packer;
-n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
-// V_EX_stage
-uint64_t n_V_EX_stage;
-n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
-perfModel->V_EX_stage.set(n_V_EX_stage);
-perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
-// V_WB_Pass
-uint64_t n_V_WB_Pass;
-n_V_WB_Pass = n_V_EX_stage + 1;
-// V_WB_stage
-uint64_t n_V_WB_stage;
-n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
-perfModel->V_WB_stage = n_V_WB_stage;
-// V_Result
-uint64_t n_V_Result;
-n_V_Result = n_V_WB_stage + 1;
-// V_RES_stage
-uint64_t n_V_RES_stage = n_V_Result;
-perfModel->V_RES_stage = n_V_RES_stage;
-
-  }
-);
-
-static SchedulingFunction *schedulingFunction_vwaddu_vx = new SchedulingFunction(
-  Vicuna_SchedulingFunctionSet,
-  "vwaddu_vx",
-  121,
-  [](PerformanceModel* perfModel_){
-  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
-  // Enter
-uint64_t n_Enter = perfModel->IF_stage;
-// IPort_R
-uint64_t n_IPort_R;
-uint64_t n_IPort_R_max;
-n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_IPort_R = n_IPort_R_max + 1;
-// PCGen
-uint64_t n_PCGen;
-uint64_t n_PCGen_max;
-n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_PCGen = n_PCGen_max + 1;
-perfModel->staBranchPredModel.setPc_p(n_PCGen);
-// IF_stage
-uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
-perfModel->IF_stage = n_IF_stage;
-// Decoder
-uint64_t n_Decoder;
-n_Decoder = n_IF_stage + 1;
-// uA_ID_Req_SReg_A
-uint64_t n_uA_ID_Req_SReg_A;
-n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
-// ID_stage
-uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
-perfModel->ID_stage = n_ID_stage;
-// Dispatcher
-uint64_t n_Dispatcher;
-n_Dispatcher = n_ID_stage + 1;
-// uA_V_DISP_Req_Vs2
-uint64_t n_uA_V_DISP_Req_Vs2;
-n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
-// uA_V_DISP_Req_MaxVdGroup
-uint64_t n_uA_V_DISP_Req_MaxVdGroup;
-n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
-// uA_V_DISP_Req_Vset_Signal
-uint64_t n_uA_V_DISP_Req_Vset_Signal;
-n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
-// uA_R_SIG_Req_Xif_Signal
-uint64_t n_uA_R_SIG_Req_Xif_Signal;
-n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
-// R_SIG_Queue
-uint64_t n_R_SIG_Queue;
-n_R_SIG_Queue = n_ID_stage + 1;
-// V_DISP_stage
-uint64_t n_V_DISP_stage;
-n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
-perfModel->V_DISP_stage.set(n_V_DISP_stage);
-// R_SIG_stage
-uint64_t n_R_SIG_stage;
-n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
-perfModel->R_SIG_stage.set(n_R_SIG_stage);
-// V_ALU_Unpacker
-uint64_t n_V_ALU_Unpacker;
-n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
-// R_RET_Retirer
-uint64_t n_R_RET_Retirer;
-n_R_RET_Retirer = n_R_SIG_stage + 1;
-// V_EX_ALU_Unpack_substage
-uint64_t n_V_EX_ALU_Unpack_substage;
-n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
-perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
-// R_RET_stage
-uint64_t n_R_RET_stage = n_R_RET_Retirer;
-perfModel->R_RET_stage = n_R_RET_stage;
-// V_ALU
-uint64_t n_V_ALU;
-n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
-// V_ALU_RegWriter
-uint64_t n_V_ALU_RegWriter;
-n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
-perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
-// V_EX_ALU_Op_substage
-uint64_t n_V_EX_ALU_Op_substage;
-n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
-perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
-// V_ALU_Packer
-uint64_t n_V_ALU_Packer;
-n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
-// V_EX_stage
-uint64_t n_V_EX_stage;
-n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
-perfModel->V_EX_stage.set(n_V_EX_stage);
-perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
-// V_WB_Pass
-uint64_t n_V_WB_Pass;
-n_V_WB_Pass = n_V_EX_stage + 1;
-// V_WB_stage
-uint64_t n_V_WB_stage;
-n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
-perfModel->V_WB_stage = n_V_WB_stage;
-// V_Result
-uint64_t n_V_Result;
-n_V_Result = n_V_WB_stage + 1;
-// V_RES_stage
-uint64_t n_V_RES_stage = n_V_Result;
-perfModel->V_RES_stage = n_V_RES_stage;
-
-  }
-);
-
-static SchedulingFunction *schedulingFunction_vwsubu_vx = new SchedulingFunction(
-  Vicuna_SchedulingFunctionSet,
-  "vwsubu_vx",
-  122,
-  [](PerformanceModel* perfModel_){
-  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
-  // Enter
-uint64_t n_Enter = perfModel->IF_stage;
-// IPort_R
-uint64_t n_IPort_R;
-uint64_t n_IPort_R_max;
-n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_IPort_R = n_IPort_R_max + 1;
-// PCGen
-uint64_t n_PCGen;
-uint64_t n_PCGen_max;
-n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_PCGen = n_PCGen_max + 1;
-perfModel->staBranchPredModel.setPc_p(n_PCGen);
-// IF_stage
-uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
-perfModel->IF_stage = n_IF_stage;
-// Decoder
-uint64_t n_Decoder;
-n_Decoder = n_IF_stage + 1;
-// uA_ID_Req_SReg_A
-uint64_t n_uA_ID_Req_SReg_A;
-n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
-// ID_stage
-uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
-perfModel->ID_stage = n_ID_stage;
-// Dispatcher
-uint64_t n_Dispatcher;
-n_Dispatcher = n_ID_stage + 1;
-// uA_V_DISP_Req_Vs2
-uint64_t n_uA_V_DISP_Req_Vs2;
-n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
-// uA_V_DISP_Req_MaxVdGroup
-uint64_t n_uA_V_DISP_Req_MaxVdGroup;
-n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
-// uA_V_DISP_Req_Vset_Signal
-uint64_t n_uA_V_DISP_Req_Vset_Signal;
-n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
-// uA_R_SIG_Req_Xif_Signal
-uint64_t n_uA_R_SIG_Req_Xif_Signal;
-n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
-// R_SIG_Queue
-uint64_t n_R_SIG_Queue;
-n_R_SIG_Queue = n_ID_stage + 1;
-// V_DISP_stage
-uint64_t n_V_DISP_stage;
-n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
-perfModel->V_DISP_stage.set(n_V_DISP_stage);
-// R_SIG_stage
-uint64_t n_R_SIG_stage;
-n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
-perfModel->R_SIG_stage.set(n_R_SIG_stage);
-// V_ALU_Unpacker
-uint64_t n_V_ALU_Unpacker;
-n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
-// R_RET_Retirer
-uint64_t n_R_RET_Retirer;
-n_R_RET_Retirer = n_R_SIG_stage + 1;
-// V_EX_ALU_Unpack_substage
-uint64_t n_V_EX_ALU_Unpack_substage;
-n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
-perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
-// R_RET_stage
-uint64_t n_R_RET_stage = n_R_RET_Retirer;
-perfModel->R_RET_stage = n_R_RET_stage;
-// V_ALU
-uint64_t n_V_ALU;
-n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
-// V_ALU_RegWriter
-uint64_t n_V_ALU_RegWriter;
-n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
-perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
-// V_EX_ALU_Op_substage
-uint64_t n_V_EX_ALU_Op_substage;
-n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
-perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
-// V_ALU_Packer
-uint64_t n_V_ALU_Packer;
-n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
-// V_EX_stage
-uint64_t n_V_EX_stage;
-n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
-perfModel->V_EX_stage.set(n_V_EX_stage);
-perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
-// V_WB_Pass
-uint64_t n_V_WB_Pass;
-n_V_WB_Pass = n_V_EX_stage + 1;
-// V_WB_stage
-uint64_t n_V_WB_stage;
-n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
-perfModel->V_WB_stage = n_V_WB_stage;
-// V_Result
-uint64_t n_V_Result;
-n_V_Result = n_V_WB_stage + 1;
-// V_RES_stage
-uint64_t n_V_RES_stage = n_V_Result;
-perfModel->V_RES_stage = n_V_RES_stage;
-
-  }
-);
-
-static SchedulingFunction *schedulingFunction_vwadd_vx = new SchedulingFunction(
-  Vicuna_SchedulingFunctionSet,
-  "vwadd_vx",
-  123,
-  [](PerformanceModel* perfModel_){
-  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
-  // Enter
-uint64_t n_Enter = perfModel->IF_stage;
-// IPort_R
-uint64_t n_IPort_R;
-uint64_t n_IPort_R_max;
-n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_IPort_R = n_IPort_R_max + 1;
-// PCGen
-uint64_t n_PCGen;
-uint64_t n_PCGen_max;
-n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
-n_PCGen = n_PCGen_max + 1;
-perfModel->staBranchPredModel.setPc_p(n_PCGen);
-// IF_stage
-uint64_t n_IF_stage;
-n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
-perfModel->IF_stage = n_IF_stage;
-// Decoder
-uint64_t n_Decoder;
-n_Decoder = n_IF_stage + 1;
-// uA_ID_Req_SReg_A
-uint64_t n_uA_ID_Req_SReg_A;
-n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
-// ID_stage
-uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
-perfModel->ID_stage = n_ID_stage;
-// Dispatcher
-uint64_t n_Dispatcher;
-n_Dispatcher = n_ID_stage + 1;
-// uA_V_DISP_Req_Vs2
-uint64_t n_uA_V_DISP_Req_Vs2;
-n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
-// uA_V_DISP_Req_MaxVdGroup
-uint64_t n_uA_V_DISP_Req_MaxVdGroup;
-n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
-// uA_V_DISP_Req_Vset_Signal
-uint64_t n_uA_V_DISP_Req_Vset_Signal;
-n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
-// uA_R_SIG_Req_Xif_Signal
-uint64_t n_uA_R_SIG_Req_Xif_Signal;
-n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
-// R_SIG_Queue
-uint64_t n_R_SIG_Queue;
-n_R_SIG_Queue = n_ID_stage + 1;
-// V_DISP_stage
-uint64_t n_V_DISP_stage;
-n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
-perfModel->V_DISP_stage.set(n_V_DISP_stage);
-// R_SIG_stage
-uint64_t n_R_SIG_stage;
-n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
-perfModel->R_SIG_stage.set(n_R_SIG_stage);
-// V_ALU_Unpacker
-uint64_t n_V_ALU_Unpacker;
-n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
-// R_RET_Retirer
-uint64_t n_R_RET_Retirer;
-n_R_RET_Retirer = n_R_SIG_stage + 1;
-// V_EX_ALU_Unpack_substage
-uint64_t n_V_EX_ALU_Unpack_substage;
-n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
-perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
-// R_RET_stage
-uint64_t n_R_RET_stage = n_R_RET_Retirer;
-perfModel->R_RET_stage = n_R_RET_stage;
-// V_ALU
-uint64_t n_V_ALU;
-n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
-// V_ALU_RegWriter
-uint64_t n_V_ALU_RegWriter;
-n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
-perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
-// V_EX_ALU_Op_substage
-uint64_t n_V_EX_ALU_Op_substage;
-n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
-perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
-// V_ALU_Packer
-uint64_t n_V_ALU_Packer;
-n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
-// V_EX_stage
-uint64_t n_V_EX_stage;
-n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
-perfModel->V_EX_stage.set(n_V_EX_stage);
-perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
-// V_WB_Pass
-uint64_t n_V_WB_Pass;
-n_V_WB_Pass = n_V_EX_stage + 1;
-// V_WB_stage
-uint64_t n_V_WB_stage;
-n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
-perfModel->V_WB_stage = n_V_WB_stage;
-// V_Result
-uint64_t n_V_Result;
-n_V_Result = n_V_WB_stage + 1;
-// V_RES_stage
-uint64_t n_V_RES_stage = n_V_Result;
-perfModel->V_RES_stage = n_V_RES_stage;
-
-  }
-);
-
-static SchedulingFunction *schedulingFunction_vwsub_vx = new SchedulingFunction(
-  Vicuna_SchedulingFunctionSet,
-  "vwsub_vx",
   124,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
@@ -16262,10 +16262,874 @@ perfModel->V_RES_stage = n_V_RES_stage;
   }
 );
 
+static SchedulingFunction *schedulingFunction_vwaddu_vx = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwaddu_vx",
+  178,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// uA_ID_Req_SReg_A
+uint64_t n_uA_ID_Req_SReg_A;
+n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwsubu_vx = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwsubu_vx",
+  179,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// uA_ID_Req_SReg_A
+uint64_t n_uA_ID_Req_SReg_A;
+n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwadd_vx = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwadd_vx",
+  180,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// uA_ID_Req_SReg_A
+uint64_t n_uA_ID_Req_SReg_A;
+n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwsub_vx = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwsub_vx",
+  181,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// uA_ID_Req_SReg_A
+uint64_t n_uA_ID_Req_SReg_A;
+n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwaddu_w_vx = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwaddu_w_vx",
+  182,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// uA_ID_Req_SReg_A
+uint64_t n_uA_ID_Req_SReg_A;
+n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwsubu_w_vx = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwsubu_w_vx",
+  183,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// uA_ID_Req_SReg_A
+uint64_t n_uA_ID_Req_SReg_A;
+n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwadd_w_vx = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwadd_w_vx",
+  184,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// uA_ID_Req_SReg_A
+uint64_t n_uA_ID_Req_SReg_A;
+n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_vwsub_w_vx = new SchedulingFunction(
+  Vicuna_SchedulingFunctionSet,
+  "vwsub_w_vx",
+  185,
+  [](PerformanceModel* perfModel_){
+  Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// uA_ID_Req_SReg_A
+uint64_t n_uA_ID_Req_SReg_A;
+n_uA_ID_Req_SReg_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, n_uA_ID_Req_SReg_A, perfModel->V_DISP_stage.get(2), perfModel->R_SIG_stage.get(100)});
+perfModel->ID_stage = n_ID_stage;
+// Dispatcher
+uint64_t n_Dispatcher;
+n_Dispatcher = n_ID_stage + 1;
+// uA_V_DISP_Req_Vs2
+uint64_t n_uA_V_DISP_Req_Vs2;
+n_uA_V_DISP_Req_Vs2 = std::max({n_ID_stage, perfModel->vectorRegModel.getVs2()});
+// uA_V_DISP_Req_MaxVdGroup
+uint64_t n_uA_V_DISP_Req_MaxVdGroup;
+n_uA_V_DISP_Req_MaxVdGroup = std::max({n_ID_stage, perfModel->vectorRegModel.getMaxVdGroup()});
+// uA_V_DISP_Req_Vset_Signal
+uint64_t n_uA_V_DISP_Req_Vset_Signal;
+n_uA_V_DISP_Req_Vset_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getVsetSignal()});
+// uA_R_SIG_Req_Xif_Signal
+uint64_t n_uA_R_SIG_Req_Xif_Signal;
+n_uA_R_SIG_Req_Xif_Signal = std::max({n_ID_stage, perfModel->vectorSignaller.getXifSignalNext()});
+// R_SIG_Queue
+uint64_t n_R_SIG_Queue;
+n_R_SIG_Queue = n_ID_stage + 1;
+// V_DISP_stage
+uint64_t n_V_DISP_stage;
+n_V_DISP_stage = std::max({n_Dispatcher, n_uA_V_DISP_Req_Vs2, n_uA_V_DISP_Req_MaxVdGroup, n_uA_V_DISP_Req_Vset_Signal, perfModel->V_DISP_stage.get(1), perfModel->V_EX_stage.get(2), perfModel->V_EX_ALU_Unpack_substage});
+perfModel->V_DISP_stage.set(n_V_DISP_stage);
+// R_SIG_stage
+uint64_t n_R_SIG_stage;
+n_R_SIG_stage = std::max({n_uA_R_SIG_Req_Xif_Signal, n_R_SIG_Queue, perfModel->R_SIG_stage.get(1), perfModel->R_RET_stage});
+perfModel->R_SIG_stage.set(n_R_SIG_stage);
+// V_ALU_Unpacker
+uint64_t n_V_ALU_Unpacker;
+n_V_ALU_Unpacker = n_V_DISP_stage + perfModel->packUnpack.getDelay();
+// R_RET_Retirer
+uint64_t n_R_RET_Retirer;
+n_R_RET_Retirer = n_R_SIG_stage + 1;
+// V_EX_ALU_Unpack_substage
+uint64_t n_V_EX_ALU_Unpack_substage;
+n_V_EX_ALU_Unpack_substage = std::max({n_V_ALU_Unpacker, perfModel->V_EX_ALU_Op_substage});
+perfModel->V_EX_ALU_Unpack_substage = n_V_EX_ALU_Unpack_substage;
+// R_RET_stage
+uint64_t n_R_RET_stage = n_R_RET_Retirer;
+perfModel->R_RET_stage = n_R_RET_stage;
+// V_ALU
+uint64_t n_V_ALU;
+n_V_ALU = n_V_EX_ALU_Unpack_substage + perfModel->vectorAluModel.getDelay();
+// V_ALU_RegWriter
+uint64_t n_V_ALU_RegWriter;
+n_V_ALU_RegWriter = n_V_EX_ALU_Unpack_substage + 1;
+perfModel->vectorRegModel.setVdGroupAlu(n_V_ALU_RegWriter);
+// V_EX_ALU_Op_substage
+uint64_t n_V_EX_ALU_Op_substage;
+n_V_EX_ALU_Op_substage = std::max({n_V_ALU, n_V_ALU_RegWriter, perfModel->V_EX_ALU_Pack_substage});
+perfModel->V_EX_ALU_Op_substage = n_V_EX_ALU_Op_substage;
+// V_ALU_Packer
+uint64_t n_V_ALU_Packer;
+n_V_ALU_Packer = n_V_EX_ALU_Op_substage + perfModel->packUnpack.getDelay();
+// V_EX_stage
+uint64_t n_V_EX_stage;
+n_V_EX_stage = std::max({n_V_ALU_Packer, perfModel->V_EX_stage.get(1), perfModel->V_WB_stage});
+perfModel->V_EX_stage.set(n_V_EX_stage);
+perfModel->V_EX_ALU_Pack_substage = n_V_EX_stage;
+// V_WB_Pass
+uint64_t n_V_WB_Pass;
+n_V_WB_Pass = n_V_EX_stage + 1;
+// V_WB_stage
+uint64_t n_V_WB_stage;
+n_V_WB_stage = std::max({n_V_WB_Pass, perfModel->V_RES_stage});
+perfModel->V_WB_stage = n_V_WB_stage;
+// V_Result
+uint64_t n_V_Result;
+n_V_Result = n_V_WB_stage + 1;
+// V_RES_stage
+uint64_t n_V_RES_stage = n_V_Result;
+perfModel->V_RES_stage = n_V_RES_stage;
+
+  }
+);
+
 static SchedulingFunction *schedulingFunction_vadd_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vadd_vi",
-  178,
+  186,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -16370,7 +17234,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vrsub_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vrsub_vi",
-  179,
+  187,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -16475,7 +17339,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vadc_vim = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vadc_vim",
-  180,
+  188,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -16580,7 +17444,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmadc_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmadc_vi",
-  181,
+  189,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -16685,7 +17549,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vand_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vand_vi",
-  182,
+  190,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -16790,7 +17654,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vor_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vor_vi",
-  183,
+  191,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -16895,7 +17759,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vxor_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vxor_vi",
-  184,
+  192,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17000,7 +17864,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsll_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsll_vi",
-  185,
+  193,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17105,7 +17969,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsrl_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsrl_vi",
-  186,
+  194,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17210,7 +18074,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsra_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsra_vi",
-  187,
+  195,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17315,7 +18179,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmseq_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmseq_vi",
-  188,
+  196,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17420,7 +18284,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsne_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsne_vi",
-  189,
+  197,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17525,7 +18389,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsleu_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsleu_vi",
-  190,
+  198,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17630,7 +18494,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsle_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsle_vi",
-  191,
+  199,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17735,7 +18599,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsgtu_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsgtu_vi",
-  192,
+  200,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17840,7 +18704,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmsgt_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmsgt_vi",
-  193,
+  201,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -17945,7 +18809,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vmerge_vim = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vmerge_vim",
-  194,
+  202,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18050,7 +18914,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsaddu_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsaddu_vi",
-  195,
+  203,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18155,7 +19019,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsadd_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsadd_vi",
-  196,
+  204,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18260,7 +19124,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vssrl_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vssrl_vi",
-  197,
+  205,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18365,7 +19229,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vssra_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vssra_vi",
-  198,
+  206,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18470,7 +19334,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vslideup_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vslideup_vi",
-  199,
+  207,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18575,7 +19439,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vslidedown_vi = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vslidedown_vi",
-  200,
+  208,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18680,7 +19544,7 @@ perfModel->V_RES_stage = n_V_RES_stage;
 static SchedulingFunction *schedulingFunction_vsetivli = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsetivli",
-  201,
+  209,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18742,7 +19606,7 @@ perfModel->R_RET_stage = n_R_RET_stage;
 static SchedulingFunction *schedulingFunction_vsetvli = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsetvli",
-  202,
+  210,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18807,7 +19671,7 @@ perfModel->R_RET_stage = n_R_RET_stage;
 static SchedulingFunction *schedulingFunction_vsetvl = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "vsetvl",
-  203,
+  211,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18875,7 +19739,7 @@ perfModel->R_RET_stage = n_R_RET_stage;
 static SchedulingFunction *schedulingFunction__def = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "_def",
-  204,
+  212,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18902,7 +19766,7 @@ perfModel->IF_stage = n_IF_stage;
 static SchedulingFunction *schedulingFunction_jal = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "jal",
-  205,
+  213,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
@@ -18948,7 +19812,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_jalr = new SchedulingFunction(
   Vicuna_SchedulingFunctionSet,
   "jalr",
-  206,
+  214,
   [](PerformanceModel* perfModel_){
   Vicuna_PerformanceModel* perfModel = static_cast<Vicuna_PerformanceModel*>(perfModel_);
   // Enter
