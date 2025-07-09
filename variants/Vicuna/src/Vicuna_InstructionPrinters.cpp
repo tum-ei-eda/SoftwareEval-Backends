@@ -1539,10 +1539,154 @@ static InstructionPrinter *instrPrinter_vrem_vx = new InstructionPrinter(
     return ret_strs.str();
   }
 );
+static InstructionPrinter *instrPrinter_vzext_vf2 = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vzext_vf2",
+  63,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vsext_vf2 = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vsext_vf2",
+  64,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vzext_vf4 = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vzext_vf4",
+  65,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vsext_vf4 = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vsext_vf4",
+  66,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vzext_vf8 = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vzext_vf8",
+  67,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_vsext_vf8 = new InstructionPrinter(
+  Vicuna_InstrPrinterSet,
+  "vsext_vf8",
+  68,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vs2() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_vtype() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_isWidening() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
 static InstructionPrinter *instrPrinter_vmv_v_i = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmv_v_i",
-  63,
+  69,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1566,7 +1710,7 @@ static InstructionPrinter *instrPrinter_vmv_v_i = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vadd_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vadd_vv",
-  64,
+  70,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1590,7 +1734,7 @@ static InstructionPrinter *instrPrinter_vadd_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsub_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsub_vv",
-  65,
+  71,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1614,7 +1758,7 @@ static InstructionPrinter *instrPrinter_vsub_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vadc_vvm = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vadc_vvm",
-  66,
+  72,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1638,7 +1782,7 @@ static InstructionPrinter *instrPrinter_vadc_vvm = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmadc_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmadc_vv",
-  67,
+  73,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1662,7 +1806,7 @@ static InstructionPrinter *instrPrinter_vmadc_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsbc_vvm = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsbc_vvm",
-  68,
+  74,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1686,7 +1830,7 @@ static InstructionPrinter *instrPrinter_vsbc_vvm = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsbc_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsbc_vv",
-  69,
+  75,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1710,7 +1854,7 @@ static InstructionPrinter *instrPrinter_vmsbc_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vand_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vand_vv",
-  70,
+  76,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1734,7 +1878,7 @@ static InstructionPrinter *instrPrinter_vand_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vor_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vor_vv",
-  71,
+  77,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1758,7 +1902,7 @@ static InstructionPrinter *instrPrinter_vor_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vxor_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vxor_vv",
-  72,
+  78,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1782,7 +1926,7 @@ static InstructionPrinter *instrPrinter_vxor_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsll_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsll_vv",
-  73,
+  79,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1806,7 +1950,7 @@ static InstructionPrinter *instrPrinter_vsll_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsrl_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsrl_vv",
-  74,
+  80,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1830,7 +1974,7 @@ static InstructionPrinter *instrPrinter_vsrl_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsra_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsra_vv",
-  75,
+  81,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1854,7 +1998,7 @@ static InstructionPrinter *instrPrinter_vsra_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmseq_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmseq_vv",
-  76,
+  82,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1878,7 +2022,7 @@ static InstructionPrinter *instrPrinter_vmseq_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsne_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsne_vv",
-  77,
+  83,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1902,7 +2046,7 @@ static InstructionPrinter *instrPrinter_vmsne_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsltu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsltu_vv",
-  78,
+  84,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1926,7 +2070,7 @@ static InstructionPrinter *instrPrinter_vmsltu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmslt_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmslt_vv",
-  79,
+  85,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1950,7 +2094,7 @@ static InstructionPrinter *instrPrinter_vmslt_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsleu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsleu_vv",
-  80,
+  86,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1974,7 +2118,7 @@ static InstructionPrinter *instrPrinter_vmsleu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsle_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsle_vv",
-  81,
+  87,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -1998,7 +2142,7 @@ static InstructionPrinter *instrPrinter_vmsle_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vminu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vminu_vv",
-  82,
+  88,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2022,7 +2166,7 @@ static InstructionPrinter *instrPrinter_vminu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmin_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmin_vv",
-  83,
+  89,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2046,7 +2190,7 @@ static InstructionPrinter *instrPrinter_vmin_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmaxu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmaxu_vv",
-  84,
+  90,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2070,7 +2214,7 @@ static InstructionPrinter *instrPrinter_vmaxu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmax_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmax_vv",
-  85,
+  91,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2094,7 +2238,7 @@ static InstructionPrinter *instrPrinter_vmax_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmul_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmul_vv",
-  86,
+  92,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2118,7 +2262,7 @@ static InstructionPrinter *instrPrinter_vmul_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmulh_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmulh_vv",
-  87,
+  93,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2142,7 +2286,7 @@ static InstructionPrinter *instrPrinter_vmulh_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmulhu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmulhu_vv",
-  88,
+  94,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2166,7 +2310,7 @@ static InstructionPrinter *instrPrinter_vmulhu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmulhsu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmulhsu_vv",
-  89,
+  95,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2190,7 +2334,7 @@ static InstructionPrinter *instrPrinter_vmulhsu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmul_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmul_vv",
-  90,
+  96,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2214,7 +2358,7 @@ static InstructionPrinter *instrPrinter_vwmul_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmulu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmulu_vv",
-  91,
+  97,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2238,7 +2382,7 @@ static InstructionPrinter *instrPrinter_vwmulu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmulsu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmulsu_vv",
-  92,
+  98,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2262,7 +2406,7 @@ static InstructionPrinter *instrPrinter_vwmulsu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmacc_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmacc_vv",
-  93,
+  99,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2286,7 +2430,7 @@ static InstructionPrinter *instrPrinter_vmacc_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vnmsac_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vnmsac_vv",
-  94,
+  100,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2310,7 +2454,7 @@ static InstructionPrinter *instrPrinter_vnmsac_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmadd_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmadd_vv",
-  95,
+  101,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2334,7 +2478,7 @@ static InstructionPrinter *instrPrinter_vmadd_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vnmsub_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vnmsub_vv",
-  96,
+  102,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2358,7 +2502,7 @@ static InstructionPrinter *instrPrinter_vnmsub_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmaccu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmaccu_vv",
-  97,
+  103,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2382,7 +2526,7 @@ static InstructionPrinter *instrPrinter_vwmaccu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmacc_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmacc_vv",
-  98,
+  104,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2406,7 +2550,7 @@ static InstructionPrinter *instrPrinter_vwmacc_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmaccsu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmaccsu_vv",
-  99,
+  105,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2430,7 +2574,7 @@ static InstructionPrinter *instrPrinter_vwmaccsu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmerge_vvm = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmerge_vvm",
-  100,
+  106,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2454,7 +2598,7 @@ static InstructionPrinter *instrPrinter_vmerge_vvm = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsaddu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsaddu_vv",
-  101,
+  107,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2478,7 +2622,7 @@ static InstructionPrinter *instrPrinter_vsaddu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsadd_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsadd_vv",
-  102,
+  108,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2502,7 +2646,7 @@ static InstructionPrinter *instrPrinter_vsadd_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssubu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssubu_vv",
-  103,
+  109,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2526,7 +2670,7 @@ static InstructionPrinter *instrPrinter_vssubu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssub_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssub_vv",
-  104,
+  110,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2550,7 +2694,7 @@ static InstructionPrinter *instrPrinter_vssub_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vaaddu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vaaddu_vv",
-  105,
+  111,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2574,7 +2718,7 @@ static InstructionPrinter *instrPrinter_vaaddu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vaadd_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vaadd_vv",
-  106,
+  112,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2598,7 +2742,7 @@ static InstructionPrinter *instrPrinter_vaadd_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vasubu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vasubu_vv",
-  107,
+  113,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2622,7 +2766,7 @@ static InstructionPrinter *instrPrinter_vasubu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vasub_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vasub_vv",
-  108,
+  114,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2646,7 +2790,7 @@ static InstructionPrinter *instrPrinter_vasub_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsmul_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsmul_vv",
-  109,
+  115,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2670,7 +2814,7 @@ static InstructionPrinter *instrPrinter_vsmul_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssrl_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssrl_vv",
-  110,
+  116,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2694,7 +2838,7 @@ static InstructionPrinter *instrPrinter_vssrl_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssra_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssra_vv",
-  111,
+  117,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2718,7 +2862,7 @@ static InstructionPrinter *instrPrinter_vssra_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vrgather_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vrgather_vv",
-  112,
+  118,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2742,7 +2886,7 @@ static InstructionPrinter *instrPrinter_vrgather_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vrgatherei16_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vrgatherei16_vv",
-  113,
+  119,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2766,7 +2910,7 @@ static InstructionPrinter *instrPrinter_vrgatherei16_vv = new InstructionPrinter
 static InstructionPrinter *instrPrinter_vwaddu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwaddu_vv",
-  114,
+  120,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2790,7 +2934,7 @@ static InstructionPrinter *instrPrinter_vwaddu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwsubu_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwsubu_vv",
-  115,
+  121,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2814,7 +2958,7 @@ static InstructionPrinter *instrPrinter_vwsubu_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwadd_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwadd_vv",
-  116,
+  122,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2838,7 +2982,7 @@ static InstructionPrinter *instrPrinter_vwadd_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwsub_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwsub_vv",
-  117,
+  123,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2862,7 +3006,7 @@ static InstructionPrinter *instrPrinter_vwsub_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwaddu_w_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwaddu_w_vv",
-  118,
+  124,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2886,7 +3030,7 @@ static InstructionPrinter *instrPrinter_vwaddu_w_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwsubu_w_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwsubu_w_vv",
-  119,
+  125,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2910,7 +3054,7 @@ static InstructionPrinter *instrPrinter_vwsubu_w_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwadd_w_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwadd_w_vv",
-  120,
+  126,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2934,7 +3078,7 @@ static InstructionPrinter *instrPrinter_vwadd_w_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwsub_w_vv = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwsub_w_vv",
-  121,
+  127,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2958,7 +3102,7 @@ static InstructionPrinter *instrPrinter_vwsub_w_vv = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vadd_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vadd_vx",
-  122,
+  128,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -2982,7 +3126,7 @@ static InstructionPrinter *instrPrinter_vadd_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsub_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsub_vx",
-  123,
+  129,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3006,7 +3150,7 @@ static InstructionPrinter *instrPrinter_vsub_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vrsub_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vrsub_vx",
-  124,
+  130,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3030,7 +3174,7 @@ static InstructionPrinter *instrPrinter_vrsub_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vadc_vxm = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vadc_vxm",
-  125,
+  131,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3054,7 +3198,7 @@ static InstructionPrinter *instrPrinter_vadc_vxm = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmadc_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmadc_vx",
-  126,
+  132,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3078,7 +3222,7 @@ static InstructionPrinter *instrPrinter_vmadc_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsbc_vxm = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsbc_vxm",
-  127,
+  133,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3102,7 +3246,7 @@ static InstructionPrinter *instrPrinter_vsbc_vxm = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsbc_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsbc_vx",
-  128,
+  134,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3126,7 +3270,7 @@ static InstructionPrinter *instrPrinter_vmsbc_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vand_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vand_vx",
-  129,
+  135,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3150,7 +3294,7 @@ static InstructionPrinter *instrPrinter_vand_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vor_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vor_vx",
-  130,
+  136,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3174,7 +3318,7 @@ static InstructionPrinter *instrPrinter_vor_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vxor_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vxor_vx",
-  131,
+  137,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3198,7 +3342,7 @@ static InstructionPrinter *instrPrinter_vxor_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsll_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsll_vx",
-  132,
+  138,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3222,7 +3366,7 @@ static InstructionPrinter *instrPrinter_vsll_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsrl_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsrl_vx",
-  133,
+  139,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3246,7 +3390,7 @@ static InstructionPrinter *instrPrinter_vsrl_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsra_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsra_vx",
-  134,
+  140,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3270,7 +3414,7 @@ static InstructionPrinter *instrPrinter_vsra_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmseq_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmseq_vx",
-  135,
+  141,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3294,7 +3438,7 @@ static InstructionPrinter *instrPrinter_vmseq_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsne_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsne_vx",
-  136,
+  142,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3318,7 +3462,7 @@ static InstructionPrinter *instrPrinter_vmsne_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsltu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsltu_vx",
-  137,
+  143,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3342,7 +3486,7 @@ static InstructionPrinter *instrPrinter_vmsltu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmslt_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmslt_vx",
-  138,
+  144,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3366,7 +3510,7 @@ static InstructionPrinter *instrPrinter_vmslt_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsleu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsleu_vx",
-  139,
+  145,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3390,7 +3534,7 @@ static InstructionPrinter *instrPrinter_vmsleu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsle_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsle_vx",
-  140,
+  146,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3414,7 +3558,7 @@ static InstructionPrinter *instrPrinter_vmsle_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsgtu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsgtu_vx",
-  141,
+  147,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3438,7 +3582,7 @@ static InstructionPrinter *instrPrinter_vmsgtu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsgt_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsgt_vx",
-  142,
+  148,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3462,7 +3606,7 @@ static InstructionPrinter *instrPrinter_vmsgt_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vminu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vminu_vx",
-  143,
+  149,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3486,7 +3630,7 @@ static InstructionPrinter *instrPrinter_vminu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmin_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmin_vx",
-  144,
+  150,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3510,7 +3654,7 @@ static InstructionPrinter *instrPrinter_vmin_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmaxu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmaxu_vx",
-  145,
+  151,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3534,7 +3678,7 @@ static InstructionPrinter *instrPrinter_vmaxu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmax_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmax_vx",
-  146,
+  152,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3558,7 +3702,7 @@ static InstructionPrinter *instrPrinter_vmax_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmul_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmul_vx",
-  147,
+  153,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3582,7 +3726,7 @@ static InstructionPrinter *instrPrinter_vmul_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmulh_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmulh_vx",
-  148,
+  154,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3606,7 +3750,7 @@ static InstructionPrinter *instrPrinter_vmulh_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmulhu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmulhu_vx",
-  149,
+  155,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3630,7 +3774,7 @@ static InstructionPrinter *instrPrinter_vmulhu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmulhsu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmulhsu_vx",
-  150,
+  156,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3654,7 +3798,7 @@ static InstructionPrinter *instrPrinter_vmulhsu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmul_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmul_vx",
-  151,
+  157,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3678,7 +3822,7 @@ static InstructionPrinter *instrPrinter_vwmul_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmulu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmulu_vx",
-  152,
+  158,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3702,7 +3846,7 @@ static InstructionPrinter *instrPrinter_vwmulu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmulsu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmulsu_vx",
-  153,
+  159,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3726,7 +3870,7 @@ static InstructionPrinter *instrPrinter_vwmulsu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmacc_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmacc_vx",
-  154,
+  160,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3750,7 +3894,7 @@ static InstructionPrinter *instrPrinter_vmacc_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vnmsac_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vnmsac_vx",
-  155,
+  161,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3774,7 +3918,7 @@ static InstructionPrinter *instrPrinter_vnmsac_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmadd_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmadd_vx",
-  156,
+  162,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3798,7 +3942,7 @@ static InstructionPrinter *instrPrinter_vmadd_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vnmsub_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vnmsub_vx",
-  157,
+  163,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3822,7 +3966,7 @@ static InstructionPrinter *instrPrinter_vnmsub_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmaccu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmaccu_vx",
-  158,
+  164,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3846,7 +3990,7 @@ static InstructionPrinter *instrPrinter_vwmaccu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmacc_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmacc_vx",
-  159,
+  165,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3870,7 +4014,7 @@ static InstructionPrinter *instrPrinter_vwmacc_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmaccsu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmaccsu_vx",
-  160,
+  166,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3894,7 +4038,7 @@ static InstructionPrinter *instrPrinter_vwmaccsu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwmaccus_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwmaccus_vx",
-  161,
+  167,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3918,7 +4062,7 @@ static InstructionPrinter *instrPrinter_vwmaccus_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmerge_vxm = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmerge_vxm",
-  162,
+  168,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3942,7 +4086,7 @@ static InstructionPrinter *instrPrinter_vmerge_vxm = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsaddu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsaddu_vx",
-  163,
+  169,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3966,7 +4110,7 @@ static InstructionPrinter *instrPrinter_vsaddu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsadd_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsadd_vx",
-  164,
+  170,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -3990,7 +4134,7 @@ static InstructionPrinter *instrPrinter_vsadd_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssubu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssubu_vx",
-  165,
+  171,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4014,7 +4158,7 @@ static InstructionPrinter *instrPrinter_vssubu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssub_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssub_vx",
-  166,
+  172,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4038,7 +4182,7 @@ static InstructionPrinter *instrPrinter_vssub_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vaaddu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vaaddu_vx",
-  167,
+  173,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4062,7 +4206,7 @@ static InstructionPrinter *instrPrinter_vaaddu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vaadd_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vaadd_vx",
-  168,
+  174,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4086,7 +4230,7 @@ static InstructionPrinter *instrPrinter_vaadd_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vasubu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vasubu_vx",
-  169,
+  175,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4110,7 +4254,7 @@ static InstructionPrinter *instrPrinter_vasubu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vasub_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vasub_vx",
-  170,
+  176,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4134,7 +4278,7 @@ static InstructionPrinter *instrPrinter_vasub_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsmul_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsmul_vx",
-  171,
+  177,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4158,7 +4302,7 @@ static InstructionPrinter *instrPrinter_vsmul_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssrl_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssrl_vx",
-  172,
+  178,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4182,7 +4326,7 @@ static InstructionPrinter *instrPrinter_vssrl_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssra_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssra_vx",
-  173,
+  179,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4206,7 +4350,7 @@ static InstructionPrinter *instrPrinter_vssra_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vslideup_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vslideup_vx",
-  174,
+  180,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4230,7 +4374,7 @@ static InstructionPrinter *instrPrinter_vslideup_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vslidedown_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vslidedown_vx",
-  175,
+  181,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4254,7 +4398,7 @@ static InstructionPrinter *instrPrinter_vslidedown_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vslide1up_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vslide1up_vx",
-  176,
+  182,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4278,7 +4422,7 @@ static InstructionPrinter *instrPrinter_vslide1up_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vslide1down_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vslide1down_vx",
-  177,
+  183,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4302,7 +4446,7 @@ static InstructionPrinter *instrPrinter_vslide1down_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwaddu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwaddu_vx",
-  178,
+  184,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4326,7 +4470,7 @@ static InstructionPrinter *instrPrinter_vwaddu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwsubu_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwsubu_vx",
-  179,
+  185,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4350,7 +4494,7 @@ static InstructionPrinter *instrPrinter_vwsubu_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwadd_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwadd_vx",
-  180,
+  186,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4374,7 +4518,7 @@ static InstructionPrinter *instrPrinter_vwadd_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwsub_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwsub_vx",
-  181,
+  187,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4398,7 +4542,7 @@ static InstructionPrinter *instrPrinter_vwsub_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwaddu_w_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwaddu_w_vx",
-  182,
+  188,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4422,7 +4566,7 @@ static InstructionPrinter *instrPrinter_vwaddu_w_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwsubu_w_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwsubu_w_vx",
-  183,
+  189,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4446,7 +4590,7 @@ static InstructionPrinter *instrPrinter_vwsubu_w_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwadd_w_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwadd_w_vx",
-  184,
+  190,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4470,7 +4614,7 @@ static InstructionPrinter *instrPrinter_vwadd_w_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vwsub_w_vx = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vwsub_w_vx",
-  185,
+  191,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4494,7 +4638,7 @@ static InstructionPrinter *instrPrinter_vwsub_w_vx = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vadd_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vadd_vi",
-  186,
+  192,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4518,7 +4662,7 @@ static InstructionPrinter *instrPrinter_vadd_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vrsub_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vrsub_vi",
-  187,
+  193,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4542,7 +4686,7 @@ static InstructionPrinter *instrPrinter_vrsub_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vadc_vim = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vadc_vim",
-  188,
+  194,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4566,7 +4710,7 @@ static InstructionPrinter *instrPrinter_vadc_vim = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmadc_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmadc_vi",
-  189,
+  195,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4590,7 +4734,7 @@ static InstructionPrinter *instrPrinter_vmadc_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vand_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vand_vi",
-  190,
+  196,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4614,7 +4758,7 @@ static InstructionPrinter *instrPrinter_vand_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vor_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vor_vi",
-  191,
+  197,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4638,7 +4782,7 @@ static InstructionPrinter *instrPrinter_vor_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vxor_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vxor_vi",
-  192,
+  198,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4662,7 +4806,7 @@ static InstructionPrinter *instrPrinter_vxor_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsll_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsll_vi",
-  193,
+  199,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4686,7 +4830,7 @@ static InstructionPrinter *instrPrinter_vsll_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsrl_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsrl_vi",
-  194,
+  200,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4710,7 +4854,7 @@ static InstructionPrinter *instrPrinter_vsrl_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsra_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsra_vi",
-  195,
+  201,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4734,7 +4878,7 @@ static InstructionPrinter *instrPrinter_vsra_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmseq_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmseq_vi",
-  196,
+  202,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4758,7 +4902,7 @@ static InstructionPrinter *instrPrinter_vmseq_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsne_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsne_vi",
-  197,
+  203,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4782,7 +4926,7 @@ static InstructionPrinter *instrPrinter_vmsne_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsleu_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsleu_vi",
-  198,
+  204,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4806,7 +4950,7 @@ static InstructionPrinter *instrPrinter_vmsleu_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsle_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsle_vi",
-  199,
+  205,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4830,7 +4974,7 @@ static InstructionPrinter *instrPrinter_vmsle_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsgtu_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsgtu_vi",
-  200,
+  206,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4854,7 +4998,7 @@ static InstructionPrinter *instrPrinter_vmsgtu_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmsgt_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmsgt_vi",
-  201,
+  207,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4878,7 +5022,7 @@ static InstructionPrinter *instrPrinter_vmsgt_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vmerge_vim = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vmerge_vim",
-  202,
+  208,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4902,7 +5046,7 @@ static InstructionPrinter *instrPrinter_vmerge_vim = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsaddu_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsaddu_vi",
-  203,
+  209,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4926,7 +5070,7 @@ static InstructionPrinter *instrPrinter_vsaddu_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsadd_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsadd_vi",
-  204,
+  210,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4950,7 +5094,7 @@ static InstructionPrinter *instrPrinter_vsadd_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssrl_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssrl_vi",
-  205,
+  211,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4974,7 +5118,7 @@ static InstructionPrinter *instrPrinter_vssrl_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vssra_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vssra_vi",
-  206,
+  212,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -4998,7 +5142,7 @@ static InstructionPrinter *instrPrinter_vssra_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vslideup_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vslideup_vi",
-  207,
+  213,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -5022,7 +5166,7 @@ static InstructionPrinter *instrPrinter_vslideup_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vslidedown_vi = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vslidedown_vi",
-  208,
+  214,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -5046,7 +5190,7 @@ static InstructionPrinter *instrPrinter_vslidedown_vi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsetivli = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsetivli",
-  209,
+  215,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -5070,7 +5214,7 @@ static InstructionPrinter *instrPrinter_vsetivli = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsetvli = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsetvli",
-  210,
+  216,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -5094,7 +5238,7 @@ static InstructionPrinter *instrPrinter_vsetvli = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_vsetvl = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "vsetvl",
-  211,
+  217,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -5118,7 +5262,7 @@ static InstructionPrinter *instrPrinter_vsetvl = new InstructionPrinter(
 static InstructionPrinter *instrPrinter__def = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "_def",
-  212,
+  218,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -5142,7 +5286,7 @@ static InstructionPrinter *instrPrinter__def = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_jal = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "jal",
-  213,
+  219,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
@@ -5166,7 +5310,7 @@ static InstructionPrinter *instrPrinter_jal = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_jalr = new InstructionPrinter(
   Vicuna_InstrPrinterSet,
   "jalr",
-  214,
+  220,
   [](Printer* printer_){
     std::stringstream ret_strs;
     Vicuna_Printer* printer = static_cast<Vicuna_Printer*>(printer_);
