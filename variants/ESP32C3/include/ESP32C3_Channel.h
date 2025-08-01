@@ -17,33 +17,30 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
 
-#include "CV32E40P_Channel.h"
+#ifndef SWEVAL_BACKENDS_ESP32C3_CHANNEL_H
+#define SWEVAL_BACKENDS_ESP32C3_CHANNEL_H
 
-void *CV32E40P_Channel::getTraceValueHook(std::string trVal_)
+#include "Channel.h"
+
+#include <string>
+#include <stdbool.h>
+#include <cstdint>
+
+class ESP32C3_Channel: public Channel
 {
-  if(trVal_ == "rs1")
-  {
-    return rs1;
-  }
-  if(trVal_ == "rs2")
-  {
-    return rs2;
-  }
-  if(trVal_ == "rd")
-  {
-    return rd;
-  }
-  if(trVal_ == "pc")
-  {
-    return pc;
-  }
-  if(trVal_ == "brTarget")
-  {
-    return brTarget;
-  }
-  if(trVal_ == "rs2_data")
-  {
-    return rs2_data;
-  }
-  return nullptr;
-}
+public:
+
+  ESP32C3_Channel() {};
+  ~ESP32C3_Channel() {};
+
+  uint64_t rs1 [100];
+  uint64_t rs2 [100];
+  uint64_t rd [100];
+  uint64_t pc [100];
+  uint64_t brTarget [100];
+  uint64_t rs2_data [100];
+
+  virtual void *getTraceValueHook(std::string);
+};
+
+#endif // SWEVAL_BACKENDS_ESP32C3_CHANNEL_H

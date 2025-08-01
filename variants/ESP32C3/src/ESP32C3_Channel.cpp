@@ -17,9 +17,9 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
 
-#include "CV32E40P_Channel.h"
+#include "ESP32C3_Channel.h"
 
-void *CV32E40P_Channel::getTraceValueHook(std::string trVal_)
+void *ESP32C3_Channel::getTraceValueHook(std::string trVal_)
 {
   if(trVal_ == "rs1")
   {

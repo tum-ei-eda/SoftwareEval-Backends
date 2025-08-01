@@ -17,8 +17,8 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
                    
-#ifndef SWEVAL_BACKENDS_CV32E40P_PRINTER_H
-#define SWEVAL_BACKENDS_CV32E40P_PRINTER_H
+#ifndef SWEVAL_BACKENDS_ESP32C3_PRINTER_H
+#define SWEVAL_BACKENDS_ESP32C3_PRINTER_H
 
 #include "Printer.h"
 
@@ -27,11 +27,11 @@
 #include <string>
 #include <cstdint>
 
-class CV32E40P_Printer : public Printer
+class ESP32C3_Printer : public Printer
 {
 public:
 
-  CV32E40P_Printer();
+  ESP32C3_Printer();
 
   virtual void connectChannel(Channel*);
   virtual std::string getPrintHeader(void);
@@ -53,4 +53,4 @@ private:
   uint64_t* rs2_data_ptr;
 };
 
-#endif // SWEVAL_BACKENDS_CV32E40P_PRINTER_H
+#endif // SWEVAL_BACKENDS_ESP32C3_PRINTER_H

@@ -17,23 +17,23 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
 
-#include "CV32E40P_Printer.h"
+#include "ESP32C3_Printer.h"
 
 #include "Printer.h"
 
-#include "CV32E40P_Channel.h"
+#include "ESP32C3_Channel.h"
 
 #include <iostream>
 #include <iomanip>
 
-extern InstructionPrinterSet* CV32E40P_InstrPrinterSet;
+extern InstructionPrinterSet* ESP32C3_InstrPrinterSet;
 
-CV32E40P_Printer::CV32E40P_Printer(): Printer("CV32E40P_Printer", CV32E40P_InstrPrinterSet)
+ESP32C3_Printer::ESP32C3_Printer(): Printer("ESP32C3_Printer", ESP32C3_InstrPrinterSet)
 {}
 
-void CV32E40P_Printer::connectChannel(Channel* ch_)
+void ESP32C3_Printer::connectChannel(Channel* ch_)
 {
-  CV32E40P_Channel* channel = static_cast<CV32E40P_Channel*>(ch_);
+  ESP32C3_Channel* channel = static_cast<ESP32C3_Channel*>(ch_);
   
   rs1_ptr = channel->rs1;
   rs2_ptr = channel->rs2;
@@ -43,7 +43,7 @@ void CV32E40P_Printer::connectChannel(Channel* ch_)
   rs2_data_ptr = channel->rs2_data;
 }
 
-std::string CV32E40P_Printer::getPrintHeader(void)
+std::string ESP32C3_Printer::getPrintHeader(void)
 {
   std::stringstream caption_strs;	
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs1" << " | ";
