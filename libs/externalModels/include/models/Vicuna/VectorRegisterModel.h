@@ -27,12 +27,16 @@ namespace Vicuna {
 class VectorRegisterModel : public ConnectorModel {
 public:
   VectorRegisterModel(PerformanceModel *parent_)
-      : ConnectorModel("VectorRegisterModel", parent_){};
+      : ConnectorModel("VectorRegisterModel", parent_) {
+    vlen_ = std::stoi(std::getenv("VLEN"));
+    vlane_width_ = std::stoi(std::getenv("VLANE_WIDTH"));
+  };
 
   uint64_t *vs1_ptr;
   uint64_t *vs2_ptr;
   uint64_t *vs3_ptr;
   uint64_t *vd_ptr;
+  uint64_t *vm_ptr;
   uint64_t *vtype_ptr;
   uint64_t *lsWidth_ptr;
   uint64_t *isWidening_ptr;
@@ -45,6 +49,14 @@ public:
   };
   uint64_t getVs3(void) {
     return vectorRegisterModel[vs3_ptr[getInstrIndex()]];
+  };
+  uint64_t getMaskReg(void) {
+    if (vm_ptr[getInstrIndex()] == VectorConfig::masked) {
+      return vectorRegisterModel[VectorConfig::maskRegisterIndex];
+    }
+    // If instruction is unmasked ignore (return 0), but all potentially masked
+    // instructions check this
+    return 0;
   };
 
   // Set register times for VLOAD instructions
@@ -63,7 +75,7 @@ public:
       // If the fractional bit is still 1, EMUL = 1
       // otherwise just the decoded multiplicative LMUL of that new value.
       // m8 overflowing should result in an illegal instruction anyway, so it is
-      // not checked.
+      // not checked. See spec.
       auto encodedEmul = getEncodedLmul() + log2(loadWidth / sew);
       emul = lmulIsFractional(encodedEmul)
                  ? 1
@@ -72,6 +84,7 @@ public:
       // EMUL = fraction of LMUL
       // If LMUL fractional, or log2(loadWidth / sew) >= vlmul, EMUL = 1
       // otherwise subtract log2(loadWidth / sew) from vlmul and decode.
+      // See spec.
       auto vlmul = getEncodedLmul();
       auto decrement = log2(sew / loadWidth);
       if (lmulIsFractional() || decrement > vlmul) {
@@ -81,9 +94,8 @@ public:
       }
     }
 
-    static constexpr auto cyclesPerRegister =
-        VectorConfig::vlen / VectorConfig::vMemWidth;
-    auto registerBaseIndex = vd_ptr[getInstrIndex()];
+    auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
+    auto const registerBaseIndex = vd_ptr[getInstrIndex()];
     for (size_t i = 0; i < emul; i++) {
       vectorRegisterModel[registerBaseIndex + i] =
           baseTimestamp_ + ((i + 1) * cyclesPerRegister);
@@ -92,12 +104,23 @@ public:
 
   // Set register timestamps for regular vector ALU instructions
   void setVdGroupAlu(uint64_t baseTimestamp_) {
-    static constexpr auto cyclesPerRegister =
-        VectorConfig::vlen / VectorConfig::vLaneWidth;
-    auto isWidening = isWidening_ptr[getInstrIndex()];
+    auto const cyclesPerRegister = vlen_ / vlane_width_;
+    auto const isWidening = isWidening_ptr[getInstrIndex()];
+    auto const registerBaseIndex = vd_ptr[getInstrIndex()];
+    auto const lmul = getLmul();
+    auto const emul = isWidening ? 2 * lmul : lmul;
+    for (size_t i = 0; i < emul; i++) {
+      vectorRegisterModel[registerBaseIndex + i] =
+          baseTimestamp_ + ((i + 1) * (cyclesPerRegister));
+    }
+  }
+
+  // Set register timestamps for element-wise (e.g. vcompress) instructions
+  void setVdGroupElm(uint64_t baseTimestamp_) {
+    // ELM unit depends on # of elements, i.e. VLEN / SEW
+    auto cyclesPerRegister = vlen_ / getSew();
     auto registerBaseIndex = vd_ptr[getInstrIndex()];
-    auto lmul = getLmul();
-    auto emul = isWidening ? 2 * lmul : lmul;
+    auto emul = getLmul();
     for (size_t i = 0; i < emul; i++) {
       vectorRegisterModel[registerBaseIndex + i] =
           baseTimestamp_ + ((i + 1) * (cyclesPerRegister));
@@ -107,8 +130,7 @@ public:
   // Set register timestamps for division instructions
   void setVdGroupDivider(uint64_t baseTimestamp_) {
 
-    auto cyclesPerRegister =
-        (VectorConfig::vlen / getSew()) * VectorConfig::dividerDelay;
+    auto cyclesPerRegister = (vlen_ / getSew()) * VectorConfig::dividerDelay;
 
     auto registerBaseIndex = vd_ptr[getInstrIndex()];
     auto emul = getLmul();
@@ -138,6 +160,8 @@ public:
   };
 
 private:
+  uint64_t vlen_;
+  uint64_t vlane_width_;
   std::array<uint64_t, VectorConfig::nVectorRegisters> vectorRegisterModel = {
       0};
 

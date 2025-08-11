@@ -22,10 +22,10 @@ namespace Vicuna {
 
 int VectorDividerModel::getDelay(void) {
   // TODO: constants should be configured somewhere else
-  
-  static constexpr uint64_t packFactor = VectorConfig::vlen / VectorConfig::vLaneWidth;
-  static constexpr uint64_t divider_cycles = 32;
-  uint64_t n_register_elements = VectorConfig::vlen / decodeSew();
+
+  auto const packFactor = vlen_ / vlane_width_;
+  constexpr auto divider_cycles = 32;
+  uint64_t n_register_elements = vlen_ / decodeSew();
   uint64_t lmul = decodeLmul();
   uint64_t n_divisions = n_register_elements * lmul;
   // TODO: explain

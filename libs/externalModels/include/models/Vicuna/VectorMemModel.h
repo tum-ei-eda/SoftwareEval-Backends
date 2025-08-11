@@ -4,32 +4,33 @@
 
 #include "PerformanceModel.h"
 
-namespace Vicuna
-{
+namespace Vicuna {
 
-struct DecodedInfoLoad
-{
-    uint64_t sew = 8;
-    uint64_t lmul = 1;
-    uint64_t encodedLmul = 0b00;
-    bool fractionalLmul = false;
+struct DecodedInfoLoad {
+  uint64_t sew = 8;
+  uint64_t lmul = 1;
+  uint64_t vlmul = 0b000;
+  bool fractionalLmul = false;
 };
 
-class VectorMemModel : public ResourceModel
-{
-  public:
-    VectorMemModel(PerformanceModel *parent_) : ResourceModel("VectorMemModel", parent_){};
+class VectorMemModel : public ResourceModel {
+public:
+  VectorMemModel(PerformanceModel *parent_)
+      : ResourceModel("VectorMemModel", parent_) {
+    vlen_ = std::stoi(std::getenv("VLEN"));
+  };
 
-    uint64_t *vtype_ptr;
-    uint64_t *lsWidth_ptr;
-    uint64_t *vl_ptr;
+  uint64_t *vtype_ptr;
+  uint64_t *lsWidth_ptr;
+  uint64_t *vl_ptr;
 
-    int getDelay(void);
+  int getDelay(void);
 
-  private:
-    auto decodeLmul() -> uint64_t;
-    auto decodeSew() -> uint64_t;
-    auto decodeInfo() -> DecodedInfoLoad;
+private:
+  uint64_t vlen_;
+  auto decodeLmul() -> uint64_t;
+  auto decodeSew() -> uint64_t;
+  auto decodeInfo() -> DecodedInfoLoad;
 };
 
 } // namespace Vicuna

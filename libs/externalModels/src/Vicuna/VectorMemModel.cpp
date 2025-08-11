@@ -23,9 +23,9 @@ namespace Vicuna
 
 auto log2(uint64_t value) -> uint64_t;
 
-auto fractionalBitIsSet(uint64_t encodedLmul) -> bool;
+auto fractionalBitIsSet(uint64_t vlmul) -> bool;
 
-auto decodeMultiplicativeLmul(uint64_t encodedLmul) -> uint64_t;
+auto decodeMultiplicativeLmul(uint64_t vlmul) -> uint64_t;
 
 int VectorMemModel::getDelay(void)
 {
@@ -43,7 +43,7 @@ int VectorMemModel::getDelay(void)
         // otherwise just the decoded multiplicative LMUL of that new value.
         // m8 overflowing should result in an illegal instruction anyway, so it is
         // not checked.
-        auto encodedEmul = decodedInfo.encodedLmul + log2(lsWidth / decodedInfo.sew);
+        auto encodedEmul = decodedInfo.vlmul + log2(lsWidth / decodedInfo.sew);
         emul = fractionalBitIsSet(encodedEmul) ? 1 : decodeMultiplicativeLmul(encodedEmul);
     }
     else if (lsWidth < decodedInfo.sew)
@@ -52,17 +52,17 @@ int VectorMemModel::getDelay(void)
         // If LMUL fractional, or log2(loadWidth / sew) >= vlmul, EMUL = 1
         // otherwise subtract log2(loadWidth / sew) from vlmul and decode.
         auto decrement = log2(decodedInfo.sew / lsWidth);
-        if (decodedInfo.fractionalLmul || decrement > decodedInfo.encodedLmul)
+        if (decodedInfo.fractionalLmul || decrement > decodedInfo.vlmul)
         {
             emul = 1;
         }
         else
         {
-            emul = decodeMultiplicativeLmul(decodedInfo.encodedLmul - decrement);
+            emul = decodeMultiplicativeLmul(decodedInfo.vlmul - decrement);
         }
     }
 
-    static constexpr auto cyclesPerRegister = VectorConfig::vlen / VectorConfig::vMemWidth;
+    auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
     return emul * cyclesPerRegister;
 }
 
@@ -71,10 +71,10 @@ auto VectorMemModel::decodeInfo() -> DecodedInfoLoad
     auto decodedInfo = DecodedInfoLoad{};
     uint64_t vtype = vtype_ptr[getInstrIndex()];
     static constexpr auto fractionalLmulBitmask = 0b100;
-    static constexpr auto encodedLmulBitmask = 0b11;
+    static constexpr auto vlmulBitmask = 0b111;
     decodedInfo.fractionalLmul = (vtype & fractionalLmulBitmask) != 0;
-    decodedInfo.encodedLmul = vtype & encodedLmulBitmask;
-    decodedInfo.lmul = 1 << decodedInfo.encodedLmul;
+    decodedInfo.vlmul = vtype & vlmulBitmask;
+    decodedInfo.lmul = 1 << (decodedInfo.vlmul & 0b11);
 
     uint64_t encodedSew = (vtype >> 3) & 0b11;
     decodedInfo.sew = 8 << encodedSew;
@@ -126,16 +126,16 @@ auto log2(uint64_t value) -> uint64_t
     return result;
 }
 
-auto fractionalBitIsSet(uint64_t encodedLmul) -> bool
+auto fractionalBitIsSet(uint64_t vlmul) -> bool
 {
     static constexpr auto fractionalBitmask = 0b100;
-    return (encodedLmul & fractionalBitmask) != 0;
+    return (vlmul & fractionalBitmask) != 0;
 }
 
-auto decodeMultiplicativeLmul(uint64_t encodedLmul) -> uint64_t
+auto decodeMultiplicativeLmul(uint64_t vlmul) -> uint64_t
 {
     static constexpr auto lmulValueBitmask = 0b11;
-    return 1 << (encodedLmul & lmulValueBitmask);
+    return 1 << (vlmul & lmulValueBitmask);
 }
 
 } // namespace Vicuna

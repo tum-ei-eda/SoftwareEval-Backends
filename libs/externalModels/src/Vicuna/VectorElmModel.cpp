@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-#include "models/Vicuna/VectorAluModel.h"
+#include "models/Vicuna/VectorElmModel.h"
 #include "models/Vicuna/VectorConfig.h"
 #include <cstdint>
 
-namespace Vicuna
-{
+namespace Vicuna {
 
-int VectorAluModel::getDelay(void)
-{
-    auto const cyclesPerRegister = vlen_ / vlane_width_;
-    auto const isWidening = isWidening_ptr[getInstrIndex()];
-    auto const lmul = decodeLmul();
-    auto const emul = isWidening ? 2 * lmul : lmul;
-    return cyclesPerRegister * emul;
+int VectorElmModel::getDelay(void) {
+  auto const cyclesPerRegister = vlen_ / getSew();
+  auto const emul = getLmul();
+  return cyclesPerRegister * emul;
 }
 
 /**
@@ -35,18 +31,23 @@ int VectorAluModel::getDelay(void)
  *
  * @returns The LMUL
  */
-auto VectorAluModel::decodeLmul() -> uint64_t
-{
-    uint64_t vtype = vtype_ptr[getInstrIndex()];
-    static constexpr auto fractionalLmulBitmask = 0b100;
-    auto isFractionalLmul = vtype & fractionalLmulBitmask;
-    if (isFractionalLmul)
-    {
-        return 1;
-    }
+auto VectorElmModel::getLmul() -> uint64_t {
+  uint64_t vtype = vtype_ptr[getInstrIndex()];
+  static constexpr auto fractionalLmulBitmask = 0b100;
+  auto isFractionalLmul = vtype & fractionalLmulBitmask;
+  if (isFractionalLmul) {
+    return 1;
+  }
 
-    static constexpr auto lmulValueBitmask = 0b11;
-    return 1 << (vtype & lmulValueBitmask);
+  static constexpr auto lmulValueBitmask = 0b11;
+  return 1 << (vtype & lmulValueBitmask);
+}
+
+auto VectorElmModel::getSew() -> uint64_t {
+  uint64_t vtype = vtype_ptr[getInstrIndex()];
+  uint64_t vsew = (vtype >> 3) & 0b11;
+  // SEW can be calculated by shifting 8 left by the register value (vsew)
+  return 8 << vsew;
 }
 
 } // namespace Vicuna
