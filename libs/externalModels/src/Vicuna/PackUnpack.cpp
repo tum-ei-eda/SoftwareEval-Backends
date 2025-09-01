@@ -4,7 +4,7 @@ namespace Vicuna {
 
 int PackUnpack::getDelay(void) {
   auto lmul = decodeLmul();
-  return 8;
+  return lmul;
 }
 
 /**

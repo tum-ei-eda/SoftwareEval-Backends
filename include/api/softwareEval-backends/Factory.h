@@ -35,7 +35,8 @@ private:
 	Vicuna,
 	CVA6,
 	InstructionTrace_RV64,
-	AssemblyTrace 
+	AssemblyTrace,
+	Vicuna_zvl64b 
   };
 public:
   int getVariantHandle(std::string);

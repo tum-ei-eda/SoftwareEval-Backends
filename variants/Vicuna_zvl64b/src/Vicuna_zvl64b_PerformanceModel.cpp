@@ -17,7 +17,7 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
 
 
-#include "Vicuna_PerformanceModel.h"
+#include "Vicuna_zvl64b_PerformanceModel.h"
 
 #include <stdbool.h>
 #include <string>
@@ -26,7 +26,7 @@
 
 #include "Channel.h"
 
-#include "Vicuna_Channel.h"
+#include "Vicuna_zvl64b_Channel.h"
 
 #include "models/common/StandardRegisterModel.h"
 #include "models/Vicuna/VectorRegisterModel.h"
@@ -42,11 +42,11 @@
 #include "models/cv32e40p/DividerModel.h"
 #include "models/cv32e40p/DividerUnsignedModel.h"
 
-namespace Vicuna{
+namespace Vicuna_zvl64b{
 
-void Vicuna_PerformanceModel::connectChannel(Channel* channel_)
+void Vicuna_zvl64b_PerformanceModel::connectChannel(Channel* channel_)
 {
-  Vicuna_Channel* channel = static_cast<Vicuna_Channel*>(channel_);
+  Vicuna_zvl64b_Channel* channel = static_cast<Vicuna_zvl64b_Channel*>(channel_);
 
   regModel.rs1_ptr = channel->rs1;
   regModel.rs2_ptr = channel->rs2;
@@ -89,7 +89,7 @@ void Vicuna_PerformanceModel::connectChannel(Channel* channel_)
 
 }
 
-uint64_t Vicuna_PerformanceModel::getCycleCount(void)
+uint64_t Vicuna_zvl64b_PerformanceModel::getCycleCount(void)
 {
   
   return std::max({
@@ -116,7 +116,7 @@ uint64_t Vicuna_PerformanceModel::getCycleCount(void)
   });
 }
 
-std::string Vicuna_PerformanceModel::getPipelineStream(void)
+std::string Vicuna_zvl64b_PerformanceModel::getPipelineStream(void)
 {
   std::stringstream ret_strs;
   
@@ -135,7 +135,7 @@ std::string Vicuna_PerformanceModel::getPipelineStream(void)
   return ret_strs.str();
 }
 
-std::string Vicuna_PerformanceModel::getPrintHeader(void)
+std::string Vicuna_zvl64b_PerformanceModel::getPrintHeader(void)
 {
   std::stringstream ret_strs;
   
@@ -154,4 +154,4 @@ std::string Vicuna_PerformanceModel::getPrintHeader(void)
   return ret_strs.str();
 }
 
-} // namespace Vicuna
+} // namespace Vicuna_zvl64b

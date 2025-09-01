@@ -17,8 +17,8 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
 
 
-#ifndef SWEVAL_BACKENDS_VICUNA_PERFORMANCE_MODEL_H
-#define SWEVAL_BACKENDS_VICUNA_PERFORMANCE_MODEL_H
+#ifndef SWEVAL_BACKENDS_VICUNA_ZVL64B_PERFORMANCE_MODEL_H
+#define SWEVAL_BACKENDS_VICUNA_ZVL64B_PERFORMANCE_MODEL_H
 
 #include <stdbool.h>
 #include <string>
@@ -41,15 +41,15 @@
 #include "models/cv32e40p/DividerModel.h"
 #include "models/cv32e40p/DividerUnsignedModel.h"
 
-namespace Vicuna{
+namespace Vicuna_zvl64b{
 
-extern SchedulingFunctionSet* Vicuna_SchedulingFunctionSet;
+extern SchedulingFunctionSet* Vicuna_zvl64b_SchedulingFunctionSet;
 
-class Vicuna_PerformanceModel : public PerformanceModel
+class Vicuna_zvl64b_PerformanceModel : public PerformanceModel
 {
 public:
 
-  Vicuna_PerformanceModel() : PerformanceModel("Vicuna", Vicuna_SchedulingFunctionSet)
+  Vicuna_zvl64b_PerformanceModel() : PerformanceModel("Vicuna_zvl64b", Vicuna_zvl64b_SchedulingFunctionSet)
     ,V_IQ_stage(2,0)
     ,V_DISP_stage(2,0)
     ,V_EX_stage(2,0)
@@ -115,6 +115,6 @@ public:
 
 };
 
-} // namespace Vicuna
+} // namespace Vicuna_zvl64b
 
-#endif // SWEVAL_BACKENDS_VICUNA_PERFORMANCE_MODEL_H
+#endif // SWEVAL_BACKENDS_VICUNA_ZVL64B_PERFORMANCE_MODEL_H

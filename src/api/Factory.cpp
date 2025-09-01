@@ -46,18 +46,23 @@
 #include "AssemblyTrace_Printer.h"
 #include "AssemblyTrace_Channel.h"
 
+#include "Vicuna_zvl64b_PerformanceModel.h"
+#include "Vicuna_zvl64b_Channel.h"
+#include "Vicuna_zvl64b_Printer.h"
+
 
 namespace SwEvalBackends
 {
 
 int Factory::getVariantHandle(std::string varName_)
 {
-    	if(varName_ == "CV32E40P"){ return CV32E40P; }
+    if(varName_ == "CV32E40P"){ return CV32E40P; }
 	if(varName_ == "AssemblyTrace_RV64"){ return AssemblyTrace_RV64; }
 	if(varName_ == "VICUNA"){ return Vicuna; }
 	if(varName_ == "CVA6"){ return CVA6; }
 	if(varName_ == "InstructionTrace_RV64"){ return InstructionTrace_RV64; }
 	if(varName_ == "AssemblyTrace"){ return AssemblyTrace; }
+	if(varName_ == "VICUNA_ZVL64B"){ return Vicuna_zvl64b; }
 
     return -1;
 }
@@ -72,6 +77,7 @@ Channel* Factory::getChannel(int var_)
 	case CVA6: return new CVA6_Channel();
 	case InstructionTrace_RV64: return new InstructionTrace_RV64_Channel();
 	case AssemblyTrace: return new AssemblyTrace_Channel();
+	case Vicuna_zvl64b: return new Vicuna_zvl64b_Channel();
 
     default: return nullptr;
   }
@@ -91,6 +97,9 @@ Backend* Factory::getPerformanceEstimator(int var_)
 		break;
 	case CVA6:
 		perfModel = new CVA6::CVA6_PerformanceModel();
+		break;
+	case Vicuna_zvl64b:
+		perfModel = new Vicuna_zvl64b::Vicuna_zvl64b_PerformanceModel();
 		break;
 
     default: perfModel = nullptr;
@@ -130,6 +139,9 @@ Backend* Factory::getTracePrinter(int var_)
 		break;
 	case AssemblyTrace:
 		printer = new AssemblyTrace_Printer();
+		break;
+	case Vicuna_zvl64b:
+		printer = new Vicuna_zvl64b_Printer();
 		break;
 
     default: printer = nullptr;
