@@ -154,19 +154,43 @@ public:
     }
   }
 
-  // Get the max. timestamp for a register group
+  // Get the max. timestamp for vs1 source register group
+  uint64_t getMaxVs1Group(void) {
+    auto const emul = getLmul();
+    auto const registerBaseIndex = vs1_ptr[getInstrIndex()];
+    auto start = vectorRegisterModel.begin() + registerBaseIndex;
+    return *(std::max_element(start, start + emul));
+  }
+
+  // Get the max. timestamp for vs2 source register group
+  uint64_t getMaxVs2Group(void) {
+    auto const emul = getLmul();
+    auto const registerBaseIndex = vs2_ptr[getInstrIndex()];
+    auto start = vectorRegisterModel.begin() + registerBaseIndex;
+    return *(std::max_element(start, start + emul));
+  }
+
+  // Get the max. timestamp for vs3 source register group
+  uint64_t getMaxVs3Group(void) {
+    auto const emul = getLmul();
+    auto const registerBaseIndex = vs3_ptr[getInstrIndex()];
+    auto start = vectorRegisterModel.begin() + registerBaseIndex;
+    return *(std::max_element(start, start + emul));
+  }
+
+  uint64_t getMaxVs3GroupStore(void) {
+    auto const emul = getLoadStoreEmul();
+    auto const registerBaseIndex = vs3_ptr[getInstrIndex()];
+    auto start = vectorRegisterModel.begin() + registerBaseIndex;
+    return *(std::max_element(start, start + emul));
+  }
+
+  // Get the max. timestamp for a target register group
   uint64_t getMaxVdGroup(void) {
     auto const emul = getLmul();
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
     auto start = vectorRegisterModel.begin() + registerBaseIndex;
     return *(std::max_element(start, start + emul));
-    // uint64_t max = 0;
-    // for (size_t i = 0; i < emul; ++i) {
-    //   auto const regTimestamp = vectorRegisterModel[registerBaseIndex + i];
-    //   max = regTimestamp > max ? regTimestamp : max;
-    // }
-
-    // return max;
   }
 
   // Get the max. timestamp for a register group based on nf
@@ -175,13 +199,6 @@ public:
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
     auto start = vectorRegisterModel.begin() + registerBaseIndex;
     return *(std::max_element(start, start + nFields));
-    // uint64_t max = 0;
-    // for (size_t i = 0; i < nFields; ++i) {
-    //   auto const regTimestamp = vectorRegisterModel[registerBaseIndex + i];
-    //   max = regTimestamp > max ? regTimestamp : max;
-    // }
-
-    // return max;
   }
 
   // Get the max. timestamp for a register group for load instructions
@@ -190,13 +207,6 @@ public:
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
     auto start = vectorRegisterModel.begin() + registerBaseIndex;
     return *(std::max_element(start, start + emul));
-    // uint64_t max = 0;
-    // for (size_t i = 0; i < emul; ++i) {
-    //   auto const regTimestamp = vectorRegisterModel[registerBaseIndex + i];
-    //   max = regTimestamp > max ? regTimestamp : max;
-    // }
-
-    // return max;
   }
 
   uint64_t getVd(void) { return vectorRegisterModel[vd_ptr[getInstrIndex()]]; };
@@ -226,9 +236,9 @@ private:
       auto const maxTime = std::max(runningBaseTimestamp,
                                     vectorRegisterModel[registerBaseIndex + i]);
 
-      auto const registerTime = maxTime + cyclesPerRegister + packCycles;
+      auto const registerTime = maxTime + cyclesPerRegister;
 
-      vectorRegisterModel[registerBaseIndex + i] = registerTime;
+      vectorRegisterModel[registerBaseIndex + i] = registerTime + packCycles;
       runningBaseTimestamp = registerTime;
     }
 

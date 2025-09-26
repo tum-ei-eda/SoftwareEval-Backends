@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-#include "models/Vicuna/VectorMemRegistersModel.h"
+#include "models/Vicuna/VectorMemNfModel.h"
 #include "models/Vicuna/VectorConfig.h"
 #include <cstdint>
 
 namespace Vicuna
 {
 
-int VectorMemRegistersModel::getDelay(void)
+int VectorMemNfModel::getDelay(void)
 {
     auto const nRegisters = nf_ptr[getInstrIndex()] + 1;
 

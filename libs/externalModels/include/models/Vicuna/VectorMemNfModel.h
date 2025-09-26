@@ -6,10 +6,10 @@
 
 namespace Vicuna {
 
-class VectorMemRegistersModel : public ResourceModel {
+class VectorMemNfModel : public ResourceModel {
 public:
-  VectorMemRegistersModel(PerformanceModel *parent_)
-      : ResourceModel("VectorMemRegistersModel", parent_) {
+  VectorMemNfModel(PerformanceModel *parent_)
+      : ResourceModel("VectorMemNfModel", parent_) {
     vlen_ = std::stoi(std::getenv("VLEN"));
   };
 
