@@ -38,7 +38,7 @@ public:
   uint64_t getXifResultSignal(void) { return xifResultSignal; };
   uint64_t getXifResultSignalNext(void) { return xifResultSignal + 1; };
 
-  void setVsetSignal(uint64_t vsetSignal_) { vsetSignal = vsetSignal_; }
+  void setVsetSignal(uint64_t vsetSignal_) { vsetSignal = vsetSignal_ - 1; }
   uint64_t getVsetSignal(void) { return vsetSignal; };
 
   void setMemArbiterSignal(uint64_t memArbiterSignal_) {

@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-#include "models/Vicuna/VectorDividerModel.h"
+#include "models/Vicuna/VectorDivModel.h"
 #include "models/Vicuna/VectorConfig.h"
 #include <cstdint>
 
 namespace Vicuna {
 
-int VectorDividerModel::getDelay(void) {
+int VectorDivModel::getDelay(void) {
   // TODO: constants should be configured somewhere else
 
   auto const packFactor = vlen_ / vlane_width_;
@@ -39,7 +39,7 @@ int VectorDividerModel::getDelay(void) {
  *
  * @returns The LMUL
  */
-auto VectorDividerModel::decodeLmul() -> uint64_t {
+auto VectorDivModel::decodeLmul() -> uint64_t {
   uint64_t vtype = vtype_ptr[getInstrIndex()];
   static constexpr uint64_t fractionalLmulBitmask = 0b100;
   uint64_t isFractionalLmul = vtype & fractionalLmulBitmask;
@@ -56,7 +56,7 @@ auto VectorDividerModel::decodeLmul() -> uint64_t {
  *
  * @returns The SEW
  */
-auto VectorDividerModel::decodeSew() -> uint64_t {
+auto VectorDivModel::decodeSew() -> uint64_t {
   uint64_t vtype = vtype_ptr[getInstrIndex()];
   uint64_t vsew = (vtype >> 3) & 0b11;
   // SEW can be calculated by shifting 8 left by the register value (vsew)

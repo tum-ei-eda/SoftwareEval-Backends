@@ -6,10 +6,10 @@
 
 namespace Vicuna {
 
-class VectorDividerModel : public ResourceModel {
+class VectorDivModel : public ResourceModel {
 public:
-  VectorDividerModel(PerformanceModel *parent_)
-      : ResourceModel("VectorDividerModel", parent_) {
+  VectorDivModel(PerformanceModel *parent_)
+      : ResourceModel("VectorDivModel", parent_) {
     vlen_ = std::stoi(std::getenv("VLEN"));
     vlane_width_ = std::stoi(std::getenv("VLANE_WIDTH"));
   };
