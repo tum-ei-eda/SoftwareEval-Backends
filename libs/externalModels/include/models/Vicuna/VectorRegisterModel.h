@@ -36,11 +36,16 @@ public:
       : ConnectorModel("VectorRegisterModel", parent_) {
     vlen_ = std::stoi(std::getenv("VLEN"));
     vlane_width_ = std::stoi(std::getenv("VLANE_WIDTH"));
-    shiftStagesLsuElmUnpack_ = vlen_ == 64 ? 6 : 5;
+    shiftStagesLsuElmUnpack_ = vlen_ == 64 ? 4 : 3;
     nextEnterDelayLsuElmUnpack_ = vlen_ == 64 ? 3 : 4;
-    shiftStagesArithUnpack_ = vlen_ == 64 ? 4 : 5;
-    nextEnterDelayArithUnpack_ = vlen_ == 64 ? 2 : 3;
+
+    shiftStagesArithUnpack_ = vlen_ / 32;
+    nextEnterDelayArithUnpack_ = (vlen_ / 32) - 1;
+
+    lsuElmUnpackLastStage = vlen_ == 64 ? 5 : 4;
   };
+
+  uint64_t lsuElmUnpackLastStage = 0;
 
   uint64_t *vs1_ptr;
   uint64_t *vs2_ptr;
@@ -75,31 +80,36 @@ public:
     auto const start = vectorRegisterModel.begin() + vs2;
     auto const emul = getLoadStoreEmul();
     auto const vs2Time = vectorRegisterModel[vs2];
-    // auto const maxRegister = std::max_element(start, start + emul);
-    // auto const maxRegisterTime = *maxRegister;
 
     auto const maxStartTime = std::max(enterTimeArithUnpack, vs2Time);
     nextEnterTimeArithUnpack = maxStartTime + nextEnterDelayArithUnpack_;
-    return maxStartTime + shiftStagesArithUnpack_;
+    return maxStartTime + shiftStagesArithUnpack_ + 1;
   }
 
   uint64_t getLeaveArithUnpackVs1Vs2(void) {
     auto const vs1 = vs1_ptr[getInstrIndex()];
     auto const vs2 = vs2_ptr[getInstrIndex()];
-    // auto const start_vs1 = vectorRegisterModel.begin() + vs1;
-    // auto const start_vs2 = vectorRegisterModel.begin() + vs2;
     auto const emul = getLmul();
     auto const vs1Time = vectorRegisterModel[vs1];
     auto const vs2Time = vectorRegisterModel[vs2];
 
-    // auto const maxRegisterTime =
-    //     std::max(*std::max_element(start_vs1, start_vs1 + emul),
-    //              *std::max_element(start_vs2, start_vs2 + emul));
+    auto const maxRegisterTime = std::max(vs1Time, vs2Time);
+    auto const maxStartTime = std::max(enterTimeArithUnpack, maxRegisterTime);
+    nextEnterTimeArithUnpack = maxStartTime + nextEnterDelayArithUnpack_;
+    return maxStartTime + shiftStagesArithUnpack_ + 1;
+  }
+
+  uint64_t getLeaveArithUnpackVdVs1Vs2(void) {
+    auto const vs1 = vs1_ptr[getInstrIndex()];
+    auto const vs2 = vs2_ptr[getInstrIndex()];
+    auto const emul = getLmul();
+    auto const vs1Time = vectorRegisterModel[vs1];
+    auto const vs2Time = vectorRegisterModel[vs2];
 
     auto const maxRegisterTime = std::max(vs1Time, vs2Time);
     auto const maxStartTime = std::max(enterTimeArithUnpack, maxRegisterTime);
     nextEnterTimeArithUnpack = maxStartTime + nextEnterDelayArithUnpack_;
-    return maxStartTime + shiftStagesArithUnpack_;
+    return maxStartTime + shiftStagesArithUnpack_ + 1;
   }
 
   uint64_t getAllowedEnterTimeArithUnpack(void) {
@@ -107,28 +117,94 @@ public:
   }
 
   // LSU/ELM Unpack Shift Register
+
+  // Leave times of shift register stages
+  std::array<uint64_t, 6> lsuElmShiftRegister = {0};
+  uint64_t loadComplete = 0;
+
+  uint64_t getAllowedEnterTimeLsuElmUnpack(void) {
+    // TODO here
+    return lsuElmShiftRegister[0];
+  }
+
+  void setFreeLastLsuElmUnpackStage(uint64_t freeTime_) {
+    lsuElmShiftRegister[lsuElmUnpackLastStage] = freeTime_;
+  }
+
+  void setCompleteLoad(uint64_t loadCompleteTime_) {
+    lsuElmShiftRegister[lsuElmUnpackLastStage] = loadCompleteTime_;
+    loadComplete = loadCompleteTime_;
+  }
+
   uint64_t nextEnterTimeLsuElmUnpack = 0;
   auto setEnterLsuElmUnpack(uint64_t enterTime_) -> void {
-    enterTimeLsuElmUnpack = enterTime_;
+    auto const vs1 = vs1_ptr[getInstrIndex()];
+    auto const vs2 = vs2_ptr[getInstrIndex()];
+    auto const maxRegisterTime =
+        std::max(vectorRegisterModel[vs1], vectorRegisterModel[vs2]);
+    lsuElmShiftRegister[0] = std::max(
+        enterTime_ + 1, std::max(lsuElmShiftRegister[1], maxRegisterTime));
+    for (size_t i = 1; i < lsuElmUnpackLastStage; ++i) {
+      // Shift either after emul cycles or when upper stage is empty
+      lsuElmShiftRegister[i] =
+          std::max(lsuElmShiftRegister[i + 1], lsuElmShiftRegister[i - 1] + 1);
+    }
+  }
+
+  auto setEnterLsuElmUnpackVs2(uint64_t enterTime_) -> void {
+    auto const vs2 = vs2_ptr[getInstrIndex()];
+    lsuElmShiftRegister[0] =
+        std::max(enterTime_ + 1,
+                 std::max(lsuElmShiftRegister[1], vectorRegisterModel[vs2]));
+    for (size_t i = 1; i < lsuElmUnpackLastStage; ++i) {
+      // Shift either after emul cycles or when upper stage is empty
+      lsuElmShiftRegister[i] =
+          std::max(lsuElmShiftRegister[i + 1], lsuElmShiftRegister[i - 1] + 1);
+    }
+  }
+
+  void setEnterLsuElmUnpackStore(uint64_t enterTime_) {
+    auto const vs3 = vs3_ptr[getInstrIndex()];
+    // auto const groupStart = vectorRegisterModel.begin() + vs3;
+    // auto maxGroupTime = *std::max_element(groupStart, groupStart +
+    // getLoadStoreEmul());
+    lsuElmShiftRegister[0] =
+        std::max(enterTime_ + 1,
+                 std::max(lsuElmShiftRegister[1], vectorRegisterModel[vs3]));
+    for (size_t i = 1; i < lsuElmUnpackLastStage; ++i) {
+      // Shift either after emul cycles or when upper stage is empty
+      lsuElmShiftRegister[i] =
+          std::max(lsuElmShiftRegister[i + 1], lsuElmShiftRegister[i - 1] + 1);
+    }
+  }
+
+  void setEnterLsuElmUnpackLoad(uint64_t enterTime_) {
+    lsuElmShiftRegister[0] = std::max(enterTime_ + 1, lsuElmShiftRegister[1]);
+    for (size_t i = 1; i < lsuElmUnpackLastStage; ++i) {
+      // Shift either after emul cycles or when upper stage is empty
+      lsuElmShiftRegister[i] =
+          std::max(lsuElmShiftRegister[i + 1], lsuElmShiftRegister[i - 1] + 1);
+    }
+  }
+
+  uint64_t getLeaveLsuElmUnpack(void) {
+    return std::max(lsuElmShiftRegister[lsuElmUnpackLastStage],
+                    lsuElmShiftRegister[lsuElmUnpackLastStage - 1] + 1);
+  }
+
+  uint64_t getLeaveLsuElmUnpackLoad(void) {
+    return std::max(lsuElmShiftRegister[lsuElmUnpackLastStage],
+                    lsuElmShiftRegister[lsuElmUnpackLastStage - 1] + 1);
   }
 
   uint64_t getLeaveLsuElmUnpackNoReads(void) {
-    nextEnterTimeLsuElmUnpack =
-        enterTimeLsuElmUnpack + nextEnterDelayLsuElmUnpack_;
-    return enterTimeLsuElmUnpack + shiftStagesLsuElmUnpack_;
+    return std::max(lsuElmShiftRegister[lsuElmUnpackLastStage],
+                    lsuElmShiftRegister[lsuElmUnpackLastStage - 1] + 1);
   }
 
   uint64_t getLeaveLsuElmUnpackStore(void) {
-    auto const vs3 = vs3_ptr[getInstrIndex()];
-    auto const start = vectorRegisterModel.begin() + vs3;
-    auto const emul = getLoadStoreEmul();
-    auto const vs3Time = vectorRegisterModel[vs3];
-    // auto const maxRegister = std::max_element(start, start + emul);
-    // auto const maxRegisterTime = *maxRegister;
-
-    auto const maxStartTime = std::max(enterTimeLsuElmUnpack, vs3Time);
-    nextEnterTimeLsuElmUnpack = maxStartTime + nextEnterDelayLsuElmUnpack_;
-    return maxStartTime + shiftStagesLsuElmUnpack_;
+    return std::max(lsuElmShiftRegister[lsuElmUnpackLastStage],
+                    lsuElmShiftRegister[lsuElmUnpackLastStage - 1] + 1);
   }
 
   uint64_t getLeaveLsuElmUnpackStoreNf(void) {
@@ -136,12 +212,6 @@ public:
     auto const start = vectorRegisterModel.begin() + vs3;
     auto const emul = nf_ptr[getInstrIndex()] + 1;
     auto const vs3Time = vectorRegisterModel[vs3];
-    // auto const maxRegister = std::max_element(start, start + emul);
-    // auto const maxRegisterTime = *maxRegister;
-
-    // auto const maxStartTime = std::max(enterTimeLsuElmUnpack,
-    // maxRegisterTime); nextEnterTimeLsuElmUnpack = maxStartTime +
-    // nextEnterDelayLsuElmUnpack_;
     auto const maxStartTime = std::max(enterTimeLsuElmUnpack, vs3Time);
     nextEnterTimeLsuElmUnpack = maxStartTime + nextEnterDelayLsuElmUnpack_;
     return maxStartTime + shiftStagesLsuElmUnpack_;
@@ -161,27 +231,22 @@ public:
   }
 
   uint64_t getLeaveLsuElmUnpackVs1Vs2(void) {
-    auto const vs1 = vs1_ptr[getInstrIndex()];
-    auto const vs2 = vs2_ptr[getInstrIndex()];
-    auto const start_vs1 = vectorRegisterModel.begin() + vs1;
-    auto const start_vs2 = vectorRegisterModel.begin() + vs2;
-    auto const emul = getLmul();
+    // auto const vs1 = vs1_ptr[getInstrIndex()];
+    // auto const vs2 = vs2_ptr[getInstrIndex()];
+    // auto const start_vs1 = vectorRegisterModel.begin() + vs1;
+    // auto const start_vs2 = vectorRegisterModel.begin() + vs2;
+    // auto const emul = getLmul();
 
-    auto const vs1Time = vectorRegisterModel[vs1];
-    auto const vs2Time = vectorRegisterModel[vs2];
+    // auto const vs1Time = vectorRegisterModel[vs1];
+    // auto const vs2Time = vectorRegisterModel[vs2];
 
-    // auto const maxRegisterTime =
-    //     std::max(*std::max_element(start_vs1, start_vs1 + emul),
-    //              *std::max_element(start_vs2, start_vs2 + emul));
-
-    auto const maxRegisterTime = std::max(vs1Time, vs2Time);
-    auto const maxStartTime = std::max(enterTimeLsuElmUnpack, maxRegisterTime);
-    nextEnterTimeLsuElmUnpack = maxStartTime + nextEnterDelayLsuElmUnpack_;
-    return maxStartTime + shiftStagesLsuElmUnpack_;
-  }
-
-  uint64_t getAllowedEnterTimeLsuElmUnpack(void) {
-    return nextEnterTimeLsuElmUnpack;
+    // auto const maxRegisterTime = std::max(vs1Time, vs2Time);
+    // auto const maxStartTime = std::max(enterTimeLsuElmUnpack,
+    // maxRegisterTime); nextEnterTimeLsuElmUnpack = maxStartTime +
+    // nextEnterDelayLsuElmUnpack_; return maxStartTime +
+    // shiftStagesLsuElmUnpack_;
+    return std::max(lsuElmShiftRegister[lsuElmUnpackLastStage],
+                    lsuElmShiftRegister[lsuElmUnpackLastStage - 1] + 1);
   }
 
   uint64_t getVs1(void) {
@@ -211,7 +276,8 @@ public:
     auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
 
-    setRegisterTimes(registerBaseIndex, baseTimestamp_, emul,
+    // +1 extra buffer cycle
+    setRegisterTimes(registerBaseIndex, baseTimestamp_ + 1, emul,
                      cyclesPerRegister);
   }
 
@@ -221,21 +287,9 @@ public:
     auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
 
-    setRegisterTimes(registerBaseIndex, baseTimestamp_, nRegisters,
+    // +1 extra buffer cycle
+    setRegisterTimes(registerBaseIndex, baseTimestamp_ + 1, nRegisters,
                      cyclesPerRegister);
-    // auto runningBaseTimestamp = baseTimestamp_;
-
-    // for (size_t i = 0; i < nRegisters; ++i) {
-    //   auto const maxTime = std::max(runningBaseTimestamp,
-    //                                 vectorRegisterModel[registerBaseIndex +
-    //                                 i] +
-    //                                     lsuElmUnpackCycles);
-
-    //   auto const registerTime = maxTime + cyclesPerRegister + packCycles;
-
-    //   vectorRegisterModel[registerBaseIndex + i] = registerTime;
-    //   runningBaseTimestamp = registerTime;
-    // }
   }
 
   // Set register timestamps for regular vector ALU instructions
@@ -247,6 +301,7 @@ public:
     auto const lmul = getLmul();
     auto const emul = isWidening ? 2 * lmul : lmul;
 
+    // Extra ALU state cycles
     setRegisterTimes(registerBaseIndex, baseTimestamp_ + 2, emul,
                      cyclesPerRegister);
   }
@@ -260,16 +315,6 @@ public:
 
     setRegisterTimes(registerBaseIndex, baseTimestamp_, emul,
                      cyclesPerRegister);
-
-    // for (size_t i = 0; i < emul; ++i) {
-    //   auto const maxTime =
-    //       std::max(baseTimestamp_, vectorRegisterModel[registerBaseIndex + i]
-    //       +
-    //                                    lsuElmUnpackCycles);
-
-    //   vectorRegisterModel[registerBaseIndex + i] =
-    //       maxTime + (emul * (cyclesPerRegister)) + packCycles;
-    // }
   }
 
   // Set register timestamps for division instructions

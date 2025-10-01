@@ -63,7 +63,8 @@ int VectorMemModel::getDelay(void)
     }
 
     auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
-    return emul * cyclesPerRegister;
+    // +1 Buffer Cycle before request
+    return (emul * cyclesPerRegister) + 1;
 }
 
 auto VectorMemModel::decodeInfo() -> DecodedInfoLoad

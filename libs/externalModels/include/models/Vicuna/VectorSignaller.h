@@ -84,21 +84,21 @@ public:
   auto getWbFreeSignal(void) -> uint64_t { return wbFreeSignal; }
 
   uint64_t getWbFreeSignalSync(void) {
-    if (wbSyncFlag) {
-      // Signal was set already for same instruction, return buffered signal
-      wbSyncFlag = false;
-      return wbFreeSignalBuffer;
-    }
-    wbSyncFlag = true;
+    // if (wbSyncFlag) {
+    //   // Signal was set already for same instruction, return buffered signal
+    //   wbSyncFlag = false;
+    //   return wbFreeSignalBuffer;
+    // }
+    // wbSyncFlag = true;
     return wbFreeSignal;
   }
 
   void setWbFreeSignalSync(uint64_t wbFreeSignal_) {
-    if (!wbSyncFlag) {
-      // wbFreeSignal not yet observed, buffer it
-      wbFreeSignalBuffer = wbFreeSignal;
-    }
-    wbSyncFlag = !wbSyncFlag;
+    // if (!wbSyncFlag) {
+    //   // wbFreeSignal not yet observed, buffer it
+    //   wbFreeSignalBuffer = wbFreeSignal;
+    // }
+    // wbSyncFlag = !wbSyncFlag;
     wbFreeSignal = wbFreeSignal_;
   }
 
