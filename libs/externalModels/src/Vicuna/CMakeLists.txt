@@ -1,5 +1,6 @@
 target_sources(SWEVAL_BACKENDS_LIB PRIVATE
-  VectorAluModel.cpp
+  VectorArithModel.cpp
+  VectorArithWideningModel.cpp
   VectorDivModel.cpp
   VectorElmModel.cpp
   VectorMemModel.cpp

@@ -7,16 +7,15 @@
 
 namespace Vicuna {
 
-class VectorAluModel : public ResourceModel {
+class VectorArithWideningModel : public ResourceModel {
 public:
-  VectorAluModel(PerformanceModel *parent_)
-      : ResourceModel("VectorAluModel", parent_) {
+  VectorArithWideningModel(PerformanceModel *parent_)
+      : ResourceModel("VectorArithWideningModel", parent_) {
     vlen_ = std::stoi(std::getenv("VLEN"));
     vlane_width_ = std::stoi(std::getenv("VLANE_WIDTH"));
   };
 
   uint64_t *vtype_ptr;
-  uint64_t *isWidening_ptr;
 
   int getDelay(void);
 

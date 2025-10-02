@@ -14,20 +14,18 @@
  * limitations under the License.
  */
 
-#include "models/Vicuna/VectorAluModel.h"
+#include "models/Vicuna/VectorArithModel.h"
 #include "models/Vicuna/VectorConfig.h"
 #include <cstdint>
 
 namespace Vicuna
 {
 
-int VectorAluModel::getDelay(void)
+int VectorArithModel::getDelay(void)
 {
     auto const cyclesPerRegister = vlen_ / vlane_width_;
-    auto const isWidening = isWidening_ptr[getInstrIndex()];
     auto const lmul = decodeLmul();
-    auto const emul = isWidening ? 2 * lmul : lmul;
-    return cyclesPerRegister * emul;
+    return cyclesPerRegister * decodeLmul();
 }
 
 /**
@@ -35,7 +33,7 @@ int VectorAluModel::getDelay(void)
  *
  * @returns The LMUL
  */
-auto VectorAluModel::decodeLmul() -> uint64_t
+auto VectorArithModel::decodeLmul() -> uint64_t
 {
     uint64_t vtype = vtype_ptr[getInstrIndex()];
     static constexpr auto fractionalLmulBitmask = 0b100;
