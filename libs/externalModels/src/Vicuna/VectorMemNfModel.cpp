@@ -27,7 +27,7 @@ int VectorMemNfModel::getDelay(void)
 
     auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
     // Extra buffer cycle
-    return nRegisters * cyclesPerRegister + 1;
+    return nRegisters * cyclesPerRegister;
 }
 
 } // namespace Vicuna
