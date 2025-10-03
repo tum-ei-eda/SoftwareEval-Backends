@@ -92,10 +92,9 @@ public:
     auto const vlenFactor = vlen_ / 64;
     auto const waitTime = enterTime_ + (2 * (getLmul() * vlenFactor));
 
-    leaveTimeArithUnpack = enterTime_ + arithUnpackLastStage + 1;
+    leaveTimeArithUnpack = enterTime_ + arithUnpackLastStage;
 
-    arithShiftRegister[0] =
-        std::max(waitTime, arithShiftRegister[1]);
+    arithShiftRegister[0] = std::max(waitTime, arithShiftRegister[1]);
 
     for (size_t i = 1; i <= arithUnpackLastStage; ++i) {
       arithShiftRegister[i] = arithShiftRegister[i - 1] + 1;
@@ -108,7 +107,7 @@ public:
     auto const waitTime = enterTime_ + (2 * (getLmul() * vlenFactor));
 
     leaveTimeArithUnpack =
-        std::max(enterTime_ + arithUnpackLastStage + 1,
+        std::max(enterTime_ + arithUnpackLastStage,
                  vectorRegisterModel[vs2] + arithUnpackLastStage);
 
     arithShiftRegister[0] =
@@ -206,6 +205,19 @@ public:
     }
   }
 
+  void setEnterLsuElmUnpackLoadNf(uint64_t enterTime_) {
+    auto const vlenFactor = vlen_ / 64;
+    auto const waitTime = 2 * (nf_ptr[getInstrIndex()] + 1) * vlenFactor;
+
+    lsuElmShiftRegisterEnter[0] =
+        std::max(enterTime_, lsuElmShiftRegisterEnter[0]);
+    lsuElmShiftRegisterLeave[0] = lsuElmShiftRegisterEnter[0] + waitTime;
+
+    for (size_t i = 1; i <= lsuElmUnpackLastStage; ++i) {
+      lsuElmShiftRegisterEnter[i] = lsuElmShiftRegisterEnter[i - 1] + 1;
+    }
+  }
+
   void setEnterLsuElmUnpackStore(uint64_t enterTime_) {
     auto const vs3 = vs3_ptr[getInstrIndex()];
     auto const maxRegisterTime = vectorRegisterModel[vs3] + 1;
@@ -217,39 +229,49 @@ public:
     lsuElmShiftRegisterEnter[0] =
         std::max(maxRegisterTime, lsuElmShiftRegisterEnter[0]);
 
-    // If a load has stalled before, check if it has already ended
-    // if (lsuElmShiftRegisterEnter[0] > loadStoreStallStart) {
-    //   lsuElmShiftRegisterEnter[0] =
-    //       std::max(lsuElmShiftRegisterEnter[0], loadStoreStallEnd);
-    // }
+    lsuElmShiftRegisterLeave[0] = lsuElmShiftRegisterEnter[0] + waitTime;
+
+    for (size_t i = 1; i <= lsuElmUnpackLastStage; ++i) {
+      lsuElmShiftRegisterEnter[i] = lsuElmShiftRegisterEnter[i - 1] + 1;
+    }
+  }
+
+  void setEnterLsuElmUnpackStoreNf(uint64_t enterTime_) {
+    auto const vs3 = vs3_ptr[getInstrIndex()];
+    auto const maxRegisterTime = vectorRegisterModel[vs3] + 1;
+    auto const vlenFactor = vlen_ / 64;
+    auto const waitTime = 2 * (nf_ptr[getInstrIndex()] + 1) * vlenFactor;
+
+    lsuElmShiftRegisterEnter[0] =
+        std::max(enterTime_, lsuElmShiftRegisterEnter[0]);
+    lsuElmShiftRegisterEnter[0] =
+        std::max(maxRegisterTime, lsuElmShiftRegisterEnter[0]);
 
     lsuElmShiftRegisterLeave[0] = lsuElmShiftRegisterEnter[0] + waitTime;
 
     for (size_t i = 1; i <= lsuElmUnpackLastStage; ++i) {
       lsuElmShiftRegisterEnter[i] = lsuElmShiftRegisterEnter[i - 1] + 1;
-
-      // // Check stall times for all stages
-      // if (lsuElmShiftRegisterEnter[i] > loadStoreStallStart) {
-      //   lsuElmShiftRegisterEnter[i] =
-      //       std::max(lsuElmShiftRegisterEnter[i], loadStoreStallEnd);
-      // }
     }
   }
 
   auto setEnterLsuElmUnpack(uint64_t enterTime_) -> void {
     auto const vs1 = vs1_ptr[getInstrIndex()];
     auto const vs2 = vs2_ptr[getInstrIndex()];
+    auto const vlenFactor = vlen_ / 64;
+    auto const waitTime = 2 * getLmul() * vlenFactor;
     // + 1: can start the cycle after register write complete
     auto const maxRegisterTime =
         std::max(vectorRegisterModel[vs1], vectorRegisterModel[vs2]) + 1;
 
-    // + 1: in case of waiting for register, can leave the cycle after starting
-    lsuElmShiftRegisterLeave[0] =
-        std::max(enterTime_ + getLmul(),
-                 std::max(lsuElmShiftRegisterLeave[1], maxRegisterTime + 1));
-    for (size_t i = 1; i < lsuElmUnpackLastStage; ++i) {
-      lsuElmShiftRegisterLeave[i] = std::max(
-          lsuElmShiftRegisterLeave[i + 1], lsuElmShiftRegisterLeave[i - 1] + 1);
+    lsuElmShiftRegisterEnter[0] =
+        std::max(enterTime_, lsuElmShiftRegisterEnter[0]);
+    lsuElmShiftRegisterEnter[0] =
+        std::max(maxRegisterTime, lsuElmShiftRegisterEnter[0]);
+
+    lsuElmShiftRegisterLeave[0] = lsuElmShiftRegisterEnter[0] + waitTime;
+
+    for (size_t i = 1; i <= lsuElmUnpackLastStage; ++i) {
+      lsuElmShiftRegisterEnter[i] = lsuElmShiftRegisterEnter[i - 1] + 1;
     }
   }
 
@@ -271,17 +293,21 @@ public:
   auto setEnterLsuElmUnpackVs1Vs2(uint64_t enterTime_) -> void {
     auto const vs1 = vs1_ptr[getInstrIndex()];
     auto const vs2 = vs2_ptr[getInstrIndex()];
-
+    auto const vlenFactor = vlen_ / 64;
+    auto const waitTime = 2 * getLmul() * vlenFactor;
+    // + 1: can start the cycle after register write complete
     auto const maxRegisterTime =
         std::max(vectorRegisterModel[vs1], vectorRegisterModel[vs2]) + 1;
 
-    lsuElmShiftRegisterLeave[0] =
-        std::max(enterTime_ + getLmul(),
-                 std::max(lsuElmShiftRegisterLeave[1], maxRegisterTime + 1));
+    lsuElmShiftRegisterEnter[0] =
+        std::max(enterTime_, lsuElmShiftRegisterEnter[0]);
+    lsuElmShiftRegisterEnter[0] =
+        std::max(maxRegisterTime, lsuElmShiftRegisterEnter[0]);
 
-    for (size_t i = 1; i < lsuElmUnpackLastStage; ++i) {
-      lsuElmShiftRegisterLeave[i] = std::max(
-          lsuElmShiftRegisterLeave[i + 1], lsuElmShiftRegisterLeave[i - 1] + 1);
+    lsuElmShiftRegisterLeave[0] = lsuElmShiftRegisterEnter[0] + waitTime;
+
+    for (size_t i = 1; i <= lsuElmUnpackLastStage; ++i) {
+      lsuElmShiftRegisterEnter[i] = lsuElmShiftRegisterEnter[i - 1] + 1;
     }
   }
 
@@ -370,6 +396,23 @@ public:
                      cyclesPerRegister);
   }
 
+  // Set register timestamp for reduction instructions
+  void setVdGroupReduce(uint64_t const baseTimestamp_) {
+    // ELM unit depends on # of elements, i.e. VLEN / SEW
+    auto const elementsPerRegister = vlen_ / getSew();
+    auto const registerBaseIndex = vd_ptr[getInstrIndex()];
+    auto const emul = getLmul();
+
+    auto const writeStart =
+        std::max(baseTimestamp_ + elementsPerRegister, vregWritePortFree_);
+    auto const writeEnd = writeStart + (elementsPerRegister * emul);
+    vregWritePortFree_ = writeEnd;
+
+    for (size_t i = 0; i < emul; ++i) {
+      vectorRegisterModel[registerBaseIndex + i] = writeEnd;
+    }
+  }
+
   // Set register timestamps for division instructions
   void setVdGroupDiv(uint64_t const baseTimestamp_) {
 
@@ -377,7 +420,7 @@ public:
         (vlen_ / getSew()) * VectorConfig::dividerDelay;
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
     auto const emul = getLmul();
-    
+
     auto const groupTimestamp =
         baseTimestamp_ + (emul * cyclesPerRegister) + packCycles;
 
