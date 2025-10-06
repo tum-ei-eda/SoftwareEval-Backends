@@ -44,8 +44,12 @@ public:
 
     lsuElmUnpackLastStage = vlen_ == 64 ? 5 : 4;
     arithUnpackLastStage = vlen_ == 64 ? 4 : 5;
+
+    // Dispatch logic
+    counterWidth = log2(vlen_ / 32) + 4;
   };
 
+  uint64_t counterWidth = 0;
   uint64_t lsuElmUnpackLastStage = 0;
   uint64_t arithUnpackLastStage = 0;
 
@@ -63,6 +67,9 @@ public:
   uint64_t *nf_ptr;
 
   // Register File Ports
+  // Vreg parallel write info
+  std::array<bool, 32> prevWrites = {false};
+  std::array<uint64_t, 32> prevWriteCycles = {0};
   uint64_t vregWriteStart = 0;
   uint64_t getVregWritePortFree(void) { return vregWritePortFree_; }
 
@@ -90,40 +97,72 @@ public:
 
   auto setEnterArithUnpack(uint64_t enterTime_) -> void {
     auto const vlenFactor = vlen_ / 64;
-    auto const waitTime = enterTime_ + (2 * (getLmul() * vlenFactor));
+    auto const waitTime = getWaitTime(getLmul());
 
+    // Can leave after running through shift register
     leaveTimeArithUnpack = enterTime_ + arithUnpackLastStage;
 
-    arithShiftRegister[0] = std::max(waitTime, arithShiftRegister[1]);
+    arithShiftRegister[0] = enterTime_ + waitTime;
+  }
 
-    for (size_t i = 1; i <= arithUnpackLastStage; ++i) {
-      arithShiftRegister[i] = arithShiftRegister[i - 1] + 1;
+  auto getWaitTime(uint64_t emul) -> uint64_t {
+    if (emul == 1) {
+      return 2;
     }
+    return emul * (vlen_ / 32);
+  }
+
+  auto getWaitTimeExt(uint64_t emul) -> uint64_t {
+    if (emul == 1) {
+      return 2;
+    }
+    return emul * (vlen_ / 32);
+  }
+
+  auto getWaitTimeLsu(uint64_t emul) -> uint64_t {
+    if (emul == 1) {
+      return 2;
+    }
+    return emul * (vlen_ / 32);
   }
 
   auto setEnterArithUnpackVs2(uint64_t enterTime_) -> void {
     auto const vs2 = vs2_ptr[getInstrIndex()];
-    auto const vlenFactor = vlen_ / 64;
-    auto const waitTime = enterTime_ + (2 * (getLmul() * vlenFactor));
+    auto const vlenFactor = log2(vlen_ / 64);
+    // auto const waitTime = 2 * (getLmul() * vlenFactor);
+    auto const waitTime = getWaitTime(getLmul());
 
+    // + 1: first stage valid in cycle after register write complete
+    auto const maxRegisterTime = vectorRegisterModel[vs2] + 1;
+
+    // Can leave after running through shift register
     leaveTimeArithUnpack =
-        std::max(enterTime_ + arithUnpackLastStage,
-                 vectorRegisterModel[vs2] + arithUnpackLastStage);
+        std::max(enterTime_, maxRegisterTime) + arithUnpackLastStage;
 
-    arithShiftRegister[0] =
-        std::max(waitTime,
-                 std::max(arithShiftRegister[1], vectorRegisterModel[vs2] + 1));
+    arithShiftRegister[0] = std::max(enterTime_, maxRegisterTime) + waitTime;
+  }
 
-    for (size_t i = 1; i <= arithUnpackLastStage; ++i) {
-      arithShiftRegister[i] = arithShiftRegister[i - 1] + 1;
-    }
+  auto setEnterArithUnpackExt(uint64_t enterTime_) -> void {
+    auto const vs2 = vs2_ptr[getInstrIndex()];
+    auto const vlenFactor = log2(vlen_ / 64);
+    // auto const waitTime = 2 * (getLmul() * vlenFactor);
+    auto const waitTime = getWaitTimeExt(getLmul());
+
+    // + 1: first stage valid in cycle after register write complete
+    auto const maxRegisterTime = vectorRegisterModel[vs2] + 1;
+
+    // Can leave after running through shift register
+    leaveTimeArithUnpack =
+        std::max(enterTime_, maxRegisterTime) + arithUnpackLastStage;
+
+    arithShiftRegister[0] = std::max(enterTime_, maxRegisterTime) + waitTime;
   }
 
   auto setEnterArithUnpackVs1Vs2(uint64_t enterTime_) -> void {
     auto const vs1 = vs1_ptr[getInstrIndex()];
     auto const vs2 = vs2_ptr[getInstrIndex()];
     auto const vlenFactor = vlen_ / 64;
-    auto const waitTime = 2 * (getLmul() * vlenFactor);
+    auto const waitTime = getWaitTime(getLmul());
 
     // + 1: first stage valid in cycle after register write complete
     auto const maxRegisterTime =
@@ -144,7 +183,6 @@ public:
   uint64_t loadComplete = 0;
   uint64_t lsuReqBufferFree = 0;
 
-  uint64_t loadStoreStallStart = 0;
   uint64_t loadStoreStallEnd = 0;
   uint64_t reqStallStart = 0;
   uint64_t reqStallEnd = 0;
@@ -193,8 +231,7 @@ public:
   }
 
   void setEnterLsuElmUnpackLoad(uint64_t enterTime_) {
-    auto const vlenFactor = vlen_ / 64;
-    auto const waitTime = 2 * getLoadStoreEmul() * vlenFactor;
+    auto const waitTime = getWaitTimeLsu(getLoadStoreEmul());
 
     lsuElmShiftRegisterEnter[0] =
         std::max(enterTime_, lsuElmShiftRegisterEnter[0]);
@@ -206,8 +243,7 @@ public:
   }
 
   void setEnterLsuElmUnpackLoadNf(uint64_t enterTime_) {
-    auto const vlenFactor = vlen_ / 64;
-    auto const waitTime = 2 * (nf_ptr[getInstrIndex()] + 1) * vlenFactor;
+    auto const waitTime = getWaitTimeLsu(nf_ptr[getInstrIndex()] + 1);
 
     lsuElmShiftRegisterEnter[0] =
         std::max(enterTime_, lsuElmShiftRegisterEnter[0]);
@@ -221,8 +257,7 @@ public:
   void setEnterLsuElmUnpackStore(uint64_t enterTime_) {
     auto const vs3 = vs3_ptr[getInstrIndex()];
     auto const maxRegisterTime = vectorRegisterModel[vs3] + 1;
-    auto const vlenFactor = vlen_ / 64;
-    auto const waitTime = 2 * getLoadStoreEmul() * vlenFactor;
+    auto const waitTime = getWaitTimeLsu(getLoadStoreEmul());
 
     lsuElmShiftRegisterEnter[0] =
         std::max(enterTime_, lsuElmShiftRegisterEnter[0]);
@@ -239,8 +274,7 @@ public:
   void setEnterLsuElmUnpackStoreNf(uint64_t enterTime_) {
     auto const vs3 = vs3_ptr[getInstrIndex()];
     auto const maxRegisterTime = vectorRegisterModel[vs3] + 1;
-    auto const vlenFactor = vlen_ / 64;
-    auto const waitTime = 2 * (nf_ptr[getInstrIndex()] + 1) * vlenFactor;
+    auto const waitTime = getWaitTimeLsu(nf_ptr[getInstrIndex()] + 1);
 
     lsuElmShiftRegisterEnter[0] =
         std::max(enterTime_, lsuElmShiftRegisterEnter[0]);
@@ -258,7 +292,7 @@ public:
     auto const vs1 = vs1_ptr[getInstrIndex()];
     auto const vs2 = vs2_ptr[getInstrIndex()];
     auto const vlenFactor = vlen_ / 64;
-    auto const waitTime = 2 * getLmul() * vlenFactor;
+    auto const waitTime = getWaitTime(getLmul());
     // + 1: can start the cycle after register write complete
     auto const maxRegisterTime =
         std::max(vectorRegisterModel[vs1], vectorRegisterModel[vs2]) + 1;
@@ -294,7 +328,7 @@ public:
     auto const vs1 = vs1_ptr[getInstrIndex()];
     auto const vs2 = vs2_ptr[getInstrIndex()];
     auto const vlenFactor = vlen_ / 64;
-    auto const waitTime = 2 * getLmul() * vlenFactor;
+    auto const waitTime = getWaitTime(getLmul());
     // + 1: can start the cycle after register write complete
     auto const maxRegisterTime =
         std::max(vectorRegisterModel[vs1], vectorRegisterModel[vs2]) + 1;
@@ -337,13 +371,24 @@ public:
     auto const emul = getLoadStoreEmul();
     auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
-    loadStoreStallStart = baseTimestamp_;
-    vregWriteStart = baseTimestamp_;
 
     // auto const writeStart = baseTimestamp_ + cyclesPerRegister + 1;
-    auto const writeStart =
-        std::max(baseTimestamp_ + cyclesPerRegister + 1, vregWritePortFree_);
-    setRegisterTimes(registerBaseIndex, writeStart, emul, cyclesPerRegister);
+    // auto tryStart = baseTimestamp_ + cyclesPerRegister;
+    // uint64_t writeStart = 0;
+    // auto extendPrevious = false;
+
+    // if ((tryStart < vregWriteStart) && tryStart < vregWritePortFree_) {
+    //   // Parallel instruction was first, but this one starts writing earlier!
+    //   // -> Extend writes from previous instruction
+    //   extendPrevious = true;
+    //   writeStart = tryStart;
+    // } else {
+    //   // Either no conflict or other instruction started first
+    //   writeStart = std::max(tryStart, vregWritePortFree_);
+    // }
+
+    setRegisterTimes(registerBaseIndex, baseTimestamp_ + cyclesPerRegister + 1,
+                     emul, cyclesPerRegister);
   }
 
   // Set register timestamps for vector whole register loads
@@ -351,26 +396,36 @@ public:
     auto const nRegisters = nf_ptr[getInstrIndex()] + 1;
     auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
-    vregWriteStart = baseTimestamp_;
 
     // auto const writeStart = baseTimestamp_ + cyclesPerRegister + 1;
-    auto const writeStart =
-        std::max(baseTimestamp_ + cyclesPerRegister + 1, vregWritePortFree_);
-    setRegisterTimes(registerBaseIndex, writeStart, nRegisters,
-                     cyclesPerRegister);
+    // auto const writeStart =
+    //     std::max(baseTimestamp_ + cyclesPerRegister, vregWritePortFree_);
+    setRegisterTimes(registerBaseIndex, baseTimestamp_ + cyclesPerRegister + 1,
+                     nRegisters, cyclesPerRegister);
   }
+
+  // Set only Vd register time
+  void setVd(uint64_t baseTimestamp_) {
+    auto const cyclesPerRegister = (vlen_ / vlane_width_);
+    auto const writeTime =
+        std::max(baseTimestamp_ + cyclesPerRegister + 1, vregWritePortFree_);
+
+    vectorRegisterModel[vd_ptr[getInstrIndex()]] =
+        baseTimestamp_ + cyclesPerRegister + 1;
+    // vregWritePortFree_ = writeTime + 1;
+  };
 
   // Set register timestamps for regular vector ALU instructions
   void setVdGroupArith(uint64_t const baseTimestamp_) {
-
     auto const cyclesPerRegister = (vlen_ / vlane_width_);
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
-    vregWriteStart = baseTimestamp_;
 
-    auto const writeStart =
-        std::max(baseTimestamp_ + cyclesPerRegister + 1, vregWritePortFree_);
-    setRegisterTimes(registerBaseIndex, writeStart, getLmul(),
-                     cyclesPerRegister);
+    // auto writeStart =
+    //     std::max(baseTimestamp_ + cyclesPerRegister, vregWritePortFree_);
+    setRegisterTimes(
+        registerBaseIndex,
+        std::max(baseTimestamp_ + cyclesPerRegister + 1, xifCommitSignal),
+        getLmul(), cyclesPerRegister);
   }
 
   void setVdGroupArithWidening(uint64_t const baseTimestamp_) {
@@ -457,11 +512,6 @@ public:
     return (*(std::max_element(start, start + emul))) + 1;
   }
 
-  uint64_t getVd(void) { return vectorRegisterModel[vd_ptr[getInstrIndex()]]; };
-  void setVd(uint64_t vd_) {
-    vectorRegisterModel[vd_ptr[getInstrIndex()]] = vd_;
-  };
-
 private:
   uint64_t vregWritePortFree_ = 0;
   uint64_t vregReadPortFree_ = 0;
@@ -479,15 +529,37 @@ private:
                         uint64_t const baseTimestamp, uint64_t const emul,
                         uint64_t const cyclesPerRegister) -> void {
 
+    static auto lastWrite = 0;
+    // static constexpr uint64_t portWidth = 128;
+
+    // auto const writeCycles =
+    //     std::max(vlen_ / portWidth, static_cast<uint64_t>(1));
+
+    // auto runningTimestamp = std::max(baseTimestamp + cyclesPerRegister + 1,
+    //                                  vregWritePortFree_ + writeCycles);
+
     auto runningTimestamp = baseTimestamp;
+    // auto const writeDone = baseTimestamp + (emul * cyclesPerRegister) + 1;
+
+    // if (extendPrevious) {
+    //   for (size_t i = 0; i < 32; i++) {
+    //     if (prevWrites[i]) {
+    //       vectorRegisterModel[i] += prevWriteCycles[i];
+    //     }
+    //   }
+    // }
+
     for (size_t i = 0; i < emul; ++i) {
-      // + 1: Register is ready 1 cycle delayed
       vectorRegisterModel[registerBaseIndex + i] = runningTimestamp;
+      std::cout << "v" << registerBaseIndex + i << " @ " << runningTimestamp
+                << ", d: " << (int)runningTimestamp - lastWrite << "\n";
+      lastWrite = runningTimestamp;
       runningTimestamp += cyclesPerRegister;
     }
 
     // Write port is free at the end
-    vregWritePortFree_ = runningTimestamp - cyclesPerRegister + 1;
+    // auto const writesPerRegister = vlen_ / portWidth;
+    // vregWritePortFree_ = runningTimestamp - cyclesPerRegister;
   }
 
   auto getMaxTimestampInGroup(uint64_t baseRegister,
