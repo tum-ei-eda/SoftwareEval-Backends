@@ -71,6 +71,8 @@ public:
   std::array<bool, 32> prevWrites = {false};
   std::array<uint64_t, 32> prevWriteCycles = {0};
   uint64_t vregWriteStart = 0;
+  uint64_t vregWritePortLsuElmFree = 0;
+  uint64_t lastWrite = 0;
   uint64_t getVregWritePortFree(void) { return vregWritePortFree_; }
 
   // XIF Commit next instruction
@@ -114,7 +116,7 @@ public:
   }
 
   auto getWaitTimeLsu(uint64_t emul) -> uint64_t {
-    return emul * (vlen_ / 32);
+    return emul * (vlen_ / VectorConfig::vMemWidth);
   }
 
   auto setEnterArithUnpackVs2(uint64_t enterTime_) -> void {
@@ -320,7 +322,6 @@ public:
   auto setEnterLsuElmUnpackVs1Vs2(uint64_t enterTime_) -> void {
     auto const vs1 = vs1_ptr[getInstrIndex()];
     auto const vs2 = vs2_ptr[getInstrIndex()];
-    auto const vlenFactor = vlen_ / 64;
     auto const waitTime = getWaitTime(getLmul());
     // + 1: can start the cycle after register write complete
     auto const maxRegisterTime =
@@ -380,8 +381,12 @@ public:
     //   writeStart = std::max(tryStart, vregWritePortFree_);
     // }
 
-    setRegisterTimes(registerBaseIndex, baseTimestamp_ + cyclesPerRegister + 1,
-                     emul, cyclesPerRegister);
+    auto const writeStart = std::max(baseTimestamp_ + cyclesPerRegister + 1,
+                                     vregWritePortLsuElmFree);
+    setRegisterTimes(registerBaseIndex, writeStart, emul, cyclesPerRegister);
+
+    // Write port free 1 cycle before last register is valid
+    vregWritePortLsuElmFree = writeStart + ((emul - 1) * cyclesPerRegister) - 1;
   }
 
   // Set register timestamps for vector whole register loads
@@ -451,13 +456,19 @@ public:
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
     auto const emul = getLmul();
 
-    auto const writeStart =
-        std::max(baseTimestamp_ + elementsPerRegister + 1, xifCommitSignal);
-    auto const writeEnd = writeStart + (elementsPerRegister * emul);
+    auto const writeStart = std::max(baseTimestamp_, vregWritePortLsuElmFree);
+    auto const writeEnd =
+        writeStart + (emul * elementsPerRegister) + elementsPerRegister;
 
-    for (size_t i = 0; i < emul; ++i) {
+    for (size_t i = 0; i < emul; i++)
+    {
       vectorRegisterModel[registerBaseIndex + i] = writeEnd;
+      std::cout << "v" << registerBaseIndex + i << " @ " << writeEnd
+              << ", d: " << (int)writeEnd - lastWrite << "\n";
     }
+    lastWrite = writeEnd;
+    vregWritePortLsuElmFree = writeEnd;
+    
   }
 
   // Set register timestamps for division instructions
@@ -521,7 +532,6 @@ private:
                         uint64_t const baseTimestamp, uint64_t const emul,
                         uint64_t const cyclesPerRegister) -> void {
 
-    static auto lastWrite = 0;
     // static constexpr uint64_t portWidth = 128;
 
     // auto const writeCycles =
