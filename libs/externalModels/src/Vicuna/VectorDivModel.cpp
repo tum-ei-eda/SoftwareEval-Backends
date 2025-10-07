@@ -28,7 +28,7 @@ int VectorDivModel::getDelay(void) {
   uint64_t n_register_elements = vlen_ / decodeSew();
   uint64_t lmul = decodeLmul();
   uint64_t n_divisions = n_register_elements * lmul;
-  // TODO: explain
+  // TODO: could be removed
   auto delay =
       n_divisions * (divider_cycles + 3) - ((lmul - 1) * divider_cycles);
   return delay;
