@@ -98,7 +98,6 @@ public:
   }
 
   auto setEnterArithUnpack(uint64_t enterTime_) -> void {
-    auto const vlenFactor = vlen_ / 64;
     auto const waitTime = getWaitTime(getLmul());
 
     // Can leave after running through shift register
@@ -121,8 +120,6 @@ public:
 
   auto setEnterArithUnpackVs2(uint64_t enterTime_) -> void {
     auto const vs2 = vs2_ptr[getInstrIndex()];
-    auto const vlenFactor = log2(vlen_ / 64);
-    // auto const waitTime = 2 * (getLmul() * vlenFactor);
     auto const waitTime = getWaitTime(getLmul());
 
     // + 1: first stage valid in cycle after register write complete
@@ -137,8 +134,6 @@ public:
 
   auto setEnterArithUnpackExt(uint64_t enterTime_) -> void {
     auto const vs2 = vs2_ptr[getInstrIndex()];
-    auto const vlenFactor = log2(vlen_ / 64);
-    // auto const waitTime = 2 * (getLmul() * vlenFactor);
     auto const waitTime = getWaitTimeExt(getLmul());
 
     // + 1: first stage valid in cycle after register write complete
@@ -154,7 +149,6 @@ public:
   auto setEnterArithUnpackVs1Vs2(uint64_t enterTime_) -> void {
     auto const vs1 = vs1_ptr[getInstrIndex()];
     auto const vs2 = vs2_ptr[getInstrIndex()];
-    auto const vlenFactor = vlen_ / 64;
     auto const waitTime = getWaitTime(getLmul());
 
     // + 1: first stage valid in cycle after register write complete
@@ -469,13 +463,17 @@ public:
   // Set register timestamps for division instructions
   void setVdGroupDiv(uint64_t const baseTimestamp_) {
 
-    auto const cyclesPerRegister =
-        (vlen_ / getSew()) * VectorConfig::dividerDelay;
+    static constexpr auto dividerWidth = 32;
+    static constexpr auto dividerDelay = 35;
+    auto const nParallelDivisions = vlane_width_ / dividerWidth;
+    auto const nElements = vlen_ / getSew();
+    auto const nDivisions = nElements / nParallelDivisions;
+    auto const cyclesPerRegister = nDivisions * dividerDelay;
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
     auto const emul = getLmul();
 
     auto const groupTimestamp =
-        baseTimestamp_ + (emul * cyclesPerRegister) + packCycles;
+        baseTimestamp_ + (emul * cyclesPerRegister) - ((emul - 1) * (vlen_ / 32));
 
     for (size_t i = 0; i < emul; ++i) {
       // TODO

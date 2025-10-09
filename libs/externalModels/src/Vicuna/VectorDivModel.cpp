@@ -23,15 +23,15 @@ namespace Vicuna {
 int VectorDivModel::getDelay(void) {
   // TODO: constants should be configured somewhere else
 
-  auto const packFactor = vlen_ / vlane_width_;
-  constexpr auto divider_cycles = 32;
-  uint64_t n_register_elements = vlen_ / decodeSew();
-  uint64_t lmul = decodeLmul();
-  uint64_t n_divisions = n_register_elements * lmul;
-  // TODO: could be removed
-  auto delay =
-      n_divisions * (divider_cycles + 3) - ((lmul - 1) * divider_cycles);
-  return delay;
+  constexpr auto dividerWidth = 32;
+  constexpr auto dividerCycles = 35;
+  auto const nParallelDivisions = vlane_width_ / dividerWidth;
+  auto const nElements = vlen_ / decodeSew();
+  auto const nDivisions = nElements / nParallelDivisions;
+  auto const emul = decodeLmul();
+  auto const cyclesPerRegister = nDivisions * dividerCycles;
+
+  return emul * cyclesPerRegister;
 }
 
 /**
