@@ -32,9 +32,9 @@
 #include "AssemblyTrace_RV64_Printer.h"
 #include "AssemblyTrace_RV64_Channel.h"
 
-#include "Vicuna_PerformanceModel.h"
-#include "Vicuna_Channel.h"
-#include "Vicuna_Printer.h"
+// #include "Vicuna_PerformanceModel.h"
+// #include "Vicuna_Channel.h"
+// #include "Vicuna_Printer.h"
 
 #include "CVA6_PerformanceModel.h"
 #include "CVA6_Channel.h"
@@ -50,6 +50,22 @@
 #include "Vicuna_zvl64b_Channel.h"
 #include "Vicuna_zvl64b_Printer.h"
 
+#include "Vicuna_zvl128b_PerformanceModel.h"
+#include "Vicuna_zvl128b_Channel.h"
+#include "Vicuna_zvl128b_Printer.h"
+
+#include "Vicuna_zvl256b_PerformanceModel.h"
+#include "Vicuna_zvl256b_Channel.h"
+#include "Vicuna_zvl256b_Printer.h"
+
+#include "Vicuna_zvl512b_PerformanceModel.h"
+#include "Vicuna_zvl512b_Channel.h"
+#include "Vicuna_zvl512b_Printer.h"
+
+#include "Vicuna_zvl1024b_PerformanceModel.h"
+#include "Vicuna_zvl1024b_Channel.h"
+#include "Vicuna_zvl1024b_Printer.h"
+
 
 namespace SwEvalBackends
 {
@@ -58,11 +74,15 @@ int Factory::getVariantHandle(std::string varName_)
 {
     if(varName_ == "CV32E40P"){ return CV32E40P; }
 	if(varName_ == "AssemblyTrace_RV64"){ return AssemblyTrace_RV64; }
-	if(varName_ == "VICUNA"){ return Vicuna; }
+	// if(varName_ == "VICUNA"){ return Vicuna; }
 	if(varName_ == "CVA6"){ return CVA6; }
 	if(varName_ == "InstructionTrace_RV64"){ return InstructionTrace_RV64; }
 	if(varName_ == "AssemblyTrace"){ return AssemblyTrace; }
-	if(varName_ == "VICUNA_ZVL64B"){ return Vicuna_zvl64b; }
+	if(varName_ == "Vicuna_zvl64b"){ return Vicuna_zvl64b; }
+	if(varName_ == "Vicuna_zvl128b"){ return Vicuna_zvl128b; }
+	if(varName_ == "Vicuna_zvl256b"){ return Vicuna_zvl256b; }
+	if(varName_ == "Vicuna_zvl512b"){ return Vicuna_zvl512b; }
+	if(varName_ == "Vicuna_zvl1024b"){ return Vicuna_zvl1024b; }
 
     return -1;
 }
@@ -73,11 +93,15 @@ Channel* Factory::getChannel(int var_)
   {
     	case CV32E40P: return new CV32E40P_Channel();
 	case AssemblyTrace_RV64: return new AssemblyTrace_RV64_Channel();
-	case Vicuna: return new Vicuna_Channel();
+	// case Vicuna: return new Vicuna_Channel();
 	case CVA6: return new CVA6_Channel();
 	case InstructionTrace_RV64: return new InstructionTrace_RV64_Channel();
 	case AssemblyTrace: return new AssemblyTrace_Channel();
 	case Vicuna_zvl64b: return new Vicuna_zvl64b_Channel();
+	case Vicuna_zvl128b: return new Vicuna_zvl128b_Channel();
+	case Vicuna_zvl256b: return new Vicuna_zvl128b_Channel();
+	case Vicuna_zvl512b: return new Vicuna_zvl128b_Channel();
+	case Vicuna_zvl1024b: return new Vicuna_zvl128b_Channel();
 
     default: return nullptr;
   }
@@ -92,13 +116,25 @@ Backend* Factory::getPerformanceEstimator(int var_)
     	case CV32E40P:
 		perfModel = new CV32E40P::CV32E40P_PerformanceModel();
 		break;
-	case Vicuna:
-		perfModel = new Vicuna::Vicuna_PerformanceModel();
-		break;
+	// case Vicuna:
+	// 	perfModel = new Vicuna::Vicuna_PerformanceModel();
+	// 	break;
 	case CVA6:
 		perfModel = new CVA6::CVA6_PerformanceModel();
 		break;
 	case Vicuna_zvl64b:
+		perfModel = new Vicuna_zvl64b::Vicuna_zvl64b_PerformanceModel();
+		break;
+	case Vicuna_zvl128b:
+		perfModel = new Vicuna_zvl64b::Vicuna_zvl64b_PerformanceModel();
+		break;
+	case Vicuna_zvl256b:
+		perfModel = new Vicuna_zvl64b::Vicuna_zvl64b_PerformanceModel();
+		break;
+	case Vicuna_zvl512b:
+		perfModel = new Vicuna_zvl64b::Vicuna_zvl64b_PerformanceModel();
+		break;
+	case Vicuna_zvl1024b:
 		perfModel = new Vicuna_zvl64b::Vicuna_zvl64b_PerformanceModel();
 		break;
 
@@ -128,9 +164,9 @@ Backend* Factory::getTracePrinter(int var_)
 	case AssemblyTrace_RV64:
 		printer = new AssemblyTrace_RV64_Printer();
 		break;
-	case Vicuna:
-		printer = new Vicuna_Printer();
-		break;
+	// case Vicuna:
+	// 	printer = new Vicuna_Printer();
+	// 	break;
 	case CVA6:
 		printer = new CVA6_Printer();
 		break;
@@ -142,6 +178,18 @@ Backend* Factory::getTracePrinter(int var_)
 		break;
 	case Vicuna_zvl64b:
 		printer = new Vicuna_zvl64b_Printer();
+		break;
+	case Vicuna_zvl128b:
+		printer = new Vicuna_zvl128b_Printer();
+		break;
+	case Vicuna_zvl256b:
+		printer = new Vicuna_zvl256b_Printer();
+		break;
+	case Vicuna_zvl512b:
+		printer = new Vicuna_zvl512b_Printer();
+		break;
+	case Vicuna_zvl1024b:
+		printer = new Vicuna_zvl1024b_Printer();
 		break;
 
     default: printer = nullptr;

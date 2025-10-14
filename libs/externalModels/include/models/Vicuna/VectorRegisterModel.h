@@ -367,11 +367,12 @@ public:
   void setVdGroupLoad(uint64_t const baseTimestamp_) {
     auto const emul = getLoadStoreEmul();
     auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
-    auto const registerBaseIndex = vd_ptr[getInstrIndex()];
-
+    auto const vd = vd_ptr[getInstrIndex()];
+    auto const maxStallTime =
+        std::max(vregWritePortLsuElmFree, vectorRegisterReads[vd]);
     auto const writeStart = std::max(baseTimestamp_ + cyclesPerRegister + 1,
-                                     vregWritePortLsuElmFree);
-    setRegisterTimes(registerBaseIndex, writeStart, emul, cyclesPerRegister);
+                                     maxStallTime);
+    setRegisterTimes(vd, writeStart, emul, cyclesPerRegister);
 
     // Write port free 1 cycle before last register is valid
     vregWritePortLsuElmFree = writeStart + ((emul - 1) * cyclesPerRegister) - 1;
@@ -400,7 +401,8 @@ public:
   void setVd(uint64_t baseTimestamp_) {
     auto const vd = vd_ptr[getInstrIndex()];
     auto const cyclesPerRegister = (vlen_ / vlane_width_);
-    auto const writeTime = baseTimestamp_ + cyclesPerRegister;
+    auto const writeTime =
+        std::max(baseTimestamp_ + cyclesPerRegister, vectorRegisterReads[vd]);
 
     vectorRegisterModel[vd] = writeTime;
 
@@ -410,15 +412,47 @@ public:
     // lastWrite = writeTime;
   };
 
+  void setVs2ReadDone(uint64_t enterTime) {
+    auto const vs2 = vs2_ptr[getInstrIndex()];
+    auto const cyclesPerRegister = (vlen_ / getSew());
+    auto const emul = getLmul();
+    for (size_t i = 0; i < emul; ++i) {
+      vectorRegisterReads[vs2 + i] = enterTime + cyclesPerRegister;
+    }
+  }
+
   // Set register timestamps for regular vector ALU instructions
   void setVdGroupArith(uint64_t const baseTimestamp_) {
     auto const cyclesPerRegister = (vlen_ / vlane_width_);
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
-
     auto const writeStart =
         std::max(baseTimestamp_ + cyclesPerRegister + 1, xifCommitSignal);
     setRegisterTimes(registerBaseIndex, writeStart, getLmul(),
                      cyclesPerRegister);
+  }
+
+  void setVdGroupArithNoReads(uint64_t const baseTimestamp_) {
+    auto const cyclesPerRegister = (vlen_ / vlane_width_);
+    auto const vd = vd_ptr[getInstrIndex()];
+
+    auto const maxStallTime =
+        std::max(xifCommitSignal, vectorRegisterReads[vd]);
+    auto const writeStart =
+        std::max(baseTimestamp_ + cyclesPerRegister + 1, maxStallTime);
+
+    setRegisterTimes(vd, writeStart, getLmul(), cyclesPerRegister);
+  }
+
+  void setVdGroupArithVs1Vs2(uint64_t const baseTimestamp_) {
+    auto const cyclesPerRegister = (vlen_ / vlane_width_);
+    auto const vd = vd_ptr[getInstrIndex()];
+    auto const vs1 = vs1_ptr[getInstrIndex()];
+    auto const vs2 = vs2_ptr[getInstrIndex()];
+    auto const writeStart =
+        std::max(baseTimestamp_ + cyclesPerRegister + 1, xifCommitSignal);
+
+    setRegisterTimesVs1Vs2(vd, vs1, vs2, writeStart, getLmul(),
+                           cyclesPerRegister);
   }
 
   void setVdGroupArithWidening(uint64_t const baseTimestamp_) {
@@ -457,7 +491,7 @@ public:
         writeStart + (emul * elementsPerRegister) + elementsPerRegister;
 
     for (size_t i = 0; i < emul; i++) {
-      vectorRegisterModel[registerBaseIndex + i] = writeEnd;
+      vectorRegisterModel[registerBaseIndex + i] = writeEnd + 1;
       // std::cout << "v" << registerBaseIndex + i << " @ " << writeEnd
       //           << ", d: " << (int)writeEnd - lastWrite << "\n";
     }
@@ -525,41 +559,47 @@ private:
 
   std::array<uint64_t, VectorConfig::nVectorRegisters> vectorRegisterModel = {
       0};
+  std::array<uint64_t, VectorConfig::nVectorRegisters> vectorRegisterReads = {
+      0};
 
   auto setRegisterTimes(uint64_t const registerBaseIndex,
                         uint64_t const baseTimestamp, uint64_t const emul,
                         uint64_t const cyclesPerRegister) -> void {
 
-    // static constexpr uint64_t portWidth = 128;
-
-    // auto const writeCycles =
-    //     std::max(vlen_ / portWidth, static_cast<uint64_t>(1));
-
-    // auto runningTimestamp = std::max(baseTimestamp + cyclesPerRegister + 1,
-    //                                  vregWritePortFree_ + writeCycles);
-
     auto runningTimestamp = baseTimestamp;
-    // auto const writeDone = baseTimestamp + (emul * cyclesPerRegister) + 1;
-
-    // if (extendPrevious) {
-    //   for (size_t i = 0; i < 32; i++) {
-    //     if (prevWrites[i]) {
-    //       vectorRegisterModel[i] += prevWriteCycles[i];
-    //     }
-    //   }
-    // }
 
     for (size_t i = 0; i < emul; ++i) {
       vectorRegisterModel[registerBaseIndex + i] = runningTimestamp;
-      // std::cout << "v" << registerBaseIndex + i << " @ " << runningTimestamp
-      //           << ", d: " << (int)runningTimestamp - lastWrite << "\n";
-      // lastWrite = runningTimestamp;
       runningTimestamp += cyclesPerRegister;
     }
+  }
 
-    // Write port is free at the end
-    // auto const writesPerRegister = vlen_ / portWidth;
-    // vregWritePortFree_ = runningTimestamp - cyclesPerRegister;
+  auto setRegisterTimesVs1Vs2(uint64_t const vd, uint64_t const vs1,
+                              uint64_t const vs2, uint64_t const baseTimestamp,
+                              uint64_t const emul,
+                              uint64_t const cyclesPerRegister) -> void {
+
+    auto runningTimestamp = baseTimestamp;
+
+    for (size_t i = 0; i < emul; ++i) {
+      vectorRegisterModel[vd + i] = runningTimestamp;
+      vectorRegisterReads[vs1 + i] = runningTimestamp;
+      vectorRegisterReads[vs2 + i] = runningTimestamp;
+      runningTimestamp += cyclesPerRegister;
+    }
+  }
+
+  auto setRegisterTimesVs2(uint64_t const vd, uint64_t const vs2,
+                           uint64_t const baseTimestamp, uint64_t const emul,
+                           uint64_t const cyclesPerRegister) -> void {
+
+    auto runningTimestamp = baseTimestamp;
+
+    for (size_t i = 0; i < emul; ++i) {
+      vectorRegisterModel[vd + i] = runningTimestamp;
+      vectorRegisterReads[vs2 + i] = runningTimestamp;
+      runningTimestamp += cyclesPerRegister;
+    }
   }
 
   auto getMaxTimestampInGroup(uint64_t baseRegister,
