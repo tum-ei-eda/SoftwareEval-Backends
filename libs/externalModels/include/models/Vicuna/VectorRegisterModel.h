@@ -44,12 +44,8 @@ public:
 
     lsuElmUnpackLastStage = vlen_ == 64 ? 5 : 4;
     arithUnpackLastStage = vlen_ == 64 ? 4 : 5;
-
-    // Dispatch logic
-    counterWidth = log2(vlen_ / 32) + 4;
   };
 
-  uint64_t counterWidth = 0;
   uint64_t lsuElmUnpackLastStage = 0;
   uint64_t arithUnpackLastStage = 0;
 
@@ -80,6 +76,7 @@ public:
   void setXifCommitSignal(uint64_t xifCommitSignal_) {
     xifCommitSignal = xifCommitSignal_;
   }
+  uint64_t getXifCommitSignal(void) { return xifCommitSignal; }
 
   // Arith Unpack Shift Register
   std::array<uint64_t, 5> arithShiftRegister = {0};
@@ -308,16 +305,19 @@ public:
 
   auto setEnterLsuElmUnpackVs2(uint64_t enterTime_) -> void {
     auto const vs2 = vs2_ptr[getInstrIndex()];
+    auto const waitTime = getWaitTimeLsu(getLoadStoreEmul());
+    auto const maxRegisterTime =
+        std::max(vectorRegisterModel[vs2] + 1, enterTime_);
 
-    lsuElmShiftRegisterLeave[0] =
-        std::max(enterTime_ + getLmul(),
-                 std::max(lsuElmShiftRegisterLeave[1],
-                          vectorRegisterModel[vs2] + 1)) +
-        1;
+    lsuElmShiftRegisterEnter[0] = maxRegisterTime;
+    lsuElmShiftRegisterLeave[0] = timeInStall(maxRegisterTime)
+                                      ? stallEnd + waitTime
+                                      : maxRegisterTime + waitTime;
 
-    for (size_t i = 1; i < lsuElmUnpackLastStage; ++i) {
-      lsuElmShiftRegisterLeave[i] = std::max(
-          lsuElmShiftRegisterLeave[i + 1], lsuElmShiftRegisterLeave[i - 1] + 1);
+    for (size_t i = 1; i <= lsuElmUnpackLastStage; ++i) {
+      lsuElmShiftRegisterEnter[i] = timeInStall(lsuElmShiftRegisterEnter[i - 1])
+                                        ? stallEnd
+                                        : lsuElmShiftRegisterEnter[i - 1] + 1;
     }
   }
 
@@ -387,22 +387,27 @@ public:
     auto const writeStart = std::max(baseTimestamp_ + cyclesPerRegister + 1,
                                      vregWritePortLsuElmFree);
 
-    setRegisterTimes(registerBaseIndex, writeStart,
-                     nRegisters, cyclesPerRegister);
+    setRegisterTimes(registerBaseIndex, writeStart, nRegisters,
+                     cyclesPerRegister);
 
     // Write port free 1 cycle before last register is valid
-    vregWritePortLsuElmFree = writeStart + ((nRegisters - 1) * cyclesPerRegister) - 1;
+    vregWritePortLsuElmFree =
+        writeStart + ((nRegisters - 1) * cyclesPerRegister) - 1;
     reqStallEnd = vregWritePortLsuElmFree;
   }
 
   // Set only Vd register time
   void setVd(uint64_t baseTimestamp_) {
+    auto const vd = vd_ptr[getInstrIndex()];
     auto const cyclesPerRegister = (vlen_ / vlane_width_);
-    auto const writeTime =
-        std::max(baseTimestamp_ + cyclesPerRegister + 1, vregWritePortFree_);
+    auto const writeTime = baseTimestamp_ + cyclesPerRegister;
 
-    vectorRegisterModel[vd_ptr[getInstrIndex()]] =
-        baseTimestamp_ + cyclesPerRegister + 1;
+    vectorRegisterModel[vd] = writeTime;
+
+    // std::cout << "v" << vd << " @ " << writeTime
+    //           << ", d: " << (int)writeTime - lastWrite << "\n";
+
+    // lastWrite = writeTime;
   };
 
   // Set register timestamps for regular vector ALU instructions
@@ -453,10 +458,10 @@ public:
 
     for (size_t i = 0; i < emul; i++) {
       vectorRegisterModel[registerBaseIndex + i] = writeEnd;
-      std::cout << "v" << registerBaseIndex + i << " @ " << writeEnd
-                << ", d: " << (int)writeEnd - lastWrite << "\n";
+      // std::cout << "v" << registerBaseIndex + i << " @ " << writeEnd
+      //           << ", d: " << (int)writeEnd - lastWrite << "\n";
     }
-    lastWrite = writeEnd;
+    // lastWrite = writeEnd;
     vregWritePortLsuElmFree = writeEnd;
   }
 
@@ -472,8 +477,8 @@ public:
     auto const registerBaseIndex = vd_ptr[getInstrIndex()];
     auto const emul = getLmul();
 
-    auto const groupTimestamp =
-        baseTimestamp_ + (emul * cyclesPerRegister) - ((emul - 1) * (vlen_ / 32));
+    auto const groupTimestamp = baseTimestamp_ + (emul * cyclesPerRegister) -
+                                ((emul - 1) * (vlen_ / 32));
 
     for (size_t i = 0; i < emul; ++i) {
       // TODO
@@ -546,9 +551,9 @@ private:
 
     for (size_t i = 0; i < emul; ++i) {
       vectorRegisterModel[registerBaseIndex + i] = runningTimestamp;
-      std::cout << "v" << registerBaseIndex + i << " @ " << runningTimestamp
-                << ", d: " << (int)runningTimestamp - lastWrite << "\n";
-      lastWrite = runningTimestamp;
+      // std::cout << "v" << registerBaseIndex + i << " @ " << runningTimestamp
+      //           << ", d: " << (int)runningTimestamp - lastWrite << "\n";
+      // lastWrite = runningTimestamp;
       runningTimestamp += cyclesPerRegister;
     }
 

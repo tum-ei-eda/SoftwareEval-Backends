@@ -25,7 +25,7 @@ int VectorArithModel::getDelay(void)
 {
     auto const cyclesPerRegister = vlen_ / vlane_width_;
     auto const lmul = decodeLmul();
-    return cyclesPerRegister * decodeLmul();
+    return lmul * cyclesPerRegister;
 }
 
 /**
