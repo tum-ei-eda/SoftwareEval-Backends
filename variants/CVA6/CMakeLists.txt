@@ -1,10 +1,10 @@
 
 TARGET_SOURCES(SWEVAL_BACKENDS_LIB PRIVATE
-  	src/CVA6_PerformanceModel.cpp
+  	src/CVA6_InstructionPrinters.cpp
 	src/CVA6_Channel.cpp
-	src/CVA6_Printer.cpp
-	src/CVA6_InstructionPrinters.cpp
 	src/CVA6_SchedulingFunction.cpp
+	src/CVA6_PerformanceModel.cpp
+	src/CVA6_Printer.cpp
 
 )
 

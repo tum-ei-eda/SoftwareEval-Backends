@@ -968,10 +968,30 @@ static InstructionPrinter *instrPrinter_mulw = new InstructionPrinter(
     return ret_strs.str();
   }
 );
+static InstructionPrinter *instrPrinter_dotp = new InstructionPrinter(
+  CVA6_InstrPrinterSet,
+  "dotp",
+  47,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::endl;
+    return ret_strs.str();
+  }
+);
 static InstructionPrinter *instrPrinter_div = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "div",
-  47,
+  48,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -991,7 +1011,7 @@ static InstructionPrinter *instrPrinter_div = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_rem = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "rem",
-  48,
+  49,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1011,7 +1031,7 @@ static InstructionPrinter *instrPrinter_rem = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_divw = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "divw",
-  49,
+  50,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1031,7 +1051,7 @@ static InstructionPrinter *instrPrinter_divw = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_remw = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "remw",
-  50,
+  51,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1051,7 +1071,7 @@ static InstructionPrinter *instrPrinter_remw = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_divu = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "divu",
-  51,
+  52,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1071,7 +1091,7 @@ static InstructionPrinter *instrPrinter_divu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_remu = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "remu",
-  52,
+  53,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1091,7 +1111,7 @@ static InstructionPrinter *instrPrinter_remu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_divuw = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "divuw",
-  53,
+  54,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1111,7 +1131,7 @@ static InstructionPrinter *instrPrinter_divuw = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_remuw = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "remuw",
-  54,
+  55,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1131,7 +1151,7 @@ static InstructionPrinter *instrPrinter_remuw = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lw = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "lw",
-  55,
+  56,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1151,7 +1171,7 @@ static InstructionPrinter *instrPrinter_lw = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lh = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "lh",
-  56,
+  57,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1171,7 +1191,7 @@ static InstructionPrinter *instrPrinter_lh = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lhu = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "lhu",
-  57,
+  58,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1191,7 +1211,7 @@ static InstructionPrinter *instrPrinter_lhu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lb = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "lb",
-  58,
+  59,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1211,7 +1231,7 @@ static InstructionPrinter *instrPrinter_lb = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lbu = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "lbu",
-  59,
+  60,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1231,7 +1251,7 @@ static InstructionPrinter *instrPrinter_lbu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_ld = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "ld",
-  60,
+  61,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1251,7 +1271,7 @@ static InstructionPrinter *instrPrinter_ld = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lwu = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "lwu",
-  61,
+  62,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1271,7 +1291,7 @@ static InstructionPrinter *instrPrinter_lwu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_sb = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "sb",
-  62,
+  63,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1291,7 +1311,7 @@ static InstructionPrinter *instrPrinter_sb = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_sh = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "sh",
-  63,
+  64,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1311,7 +1331,7 @@ static InstructionPrinter *instrPrinter_sh = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_sw = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "sw",
-  64,
+  65,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);
@@ -1331,7 +1351,7 @@ static InstructionPrinter *instrPrinter_sw = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_sd = new InstructionPrinter(
   CVA6_InstrPrinterSet,
   "sd",
-  65,
+  66,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CVA6_Printer* printer = static_cast<CVA6_Printer*>(printer_);

@@ -67,6 +67,8 @@ public:
   uint64_t EX_substage_alu = 0;
   uint64_t EX_substage_mul_i = 0;
   uint64_t EX_substage_mul_o = 0;
+  uint64_t EX_substage_dotprod_i = 0;
+  uint64_t EX_substage_dotprod_o = 0;
   uint64_t EX_substage_div = 0;
   uint64_t EX_substage_lCtrl = 0;
   uint64_t EX_substage_dCache = 0;

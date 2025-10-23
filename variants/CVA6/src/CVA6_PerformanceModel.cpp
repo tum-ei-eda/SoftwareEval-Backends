@@ -82,6 +82,8 @@ uint64_t CVA6_PerformanceModel::getCycleCount(void)
     ,EX_substage_alu
     ,EX_substage_mul_i
     ,EX_substage_mul_o
+    ,EX_substage_dotprod_i
+    ,EX_substage_dotprod_o
     ,EX_substage_div
     ,EX_substage_lCtrl
     ,EX_substage_dCache
