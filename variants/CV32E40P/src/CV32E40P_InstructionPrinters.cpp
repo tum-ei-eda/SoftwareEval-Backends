@@ -861,10 +861,42 @@ static InstructionPrinter *instrPrinter_bgeu = new InstructionPrinter(
     return ret_strs.str();
   }
 );
+static InstructionPrinter *instrPrinter_mret = new InstructionPrinter(
+  CV32E40P_InstrPrinterSet,
+  "mret",
+  49,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_ecall = new InstructionPrinter(
+  CV32E40P_InstrPrinterSet,
+  "ecall",
+  50,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    return ret_strs.str();
+  }
+);
 static InstructionPrinter *instrPrinter__def = new InstructionPrinter(
   CV32E40P_InstrPrinterSet,
   "_def",
-  49,
+  51,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
@@ -881,7 +913,7 @@ static InstructionPrinter *instrPrinter__def = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_jal = new InstructionPrinter(
   CV32E40P_InstrPrinterSet,
   "jal",
-  50,
+  52,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);
@@ -898,7 +930,7 @@ static InstructionPrinter *instrPrinter_jal = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_jalr = new InstructionPrinter(
   CV32E40P_InstrPrinterSet,
   "jalr",
-  51,
+  53,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40P_Printer* printer = static_cast<CV32E40P_Printer*>(printer_);

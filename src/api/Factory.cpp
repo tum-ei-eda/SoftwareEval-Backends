@@ -45,6 +45,7 @@
 #include "InstructionTrace_RV64IMF_Zicsr_Printer.h"
 #include "InstructionTrace_RV64IMF_Zicsr_Channel.h"
 
+#include "MatrixTester.h"
 
 namespace SwEvalBackends
 {
@@ -82,10 +83,11 @@ Backend* Factory::getPerformanceEstimator(int var_)
   PerformanceModel* perfModel;
   switch((var_t)var_)
   {
-    	case CV32E40P:
-		perfModel = new CV32E40P::CV32E40P_PerformanceModel();
+    case CV32E40P:
+		return new MatrixTester();
+    //perfModel = new CV32E40P::CV32E40P_PerformanceModel();
 		break;
-	case CVA6:
+	  case CVA6:
 		perfModel = new CVA6::CVA6_PerformanceModel();
 		break;
 

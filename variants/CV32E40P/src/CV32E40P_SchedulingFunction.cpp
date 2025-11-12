@@ -31,7 +31,7 @@ SchedulingFunctionSet* CV32E40P_SchedulingFunctionSet = new SchedulingFunctionSe
 static SchedulingFunction *schedulingFunction_add = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "add",
-  0,
+  1,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -77,6 +77,7 @@ perfModel->EX_stage = n_EX_stage;
   }
 );
 
+/*
 static SchedulingFunction *schedulingFunction_sub = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "sub",
@@ -517,11 +518,12 @@ perfModel->EX_stage = n_EX_stage;
   perfModel->entrancePoint = n_Enter;
   }
 );
+*/
 
 static SchedulingFunction *schedulingFunction_addi = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "addi",
-  10,
+  2,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -564,6 +566,7 @@ perfModel->EX_stage = n_EX_stage;
   }
 );
 
+/*
 static SchedulingFunction *schedulingFunction_xori = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "xori",
@@ -931,11 +934,12 @@ perfModel->EX_stage = n_EX_stage;
   perfModel->entrancePoint = n_Enter;
   }
 );
+*/
 
 static SchedulingFunction *schedulingFunction_auipc = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "auipc",
-  19,
+  3,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -975,6 +979,7 @@ perfModel->EX_stage = n_EX_stage;
   }
 );
 
+/*
 static SchedulingFunction *schedulingFunction_lui = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "lui",
@@ -1017,11 +1022,12 @@ perfModel->EX_stage = n_EX_stage;
   perfModel->entrancePoint = n_Enter;
   }
 );
+*/
 
 static SchedulingFunction *schedulingFunction_mul = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "mul",
-  21,
+  4,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -1070,7 +1076,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_mulh = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "mulh",
-  22,
+  5,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -1116,6 +1122,7 @@ perfModel->EX_stage = n_EX_stage;
   }
 );
 
+/*
 static SchedulingFunction *schedulingFunction_mulhu = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "mulhu",
@@ -1213,6 +1220,7 @@ perfModel->EX_stage = n_EX_stage;
   perfModel->entrancePoint = n_Enter;
   }
 );
+*/
 
 static SchedulingFunction *schedulingFunction_div = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
@@ -1413,7 +1421,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_csrrw = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "csrrw",
-  29,
+  6,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -1456,6 +1464,7 @@ perfModel->EX_stage = n_EX_stage;
   }
 );
 
+/*
 static SchedulingFunction *schedulingFunction_csrrs = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "csrrs",
@@ -1547,11 +1556,12 @@ perfModel->EX_stage = n_EX_stage;
   perfModel->entrancePoint = n_Enter;
   }
 );
+*/
 
 static SchedulingFunction *schedulingFunction_csrrwi = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "csrrwi",
-  32,
+  7,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -1591,6 +1601,7 @@ perfModel->EX_stage = n_EX_stage;
   }
 );
 
+/*
 static SchedulingFunction *schedulingFunction_csrrsi = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "csrrsi",
@@ -1676,11 +1687,12 @@ perfModel->EX_stage = n_EX_stage;
   perfModel->entrancePoint = n_Enter;
   }
 );
+*/
 
 static SchedulingFunction *schedulingFunction_sb = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "sb",
-  35,
+  8,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -1732,6 +1744,7 @@ perfModel->WB_stage = n_WB_stage;
   }
 );
 
+/*
 static SchedulingFunction *schedulingFunction_sh = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "sh",
@@ -1841,11 +1854,12 @@ perfModel->WB_stage = n_WB_stage;
   perfModel->entrancePoint = n_Enter;
   }
 );
+*/
 
 static SchedulingFunction *schedulingFunction_lw = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "lw",
-  38,
+  9,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -1895,6 +1909,7 @@ perfModel->WB_stage = n_WB_stage;
   }
 );
 
+/*
 static SchedulingFunction *schedulingFunction_lh = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "lh",
@@ -2106,11 +2121,12 @@ perfModel->WB_stage = n_WB_stage;
   perfModel->entrancePoint = n_Enter;
   }
 );
+*/
 
 static SchedulingFunction *schedulingFunction_beq = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "beq",
-  43,
+  10,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -2156,6 +2172,7 @@ perfModel->EX_stage = n_EX_stage;
   }
 );
 
+/*
 static SchedulingFunction *schedulingFunction_bne = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "bne",
@@ -2400,11 +2417,68 @@ perfModel->EX_stage = n_EX_stage;
   perfModel->entrancePoint = n_Enter;
   }
 );
+*/
+
+static SchedulingFunction *schedulingFunction_mret = new SchedulingFunction(
+  CV32E40P_SchedulingFunctionSet,
+  "mret",
+  11,
+  [](PerformanceModel* perfModel_){
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen});
+perfModel->IF_stage = n_IF_stage;
+
+  }
+);
+
+/*
+static SchedulingFunction *schedulingFunction_ecall = new SchedulingFunction(
+  CV32E40P_SchedulingFunctionSet,
+  "ecall",
+  50,
+  [](PerformanceModel* perfModel_){
+  CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen});
+perfModel->IF_stage = n_IF_stage;
+
+  }
+);
+*/
 
 static SchedulingFunction *schedulingFunction__def = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "_def",
-  49,
+  0,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -2433,7 +2507,7 @@ perfModel->IF_stage = n_IF_stage;
 static SchedulingFunction *schedulingFunction_jal = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "jal",
-  50,
+  12,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
@@ -2477,7 +2551,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_jalr = new SchedulingFunction(
   CV32E40P_SchedulingFunctionSet,
   "jalr",
-  51,
+  13,
   [](PerformanceModel* perfModel_){
   CV32E40P_PerformanceModel* perfModel = static_cast<CV32E40P_PerformanceModel*>(perfModel_);
   // Enter
