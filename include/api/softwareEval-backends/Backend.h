@@ -67,6 +67,7 @@ class Backend
   virtual void execute(void)=0;
   virtual void finalize(void)=0;
   virtual int64_t getEstimatedCycleCount(void);
+  virtual void finalize_energy(float, float)=0;
 
   void activateStreamToCout(void) { streamer.activate(); };
   void activateStreamToFile(std::string, std::string, std::string, int);

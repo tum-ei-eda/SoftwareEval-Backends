@@ -79,3 +79,17 @@ int64_t PerformanceEstimator::getEstimatedCycleCount(void)
   // std::cout << "PerformanceEstimator::getEstimatedCycleCount" << std::endl;
   return perfModel_ptr->getCycleCount();
 }
+
+void PerformanceEstimator::finalize_energy(float uArchPower, float uArchCycletime)
+{
+  uint64_t globalCycleCnt = perfModel_ptr->getCycleCount();
+  std::cout << "-----------------------------------------------------------------------------------------------------------------\n";
+  std::cout << " >> Number of instructions: " << globalInstrCnt << "\n";
+  std::cout << " >> Estimated number of processor cycles: " << globalCycleCnt << "\n";
+  std::cout << " >> Estimated average number of processor cycles per instruction (CPI): " << ((float)globalCycleCnt/(float)globalInstrCnt) << "\n";
+  std::cout << " >> Estimated energy: " << ((uArchPower*uArchCycletime*(float)globalCycleCnt)/(float)1000) << " uJ\n";
+  std::cout << " >> Estimated average energy per instruction (EPI) : " << (uArchPower*uArchCycletime*((float)globalCycleCnt/(float)globalInstrCnt)) << " nJ\n";
+  std::cout << "-----------------------------------------------------------------------------------------------------------------\n";
+
+  streamer.closeStream();
+}

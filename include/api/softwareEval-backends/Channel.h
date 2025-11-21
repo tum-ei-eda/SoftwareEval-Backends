@@ -19,6 +19,7 @@
 
 #include <string>
 #include <stdbool.h>
+#include <stdint.h>
 
 class Channel
 {

@@ -58,3 +58,8 @@ void TracePrinter::finalize(void)
 {
   streamer.closeStream();
 }
+
+void TracePrinter::finalize_energy(float uArchPower, float uArchCycletime)
+{
+  streamer.closeStream();
+}

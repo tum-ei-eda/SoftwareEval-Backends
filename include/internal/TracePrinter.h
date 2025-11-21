@@ -17,6 +17,7 @@
 #ifndef SWEVAL_BACKENDS_TRACE_PRINTER_H
 #define SWEVAL_BACKENDS_TRACE_PRINTER_H
 
+#include <stdint.h>
 #include "Channel.h"
 #include "Backend.h"
 #include "Printer.h"
@@ -32,6 +33,7 @@ public:
   void initialize(void);
   void execute(void);
   void finalize(void);
+  void finalize_energy(float, float);
 
 private:
   Printer* printer_ptr;

@@ -36,6 +36,7 @@ class PerformanceEstimator: public Backend
   void execute(void);
   void finalize(void);
   int64_t getEstimatedCycleCount(void);
+  void finalize_energy(float, float);
 
 
   
