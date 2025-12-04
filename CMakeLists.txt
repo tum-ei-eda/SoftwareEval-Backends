@@ -20,6 +20,7 @@ add_subdirectory(libs)
 
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} PRIVATE
   SWEVAL_JIT_COMPILER
+  ETISS # TODO: Currently needed to support JIT. Get rid of this dependency
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC

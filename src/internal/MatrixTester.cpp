@@ -22,9 +22,10 @@
 
 #include <iostream>
 #include <fstream> // TODO: DEBUG
+#include <string>
+#include <vector> //TODO: Try-out. Still required
+#include <algorithm> //TODO: Try-out. Still required
 
-// #include <libtcc.h>
-//#include "TCCJIT.h"
 #include "JITCompiler.h"
 
 void BasicBlock::setMatrix(const Matrix& other_)
@@ -39,16 +40,18 @@ void BasicBlock::setMatrix(const Matrix& other_)
     }
 }
 
-void BasicBlock::finalize(void)
+void BasicBlock::createFunc(void)
 {
-    bool rowHandled[38] = {false}; 
-    
+    bool rowHandled[38] = {false};
+
+    std::string code_upShifted = "";
+    std::string code_equivalent = "";
+
+    bool isUsedForEquivalent[38] = {false};
     for(int i=(matrix->getNumRows()-1); i>=0; i--){
-        
+
         // Check if row is unit-row, i.e. value unchanged
         if(rowIsUnchanged(i)){
-            unchangedCnt++;
-            unchangedRows.push(i);
             rowHandled[i] = true;
             continue;
         }
@@ -56,126 +59,135 @@ void BasicBlock::finalize(void)
         // Check if row has an equivalent
         for(int ii=i-1; ii>=0; ii--){
             if(rowsIsEquivalent(i, ii)){
-                equivalentCnt++;
-                equivalentRows.push(i);
                 rowHandled[i] = true;
+                isUsedForEquivalent[ii] = true;
+                std::string line_equivalent = "arr[" + std::to_string(i) + "] = arr[" + std::to_string(ii) + "];\n";
+                if(isUsedForEquivalent[i]){
+                    code_equivalent = line_equivalent + code_equivalent;
+                }
+                else{
+                    code_equivalent += line_equivalent;
+                }
                 break;
             }
         }
     }
 
+    // Check if row is up-shifted
+    bool isUsedForUpShift[38] = {false};
     for(int i=0; i<matrix->getNumRows(); i++){
         if(rowHandled[i]) continue;
         for(int ii=0; ii<matrix->getNumRows(); ii++){
             if(rowHandled[ii] | (i==ii)) continue;
-            if(rowsIsUpShifted(i,ii)){
-                upShiftCnt++;
-                upShiftRows.push(i);
+            if(rowsIsUpShifted(i, ii)){
+                isUsedForUpShift[ii] = true;
+                int upShift = getShift(i, ii);
                 rowHandled[i] = true;
+                std::string line_upShifted = "arr[" + std::to_string(i) + "] = arr[" + std::to_string(ii) + "] + " + std::to_string(upShift) + ";\n";
+                if(isUsedForUpShift[i]){
+                    code_upShifted = line_upShifted + code_upShifted; // Append at the begining
+                }
+                else{
+                    code_upShifted += line_upShifted; // Append at the end
+                }
                 break;
             }
         }
     }
+
+    // Handle dim-shifted rows
+    int remainingRowCnt = 0;
+    for(int i=0; i<matrix->getNumRows(); i++){
+        if(!rowHandled[i]) remainingRowCnt++;
+    }
+
+    struct RowInfo{
+        int idx;
+        int dim;
+    };
+    std::vector<RowInfo> rows;
 
     for(int i=0; i<matrix->getNumRows(); i++){
         if(rowHandled[i]) continue;
-        for(int ii=0; ii<matrix->getNumRows(); ii++){
-            if(rowHandled[ii] | (i==ii)) continue;
-            if(rowIsDimShifted(i,ii)){
-                dimShiftCnt++;
-                dimShiftRows.push(i);
-                rowHandled[i] = true;
+        int dimCnt = getDimCnt(i);
+        rows.push_back({i, dimCnt});
+    }
+
+    std::sort(rows.begin(), rows.end(),
+        [](const RowInfo& a, const RowInfo& b){
+            return a.dim > b.dim;
+    });
+
+    std::string code_dimShifted = "";
+    std::string code_dimShifted_assign = "";
+    for(int i=0; i<rows.size()-1; i++){
+        if(rowHandled[rows[i].idx]) continue;
+
+        for(int ii=i+1; ii<rows.size(); ii++){
+            if(rowIsDimShifted(rows[i].idx, rows[ii].idx)){
+                int shift = getShift(rows[i].idx, rows[ii].idx);
+                int dimDiff = getDimCnt(rows[i].idx) - getDimCnt(rows[ii].idx);
+                auto dims = getDimsCompare(rows[i].idx, rows[ii].idx);
+                std::string line_dimShifted = "int n_" + std::to_string(rows[i].idx) + " = ";
+                line_dimShifted += "MAX" + std::to_string(dimDiff + 1) + "(";
+                line_dimShifted += "n_" + std::to_string(rows[ii].idx) + " + " + std::to_string(shift);
+                for(int dim_i : dims){
+                    line_dimShifted += ", arr[" + std::to_string(dim_i) + "] + " + std::to_string((*matrix)(rows[i].idx, dim_i));
+                }
+                line_dimShifted += ");\n";
+                code_dimShifted = line_dimShifted + code_dimShifted;
+                code_dimShifted_assign += "arr[" + std::to_string(rows[i].idx) + "] = n_" + std::to_string(rows[i].idx) + ";\n";
+                rowHandled[rows[i].idx] = true;
                 break;
             }
         }
     }
 
-    for(int i=0; i<38; i++){
+    // Handle un-handled row
+    std::string code_unique = "";
+    std::string code_unique_assign = "";
+    bool handledUniqueRow = false; // TODO: For debug/trouble shooting
+    for(int i=0; i<matrix->getNumRows(); i++){
         if(!rowHandled[i]){
-            uniqueCnt++;
-            uniqueRows.push(i);
+            code_unique += "int n_" + std::to_string(i) + " = ";
+            code_unique += "MAX" + std::to_string(getDimCnt(i)) + "(";
+            auto dims = getDims(i);
+            bool isFirst = true;
+            for(int dim_i : dims){
+                if(isFirst){
+                    isFirst = false;
+                }
+                else{
+                    code_unique += ", ";
+                }
+                code_unique += "arr[" + std::to_string(dim_i) + "] + " + std::to_string((*matrix)(i, dim_i));
+            }
+            code_unique += ");\n";
+            code_unique_assign += "arr[" + std::to_string(i) + "] = n_" + std::to_string(i) + ";\n";
+
+            if(!handledUniqueRow) handledUniqueRow = true;
+            else std::cout << "MORE THAN ONE UNIQUE ROW....THIS IS A PROBLEM!!!" << std::endl;
         }
     }
 
-    /*for(int i=(matrix->getNumRows()-1); i>=0; i--){
- 
-        bool done = false;
+    // Put code together
+    code = "";
+    code += "#include \"MyHeader.h\"\n";
+    code += "void func_" + std::to_string(id) + "(int arr[38]){\n";
+    code += code_unique;
+    code += code_dimShifted;
+    code += code_dimShifted_assign;
+    code += code_unique_assign;
+    code += code_upShifted;
+    code += code_equivalent;
+    code += "}\n";
 
-        if(rowIsUnchanged(i)){
-            unchangedCnt++;
-            unchangedRows.push(i);
-            continue;
-        }
-
-        for(int ii=i-1; ii>=0; ii--){
-            if(rowsAreEquivalent(i, ii)){
-                equivalentCnt++;
-                equivalentRows.push(i);
-                done = true;
-                break;
-            }
-        }
-        if(done){
-            continue;
-        }
-
-        for(int ii=i-1; ii>=0; ii--){
-            if(rowsAreShifted(i, ii)){
-                shiftCnt++;
-                shiftRows.push(i);
-                break;
-            }
-        }
-
-    }*/
+    func = jitCompiler->compileFunction(code, id);
 }
 
-void BasicBlock::analyze(void)
+JITFuncType BasicBlock::getFunc(void)
 {
-
-    std::cout << "Unchaned rows: ";
-    while(!unchangedRows.empty()){
-        std::cout << unchangedRows.front() << " | ";
-        unchangedRows.pop();
-    }
-    std::cout << std::endl;
-
-    std::cout << "Equivalent rows: ";
-    while(!equivalentRows.empty()){
-        std::cout << equivalentRows.front() << " | ";
-        equivalentRows.pop();
-    }
-    std::cout << std::endl;
-
-    std::cout << "Up-Shift rows: ";
-    while(!upShiftRows.empty()){
-        std::cout << upShiftRows.front() << " | ";
-        upShiftRows.pop();
-    }
-    std::cout << std::endl;
-
-    std::cout << "Dim-Shift rows: ";
-    while(!dimShiftRows.empty()){
-        std::cout << dimShiftRows.front() << " | ";
-        dimShiftRows.pop();
-    }
-    std::cout << std::endl;
-
-    std::cout << "Unique rows: ";
-    while(!uniqueRows.empty()){
-        std::cout << uniqueRows.front() << " | ";
-        uniqueRows.pop();
-    }
-    std::cout << std::endl;
-
-    std::cout << std::endl;
-
-    std::cout << "Num unchanged rows: " << unchangedCnt << std::endl;
-    std::cout << "Num equivalent rows: " << equivalentCnt << std::endl;
-    std::cout << "Num up-shifted rows: " << upShiftCnt << std::endl;
-    std::cout << "Num dim-shifted rows: " << dimShiftCnt << std::endl;
-    std::cout << "Num unique rows: " << uniqueCnt << std::endl;
-
+    return func;
 }
 
 bool BasicBlock::rowIsUnchanged(int row_)
@@ -235,6 +247,18 @@ bool BasicBlock::rowsIsUpShifted(int row_1_, int row_2_){
     return true;
 }
 
+int BasicBlock::getShift(int row_1_, int row_2_)
+{
+    int shift = -1;
+    for(int j=0; j<matrix->getNumCols(); j++){
+        if(((*matrix)(row_1_,j) != -1) & ((*matrix)(row_2_,j) != -1)){
+            shift = (*matrix)(row_1_,j) - (*matrix)(row_2_,j);
+            break;
+        }
+    }
+    return shift;
+}
+
 bool BasicBlock::rowIsDimShifted(int row_1_, int row_2_){
     int shift = -1;
 
@@ -263,6 +287,42 @@ bool BasicBlock::rowIsDimShifted(int row_1_, int row_2_){
     return true;
 }
 
+int BasicBlock::getDimCnt(int row_)
+{
+    int dimCnt = 0;
+
+    for(int j=0; j<matrix->getNumCols(); j++){
+        if((*matrix)(row_,j) != -1){
+            dimCnt++;
+        }
+    }
+
+    return dimCnt;
+}
+
+std::vector<int> BasicBlock::getDims(int row_)
+{
+    std::vector<int> res;
+    for(int j=0; j<matrix->getNumCols(); j++){
+        if((*matrix)(row_, j) != -1){
+            res.push_back(j);
+        }
+    }
+    return res;
+}
+
+std::vector<int> BasicBlock::getDimsCompare(int row_1_, int row_2_)
+{
+    std::vector<int> res;
+
+    for(int j=0; j<matrix->getNumCols(); j++){
+        if(((*matrix)(row_1_,j) != -1) & ((*matrix)(row_2_,j) == -1)){
+            res.push_back(j);
+        }
+    }
+    return res;
+}
+
 void MatrixTester::connectChannel(Channel* channel_)
 {
   // Connect own pointers
@@ -284,7 +344,7 @@ void MatrixTester::initialize(void)
 
 void MatrixTester::execute(void)
 {
-    
+
     int instrCnt = *ch_instrCnt_ptr;
 
     for(curInstrIdx=0; curInstrIdx < instrCnt; curInstrIdx++){
@@ -296,52 +356,16 @@ void MatrixTester::execute(void)
             firstBBInstr = true;
             globalBBCnt++;
             getCurrentBB();
-            //auto mapResponse = bbMap.emplace(ch_pc_ptr[curInstrIdx], std::make_unique<BasicBlock>());
-            //auto& it = mapResponse.first;
-            //bool inserted = mapResponse.second;
-            //if(!inserted){
-            //    knownBB = true;
-            //}
-            //else{
-            //    uniqueBBCnt++;
-            //}
-            //curPc = ch_pc_ptr[curInstrIdx];
-            //curBB = it->second.get();
-            //bbQueue.push(curBB);
         }
 
+        // If BB seen for first time, build up BB-Object
         if(!knownBB){
             updateBBMatrix();
             uniqueInstrCnt++;
-            //auto instrMatrix = instrMatrixGen->getInstructionMatrix(this); 
-            //if(firstBBInstr){
-            //    curBB->setMatrix(*instrMatrix);
-            //}
-            //else{
-            //    curBB->matrix->mpMultiply(*instrMatrix);
-            //}
-            //
-            //// DEBUG
-            //curBB->update(ch_typeId_ptr[curInstrIdx]);
         }
 
-        // Check if current instruction is a branch/jump (i.e., BB ends)
+        // Check if BB-End is reached
         resolveBrPrediction();
-        //if(isBranchInstr()){
-        //
-        //    // Resolve BranchPrediction Model
-        //    if(firstBB){
-        //        firstBB = false;
-        //    }
-        //    else{
-        //        mispredictedQueue.push((curPc == prevBrTarget));
-        //    }
-        //    
-        //    prevBrTarget = ch_brTarget_ptr[curInstrIdx];
-        //    
-        //    activeBB = false;
-        //    knownBB = false;
-        //}
         firstBBInstr = false;
     }
 
@@ -349,10 +373,11 @@ void MatrixTester::execute(void)
 
 void MatrixTester::finalize(void)
 {
-    /*
-    auto x = std::make_unique<Matrix>(37,1);
-    auto y = std::make_unique<Matrix>(38,1);
     
+    // ENABLE FOR PERF.EST BASED ON MAX-PLUS-MATRIX
+    /*auto x = std::make_unique<Matrix>(37,1);
+    auto y = std::make_unique<Matrix>(38,1);
+
     for(size_t i=0; i<37; i++){
         (*x)(i,0) = 0;
     }
@@ -363,13 +388,14 @@ void MatrixTester::finalize(void)
 
         for(size_t i=0; i<36; i++){
             (*x)(i,0) = (*y)(i,0);
+            (*x_2)(i,0) = (*y_2)(i,0);
         }
 
         bbQueue.pop();
-        
+
         if(!bbQueue.empty()){
-            bool mispredicted = mispredictedQueue.front();
-            mispredictedQueue.pop();
+            bool mispredicted = mispredictedQueue_maxplus.front();
+            mispredictedQueue_maxplus.pop();
             if(mispredicted){
                 (*x)(36,0) = (*y)(37,0);
             }
@@ -378,162 +404,34 @@ void MatrixTester::finalize(void)
             }
         }
 
-    }
-    */
+    }*/
 
-    int popCnt = 0;
-    int unchangedCnt = 0;
-    int equivalentCnt = 0;
-    int upShiftCnt = 0;
-    int dimShiftCnt = 0;
-    int uniqueCnt = 0;
+    int cnt = 0;
+    int data[38] = {0};
+    while(!bbFuncQueue.empty()){
+        auto func = bbFuncQueue.front();
+        func(data);
+        bbFuncQueue.pop();
 
-    int problemCnt_1 = 0;
-    int problemCnt_2 = 0;
-
-    while(!bbQueue.empty())
-    {
-        
-        auto bb = bbQueue.front();
-
-        unchangedCnt += bb->unchangedCnt;
-        equivalentCnt += bb->equivalentCnt;
-        upShiftCnt += bb->upShiftCnt;
-        dimShiftCnt += bb->dimShiftCnt;
-        uniqueCnt += bb->uniqueCnt;
-
-        if(bb->uniqueCnt < 1){
-            problemCnt_1++;
-        }
-        else if(bb->uniqueCnt > 1){
-            problemCnt_2++;
-            if(problemCnt_2 < 2){
-                std::cout << "*****************************************************************" << std::endl;
-                bb->matrix->print();
-                std::cout << "\n" << std::endl;
-                bb->analyze();
-                std::cout << "*****************************************************************" << std::endl;
+        if(!bbFuncQueue.empty()){
+            bool mispredicted = mispredictedQueue.front();
+            mispredictedQueue.pop();
+            if(mispredicted){
+                data[36] = data[37];
             }
         }
-
-        /*if(popCnt < 3){
-            std::cout << "*****************************************************************" << std::endl;
-            bb->matrix->print();
-            std::cout << "\n" << std::endl;
-            bb->analyze();
-            std::cout << "*****************************************************************" << std::endl;
-        }*/
-        
-        popCnt++;
-        bbQueue.pop();
     }
 
 
-    /* START TCC TEST AREA*/
-
-    // TCCState *tcc = tcc_new();
-    // if(!tcc){
-    //     std::cerr << "Failed to create TCC context" << std::endl;
-    // }
-
-    /* END TCC TEST AREA*/
-
-    auto jitComp = new JITCompiler();
-    jitComp->proofOfLife();
-
     std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-    std::cout << "Number of BBs: " << popCnt << std::endl;
-    std::cout << "Avg. unchanged rows: " << (float(unchangedCnt) / float(popCnt)) << std::endl;
-    std::cout << "Avg. equivalent rows: " << (float(equivalentCnt) / float(popCnt)) << std::endl;
-    std::cout << "Avg. up-shifted rows: " << (float(upShiftCnt) / float(popCnt)) << std::endl;
-    std::cout << "Avg. dim-shifted rows: " << (float(dimShiftCnt) / float(popCnt)) << std::endl;
-    std::cout << "Avg. unique rows: " << (float(uniqueCnt) / float(popCnt)) << std::endl;
-    std::cout << "\nProblem_1 cnt: " << problemCnt_1 << std::endl;
-    std::cout << "Problem_2 cnt: " << problemCnt_2 << std::endl;
-
-    std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-    //std::cout << "Estimated cycles: " << std::max((*x)(2,0),(*x)(3,0)) << std::endl;
-    std::cout << "Pop count: " << popCnt << std::endl;
+    //std::cout << "Estimated cycles (Max-Plus): " << std::max((*x)(2,0),(*x)(3,0)) << std::endl;
+    std::cout << "Estimated cycles (JIT-Func): " << std::max(data[2],data[3]) << std::endl;
     std::cout << "Number of counted instructions: " << globalInstrCnt << std::endl;
     std::cout << "Number of counted basic blocks: " << globalBBCnt << std::endl;
     std::cout << "Number of unique instructions: " << uniqueInstrCnt << std::endl;
     std::cout << "Number of unique basic blocks: " << uniqueBBCnt << std::endl;
     std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 }
-
-/*
-uint64_t MatrixTester::getGrTypeId(void)
-{
-    uint64_t id = getTypeId();
-    
-    // Arith_Ra_Rb
-    //if(id == 0 || id == 1 || id == 2 || id == 3 || id == 4  || id == 5 || id == 6 || id == 7 || id == 8 || id == 9){
-    if(id >= 0 && id < 10){
-        return 1;
-    }
-    // Arith_Ra
-    //else if(id == 10 || id == 11 || id == 12 || id == 13 || id == 14 || id == 15 || id == 16 || id == 17 || id == 18){
-    if(id >= 10 && id < 19){
-        return 2;
-    }
-    // Arith_X
-    //else if(id == 19 || id == 20){
-    if(id >= 19 && id < 21){
-        return 3;
-    }
-    // Mul_Ra_Rb
-    else if(id == 21){
-        return 4;
-    }
-    // MulH_Ra_Rb
-    //else if(id == 22 || id == 23 || id == 24){
-    if(id >= 22 && id < 25){
-        return 5;
-    }
-    // Csr_Ra
-    //else if(id == 29 || id == 30 || id == 31){
-    if(id >= 29 && id < 32){
-        return 6;
-    }
-    // Csr_X
-    //else if(id == 32 || id == 33 || id == 34){
-    if(id >= 32 && id < 35){
-        return 7;
-    }
-    //Store
-    //else if(id == 35 || id == 36 || id == 37){
-    if(id >= 35 && id < 38){
-        return 8;
-    }
-    // Load
-    //else if(id == 38 || id == 39 || id == 40 || id == 41 || id == 42){
-    if(id >= 38 && id < 43){
-        return 9;
-    }
-    // Branch_Ra_Rb
-    //else if(id == 43 || id == 44 || id == 45 || id == 46 || id == 47 || id == 48){
-    if(id >= 43 && id < 49){
-        return 10;
-    }
-    //ExCtrl (mret, ecall)
-    //else if(id == 49 | id == 50){
-    if(id >= 49 && id < 51){
-        return 11;
-    }
-    // jal
-    else if(id == 52)
-    {
-        return 12;
-    }
-    // jalr
-    else if(id == 53)
-    {
-        return 13;
-    }
-
-    return 0; // Default
-}
-*/
 
 bool MatrixTester::isBranchInstr(void)
 {
@@ -544,31 +442,28 @@ bool MatrixTester::isBranchInstr(void)
 void MatrixTester::getCurrentBB(void)
 {
     curPc = ch_pc_ptr[curInstrIdx];
-    auto mapResponse = bbMap.emplace(curPc, std::make_unique<BasicBlock>());
-    auto& it = mapResponse.first;
-    bool inserted = mapResponse.second;
-    if(!inserted){
+    if(bbMap.find(curPc) != bbMap.end()){
         knownBB = true;
     }
     else{
+        bbMap.emplace(curPc, std::make_unique<BasicBlock>(uniqueBBCnt));
         uniqueBBCnt++;
     }
-    curBB = it->second.get();
-    bbQueue.push(curBB);
+    curBB = bbMap[curPc].get();
+
+    // ENABLE FOR PERF.EST. BASED ON MAX-PLUS-MATRIX
+    //bbQueue.push(curBB);
 }
 
 void MatrixTester::updateBBMatrix(void)
-{
-    auto instrMatrix = instrMatrixGen->getInstructionMatrix(this); 
+{   
+    auto instrMatrix = instrMatrixGen->getInstructionMatrix(this);
     if(firstBBInstr){
         curBB->setMatrix(*instrMatrix);
     }
     else{
         curBB->matrix->mpMultiply(*instrMatrix);
     }
-    
-    // DEBUG
-    curBB->update(ch_typeId_ptr[curInstrIdx]);
 }
 
 void MatrixTester::resolveBrPrediction(void)
@@ -581,13 +476,14 @@ void MatrixTester::resolveBrPrediction(void)
         else{
             mispredictedQueue.push((curPc == prevBrTarget));
         }
-        
+
         if(!knownBB){
-            curBB->finalize();
+            curBB->createFunc();
         }
+        bbFuncQueue.push(curBB->getFunc());
 
         prevBrTarget = ch_brTarget_ptr[curInstrIdx];
-        
+
         activeBB = false;
         knownBB = false;
     }

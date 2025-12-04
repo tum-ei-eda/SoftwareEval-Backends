@@ -17,17 +17,27 @@
 #ifndef SWEVAL_BACKENDS_JIT_COMPILER_H
 #define SWEVAL_BACKENDS_JIT_COMPILER_H
 
-// #include "libtcc.h"
+#include "libtcc.h"
 
 #include <iostream>
+#include <functional>
+#include <string>
+
+//using JITFuncType = int(*)(int, int);
+using JITFuncType = void(*)(int[32]);
 
 class JITCompiler
 {
 public:
-    JITCompiler() {};
-    ~JITCompiler() {};
+    JITCompiler();
+    ~JITCompiler() { if(tcc) tcc_delete(tcc); };
 
-    void proofOfLife(void);
+    JITFuncType compileFunction(const std::string&, int);
+
+    void getJitIncludeDir(void); // TODO: DEBUG. Delete
+
+private:
+    TCCState* tcc;
 
 };
 

@@ -24,60 +24,53 @@
 #include "InstrMatrix.h"
 #include "InstrMatrix_CV32E40P.h"
 
+#include "JITCompiler.h"
+
 #include <iostream>
 #include <cstdint>
 #include <memory>
 #include <unordered_map>
 #include <queue>
+#include <string>
+#include <vector> // TODO: Try out. Remove?
 
 using std::uint64_t;
 
 class BasicBlock
 {
     public:
-    BasicBlock() {};
-    ~BasicBlock() {};
+    BasicBlock(int id_): id(id_) { jitCompiler = new JITCompiler(); };
+    ~BasicBlock() { delete jitCompiler; };
 
     std::unique_ptr<Matrix> matrix;
 
     void setMatrix(const Matrix&);
 
-    void update(uint64_t type_)
-    {
-        instrQueue.push(type_);
-    }
+    // Function creation
+    void createFunc(void);
+    JITFuncType getFunc(void);
 
-    void show(void)
-    {
-        while(!instrQueue.empty())
-        {
-            std::cout << instrQueue.front() << std::endl;
-            instrQueue.pop();
-        }
-    }
 
-    // TODO: BB-anaylsis. Remove
-    void finalize(void);
-    void analyze(void);
+    // TODO: For debug
+    void showCode(void) { std::cout << code << std::endl; };
+
     bool rowIsUnchanged(int);
     bool rowsIsEquivalent(int, int);
     bool rowsIsUpShifted(int, int);
     bool rowIsDimShifted(int, int);
 
-    int unchangedCnt = 0;
-    int equivalentCnt = 0;
-    int upShiftCnt = 0;
-    int dimShiftCnt = 0;
-    int uniqueCnt = 0;
-
-    std::queue<int> unchangedRows;
-    std::queue<int> equivalentRows;
-    std::queue<int> upShiftRows;
-    std::queue<int> dimShiftRows;
-    std::queue<int> uniqueRows;
+    int getShift(int, int);
+    int getDimCnt(int);
+    std::vector<int> getDims(int);
+    std::vector<int> getDimsCompare(int, int);
 
     private:
-    std::queue<uint64_t> instrQueue; 
+
+    JITCompiler* jitCompiler;
+    JITFuncType func;
+    std::string code; // TODO: Currently kept for debug
+
+    int id = 0;
 
 };
 
@@ -99,7 +92,6 @@ class MatrixTester: public Backend
   
   bool isFirstBBInstr(void) { return firstBBInstr; };
   bool isBranchInstr(void);
-  //uint64_t getGrTypeId(void);
 
  private:
   
@@ -132,9 +124,10 @@ class MatrixTester: public Backend
   BasicBlock* curBB;
 
   std::unordered_map<uint64_t, std::unique_ptr<BasicBlock>> bbMap;
-  std::queue<BasicBlock*> bbQueue;
+  //std::queue<BasicBlock*> bbQueue; // ENABLE FOR PERF.EST. BASED ON MAX-PLUS-MATRIX
 
-  std::queue<bool> mispredictedQueue;
+  std::queue<JITFuncType> bbFuncQueue;
+  std::queue<bool> mispredictedQueue;  
 
   void getCurrentBB(void);
   void updateBBMatrix(void);
