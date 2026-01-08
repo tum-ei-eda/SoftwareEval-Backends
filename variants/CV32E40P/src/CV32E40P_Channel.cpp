@@ -45,5 +45,11 @@ void *CV32E40P_Channel::getTraceValueHook(std::string trVal_)
   {
     return rs2_data;
   }
+  
+  if(trVal_ == "isBranch")
+  {
+    return isBranch;
+  }
+
   return nullptr;
 }

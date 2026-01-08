@@ -27,6 +27,7 @@
 class InstructionFunction;
 class MatrixTester;
 
+// TODO: Remove
 class InstructionMatrixGenerator
 {
 public:
@@ -38,6 +39,7 @@ private:
     std::unordered_map<uint64_t, InstructionFunction*> instrFuncMap;
 };
 
+// TODO: Remove
 class InstructionFunction
 {
 public:
@@ -49,6 +51,41 @@ public:
 
 private:
     InstructionMatrixGenerator* const parentGenerator;
+};
+
+
+class InstructionMatrix{
+
+public:
+    InstructionMatrix(std::string name_, uint64_t id_) : name(name_), typeId(id_) {};
+    virtual ~InstructionMatrix() = default;
+
+    const uint64_t typeId;
+    const std::string name;
+
+    virtual void assign(Matrix&, const MatrixTester&) = 0;
+    virtual void mpMultiply(Matrix&, const MatrixTester&) = 0;
+
+};
+
+class InstructionMatrixDict{
+public:
+    InstructionMatrixDict() {};
+    virtual ~InstructionMatrixDict() = default;
+
+    template<typename T>
+    void registerInstrMatrix(){
+        auto instrMatrix =  std::make_unique<T>();
+        auto id = instrMatrix->typeId;
+        auto [iter, inserted] = instrMatrixMap.emplace(id, std::move(instrMatrix));
+        if(!inserted){
+            throw std::runtime_error("Failed to register InstructionMatrix with ID " + std::to_string(id) + ".");
+        }
+    }
+
+    InstructionMatrix* getInstructionMatrix(uint64_t id_) const { return instrMatrixMap.at(id_).get(); };
+private:
+    std::unordered_map<uint64_t, std::unique_ptr<InstructionMatrix>> instrMatrixMap;
 };
 
 #endif // SWEVAL_BACKENDS_INSTR_MATRIX_H

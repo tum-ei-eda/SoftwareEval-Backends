@@ -42,3 +42,23 @@ InstructionFunction::InstructionFunction(InstructionMatrixGenerator* parent_, st
 {
     parentGenerator->addInstructionFunction(this);
 }
+
+//InstructionMatrix::~InstructionMatrix() = default;
+
+//InstructionMatrix::InstructionMatrix(InstructionMatrixDict* parent_, std::string name_, int id_):
+//    parentDict(parent_),
+//    name(name_),
+//    typeId(id_)
+//{
+//    //parentDict->addInstructionMatrix(this);
+//}
+
+//void InstructionMatrixDict::addInstructionMatrix(InstructionMatrix* instrMatrix_)
+//{
+//    auto mapResponse = instrMatrixMap.emplace(instrMatrix_->typeId, instrMatrix_);
+//    bool inserted = mapResponse.second;
+//    if(!inserted)
+//    {
+//        std::cout << "Failed to insert instruction-matrix for instruction type " << instrMatrix_->name << std::endl;
+//    }
+//}

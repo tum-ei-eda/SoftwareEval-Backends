@@ -40,6 +40,8 @@ public:
   uint64_t brTarget [100];
   uint64_t rs2_data [100];
 
+  uint64_t isBranch[100];
+
   virtual void *getTraceValueHook(std::string);
 };
 

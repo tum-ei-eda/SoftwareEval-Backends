@@ -24,6 +24,10 @@
 #include "InstrMatrix.h"
 #include "InstrMatrix_CV32E40P.h"
 
+//#include "SchedulingGraph.h"
+//#include "InstrSchedulingGraph.h"
+//#include "InstrSchedulingGraphs_CV32E40P.h"
+
 #include "JITCompiler.h"
 
 #include <iostream>
@@ -34,40 +38,93 @@
 #include <string>
 #include <vector> // TODO: Try out. Remove?
 
+#include <array>
+#include <list>
+
 using std::uint64_t;
+
+class NodeTable
+{
+  public:
+    NodeTable(std::string inArrName_, std::string outArrName_): inArrName(inArrName_), outArrName(outArrName_) {};
+    ~NodeTable() {};
+
+    void insert(Matrix&, int);
+    std::string getCode(void);
+
+  private:
+    struct Node{
+      public:
+        int index;
+        std::array<int64_t, 39> coeffVector;
+        std::string expression;
+        bool assignNode = false;
+        bool offsetNode = false;
+        bool dimShiftNode = false;
+        int dimShiftCnt = 0;
+
+        std::string getReference() const{
+          if(assignNode){
+            return expression;
+          }
+          return ("t_" + std::to_string(index));
+        }
+    };
+
+    std::list<Node> table;
+
+    void setBaseExpression(Node&);
+
+    bool isIdentical(const Node&, const Node&);
+
+    struct OffsetResult{
+      bool constOffset = false;
+      int offset = 0;
+    };
+    OffsetResult checkConstOffset(const Node&, const Node&);
+
+    struct DimResult{
+      bool dimExtended = false;
+      bool dimExtended_a = false;
+      bool dimExtended_b = false;
+      int offset = 0;
+      std::vector<int> dimVector;
+    };
+    DimResult checkDimShift(const Node&, const Node&);
+
+    std::string addConstStr(int c) const { return c != 0 ? (" + " + std::to_string(c)) : ""; };
+
+    //std::string addConstStr(int c) {}
+
+    std::string inArrName;
+    std::string outArrName;
+
+    static inline constexpr std::size_t NUM_COEFFS = 39; // TODO: Need to get this information for arch-specific matrix
+
+};
 
 class BasicBlock
 {
     public:
-    BasicBlock(int id_): id(id_) { jitCompiler = new JITCompiler(); };
-    ~BasicBlock() { delete jitCompiler; };
-
-    std::unique_ptr<Matrix> matrix;
-
-    void setMatrix(const Matrix&);
+    BasicBlock(int id_): id(id_) { 
+      jitCompiler = new JITCompiler();
+    };
+    ~BasicBlock() { 
+      delete jitCompiler;
+    };
 
     // Function creation
-    void createFunc(void);
+    void createFunc(Matrix&);
     JITFuncType getFunc(void);
-
 
     // TODO: For debug
     void showCode(void) { std::cout << code << std::endl; };
-
-    bool rowIsUnchanged(int);
-    bool rowsIsEquivalent(int, int);
-    bool rowsIsUpShifted(int, int);
-    bool rowIsDimShifted(int, int);
-
-    int getShift(int, int);
-    int getDimCnt(int);
-    std::vector<int> getDims(int);
-    std::vector<int> getDimsCompare(int, int);
 
     private:
 
     JITCompiler* jitCompiler;
     JITFuncType func;
+
     std::string code; // TODO: Currently kept for debug
 
     int id = 0;
@@ -77,7 +134,7 @@ class BasicBlock
 class MatrixTester: public Backend
 {
  public:
-  MatrixTester() {};
+  MatrixTester() : bbMatrix(39,39) {};
   ~MatrixTester() {};
 
   void connectChannel(Channel* channel_);
@@ -85,17 +142,17 @@ class MatrixTester: public Backend
   void execute(void);
   void finalize(void);
 
-  uint64_t getRd(void) { return ch_rd_ptr[curInstrIdx]; };
-  uint64_t getRs1(void) { return ch_rs1_ptr[curInstrIdx]; };
-  uint64_t getRs2(void) { return ch_rs2_ptr[curInstrIdx]; };
-  uint64_t getTypeId(void) {return ch_typeId_ptr[curInstrIdx]; };
+  uint64_t getRd(void) const { return ch_rd_ptr[curInstrIdx]; };
+  uint64_t getRs1(void) const { return ch_rs1_ptr[curInstrIdx]; };
+  uint64_t getRs2(void) const { return ch_rs2_ptr[curInstrIdx]; };
+  uint64_t getTypeId(void) const {return ch_typeId_ptr[curInstrIdx]; };
   
   bool isFirstBBInstr(void) { return firstBBInstr; };
-  bool isBranchInstr(void);
+  bool isBranchInstr(void) { return (ch_isBranch_ptr[curInstrIdx] == 1); };
 
  private:
-  
-   InstructionMatrixGenerator* instrMatrixGen = InstrMatrixGen_CV32E40P;
+
+  InstructionMatrixDict* instrMatrixDict = new InstrMatrixDict_CV32E40P();
 
   // Pointer to channel content
   uint64_t* ch_typeId_ptr;
@@ -105,6 +162,7 @@ class MatrixTester: public Backend
   uint64_t* ch_rs1_ptr;
   uint64_t* ch_rs2_ptr;
   uint64_t* ch_brTarget_ptr;
+  uint64_t* ch_isBranch_ptr;
     
   uint64_t globalInstrCnt = 0;
   uint64_t globalBBCnt = 0;
@@ -121,13 +179,16 @@ class MatrixTester: public Backend
   uint64_t curPc = 0;
   uint64_t prevBrTarget = 0;
 
-  BasicBlock* curBB;
+  Matrix bbMatrix;
 
+  BasicBlock* curBB;
   std::unordered_map<uint64_t, std::unique_ptr<BasicBlock>> bbMap;
-  //std::queue<BasicBlock*> bbQueue; // ENABLE FOR PERF.EST. BASED ON MAX-PLUS-MATRIX
 
   std::queue<JITFuncType> bbFuncQueue;
+
   std::queue<bool> mispredictedQueue;  
+  //bool mispredictedArray[1000];
+  //int arrayPtr = 0;
 
   void getCurrentBB(void);
   void updateBBMatrix(void);

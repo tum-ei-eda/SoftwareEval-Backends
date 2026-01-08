@@ -20,7 +20,7 @@
 #include "MatrixTester.h"
 #include <iostream>
 
-InstructionMatrixGenerator* InstrMatrixGen_CV32E40P = new InstructionMatrixGenerator();
+InstructionMatrixGenerator* InstrMatrixGen_CV32E40P = new InstructionMatrixGenerator(); // TODO: Remove
 
 static InstructionFunction *instrFunction_Default = new InstructionFunction(
     InstrMatrixGen_CV32E40P,
@@ -629,3 +629,1849 @@ static InstructionFunction *instrFunction_jalr = new InstructionFunction(
         return P;
     }
 );
+
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> NEW APPROACH <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< 
+
+void InstrMatrix_Default::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+
+    for(int i=0; i<inMatrix_.getNumRows(); i++){
+        for(int j=0; j<inMatrix_.getNumCols(); j++){
+            // TIMING VARIABLES
+            if(i<NUM_TIME_VARS){
+                // Assigne timing-variable sub-matrix
+                if(j<NUM_TIME_VARS){
+                    inMatrix_(i,j) = timeVarMatrix[i][j];
+                }
+                // Assigne PC (in connector) sub-vector
+                else if(j==IN_CON_COL_PC){
+                    inMatrix_(i,j) = pcVector[i];
+                }
+                else{
+                    inMatrix_(i,j) = -1;
+                }
+            }
+
+            else{
+                if(i==j){
+                    inMatrix_(i,j) = 0;
+                }
+                else{
+                    inMatrix_(i,j) = -1;
+                }   
+            }
+        }
+    }
+
+};
+
+void InstrMatrix_Default::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+    
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+    
+        // TODO: Can avoid long for loop over i? Simply loop over NUM_TIMING VAR and then explicitly go to out connector rows?
+
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_Arith_Ra_Rb::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne RS1 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = rs1Vector[i];
+                    }
+
+                    // Assigne RS2 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = rs2Vector[i];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                // RD REGISTER CONNECTOR
+                else if(i == (NUM_TIME_VARS + environment_.getRd())){
+
+                    // Assigne xd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS2];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRd())){
+                        inMatrix_(i,j) = -1;
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_Arith_Ra_Rb::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(rs1Vector[i], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(rs2Vector[i], bbMatrix_(k,j)));
+                    }
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS2], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_Arith_Ra::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne RS1 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = rs1Vector[i];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                // RD REGISTER CONNECTOR
+                else if(i == (NUM_TIME_VARS + environment_.getRd())){
+
+                    // Assigne xd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRd())){
+                        inMatrix_(i,j) = -1;
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_Arith_Ra::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(rs1Vector[i], bbMatrix_(k,j)));
+                    }
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_Arith_X::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                // RD REGISTER CONNECTOR
+                else if(i == (NUM_TIME_VARS + environment_.getRd())){
+
+                    // Assigne xd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRd())){
+                        inMatrix_(i,j) = -1;
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_Arith_X::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_Mul_Ra_Rb::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne RS1 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = rs1Vector[i];
+                    }
+
+                    // Assigne RS2 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = rs2Vector[i];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                // RD REGISTER CONNECTOR
+                else if(i == (NUM_TIME_VARS + environment_.getRd())){
+
+                    // Assigne xd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS2];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRd())){
+                        inMatrix_(i,j) = -1;
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_Mul_Ra_Rb::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(rs1Vector[i], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(rs2Vector[i], bbMatrix_(k,j)));
+                    }
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS2], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_MulH_Ra_Rb::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne RS1 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = rs1Vector[i];
+                    }
+
+                    // Assigne RS2 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = rs2Vector[i];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                // RD REGISTER CONNECTOR
+                else if(i == (NUM_TIME_VARS + environment_.getRd())){
+
+                    // Assigne xd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS2];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRd())){
+                        inMatrix_(i,j) = -1;
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_MulH_Ra_Rb::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(rs1Vector[i], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(rs2Vector[i], bbMatrix_(k,j)));
+                    }
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS2], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_Csr_Ra::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne RS1 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = rs1Vector[i];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                // RD REGISTER CONNECTOR
+                else if(i == (NUM_TIME_VARS + environment_.getRd())){
+
+                    // Assigne xd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRd())){
+                        inMatrix_(i,j) = -1;
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_Csr_Ra::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(rs1Vector[i], bbMatrix_(k,j)));
+                    }
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_Csr_X::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                // RD REGISTER CONNECTOR
+                else if(i == (NUM_TIME_VARS + environment_.getRd())){
+
+                    // Assigne xd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRd())){
+                        inMatrix_(i,j) = -1;
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_Csr_X::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_Store::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne RS1 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = rs1Vector[i];
+                    }
+
+                    // Assigne RS2 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = rs2Vector[i];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_Store::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(rs1Vector[i], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(rs2Vector[i], bbMatrix_(k,j)));
+                    }
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_Load::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne RS1 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = rs1Vector[i];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                // RD REGISTER CONNECTOR
+                else if(i == (NUM_TIME_VARS + environment_.getRd())){
+
+                    // Assigne xd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRd())){
+                        inMatrix_(i,j) = -1;
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_Load::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(rs1Vector[i], bbMatrix_(k,j)));
+                    }
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_Branch_Ra_Rb::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne RS1 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = rs1Vector[i];
+                    }
+
+                    // Assigne RS2 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = rs2Vector[i];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else if(i == OUT_CON_COL_PC_P){
+
+                    // Assigne pc_p sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = pc_pVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_RS1];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_RS2];
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_PC];
+                    }
+                    else if(j == OUT_CON_COL_PC_P){
+                        inMatrix_(i,j) = -1;
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+                }
+
+                else if(i == OUT_CON_COL_PC_NP){
+
+                    // Assigne pc_p sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = pc_npVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_RS1];
+                    }
+                    else if(j == (NUM_TIME_VARS + environment_.getRs2())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_RS2];
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_PC];
+                    }
+                    else if(j == OUT_CON_COL_PC_NP){
+                        inMatrix_(i,j) = -1;
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_Branch_Ra_Rb::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(rs1Vector[i], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(rs2Vector[i], bbMatrix_(k,j)));
+                    }
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == OUT_CON_COL_PC_P){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(pc_pVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_RS2], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == OUT_CON_COL_PC_NP){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(pc_npVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs2()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_RS2], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == OUT_CON_COL_PC_P){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == OUT_CON_COL_PC_NP){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_ExCtrl::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else if(i == OUT_CON_COL_PC_P){
+
+                    // Assigne pc_p sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = pc_pVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_PC];
+                    }
+                    else if(j == OUT_CON_COL_PC_P){
+                        inMatrix_(i,j) = -1;
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+                }
+
+                else if(i == OUT_CON_COL_PC_NP){
+
+                    // Assigne pc_p sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = pc_npVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_PC];
+                    }
+                    else if(j == OUT_CON_COL_PC_NP){
+                        inMatrix_(i,j) = -1;
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_ExCtrl::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == OUT_CON_COL_PC_P){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(pc_pVector[k], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == OUT_CON_COL_PC_NP){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(pc_npVector[k], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == OUT_CON_COL_PC_P){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == OUT_CON_COL_PC_NP){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_jal::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else if(i == NUM_TIME_VARS + environment_.getRd()){
+
+                    // Assigen rd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else if(j == NUM_TIME_VARS + environment_.getRd()){
+                        inMatrix_(i,j) = -1; // TODO: This is not required. All other elements are set to -1 anyway!
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+
+                }
+
+                else if(i == OUT_CON_COL_PC_P){
+
+                    // Assigne pc_p sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = pc_pVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_PC];
+                    }
+                    else if(j == OUT_CON_COL_PC_P){
+                        inMatrix_(i,j) = -1; // TODO: This is not required. All other elements are set to -1 anyway!
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+                }
+
+                else if(i == OUT_CON_COL_PC_NP){
+
+                    // Assigne pc_np sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = pc_npVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_PC];
+                    }
+                    else if(j == OUT_CON_COL_PC_NP){
+                        inMatrix_(i,j) = -1;
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_jal::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == OUT_CON_COL_PC_P){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(pc_pVector[k], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == OUT_CON_COL_PC_NP){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(pc_npVector[k], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == OUT_CON_COL_PC_P){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == OUT_CON_COL_PC_NP){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};
+
+void InstrMatrix_jalr::assign(Matrix& inMatrix_, const MatrixTester& environment_){
+
+        for(int i=0; i<inMatrix_.getNumRows(); i++){
+            for(int j=0; j<inMatrix_.getNumCols(); j++){
+                // TIMING VARIABLES
+                if(i<NUM_TIME_VARS){
+                    // Assigne timing-variable sub-matrix
+                    if(j<NUM_TIME_VARS){
+                        inMatrix_(i,j) = timeVarMatrix[i][j];
+                    }
+                    
+                    // Assigne RS1 sub-vector
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = rs1Vector[i];
+                    }
+
+                    // Assigne PC (in connector) sub-vector
+                    else if(j==IN_CON_COL_PC){
+                        inMatrix_(i,j) = pcVector[i];
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+                }
+
+                else if(i == NUM_TIME_VARS + environment_.getRd()){
+
+                    // Assigen rd sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = rdVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1];
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_RD][CROSS_ID_PC];
+                    }
+
+                    else if(j == NUM_TIME_VARS + environment_.getRd()){
+                        inMatrix_(i,j) = -1; // TODO: This is not required. All other elements are set to -1 anyway!
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+
+                }
+
+                else if(i == OUT_CON_COL_PC_P){
+
+                    // Assigne pc_p sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = pc_pVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_RS1];
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_PC];
+                    }
+                    else if(j == OUT_CON_COL_PC_P){
+                        inMatrix_(i,j) = -1; // TODO: This is not required. All other elements are set to -1 anyway!
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+                }
+
+                else if(i == OUT_CON_COL_PC_NP){
+
+                    // Assigne pc_np sub-vector
+                    if(j < NUM_TIME_VARS){
+                        inMatrix_(i,j) = pc_npVector[j];
+                    }
+
+                    // Assigne connector-crossing
+                    else if(j == (NUM_TIME_VARS + environment_.getRs1())){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_RS1];
+                    }
+                    else if(j == IN_CON_COL_PC){
+                        inMatrix_(i,j) = conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_PC];
+                    }
+                    else if(j == OUT_CON_COL_PC_NP){
+                        inMatrix_(i,j) = -1;
+                    }
+
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }
+
+                }
+
+                else{
+                    if(i==j){
+                        inMatrix_(i,j) = 0;
+                    }
+                    else{
+                        inMatrix_(i,j) = -1;
+                    }   
+                }
+            }
+        }
+
+};
+
+void InstrMatrix_jalr::mpMultiply(Matrix& bbMatrix_, const MatrixTester& environment_){
+
+    // TODO: Replace getNumCols + getNumRows with fixed (CV32E40P specific size?). Or at least make sure to imply that matrices must be NxN!
+        
+    for(int j=0; j < bbMatrix_.getNumCols(); j++){
+            
+        // Compute results and store in tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                int64_t res = -1;
+                for(int k=0; k < bbMatrix_.getNumRows(); k++){
+
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(timeVarMatrix[i][k], bbMatrix_(k,j))); // TODO: Move the mpMul function out of the class so it is generally accesable
+                    }
+
+                    // TODO: Use else-if!
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(rs1Vector[i], bbMatrix_(k,j)));
+                    }
+
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(rdVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_RD][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == OUT_CON_COL_PC_P){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(pc_pVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_PC_P][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+            if(i == OUT_CON_COL_PC_NP){
+                int64_t res = -1;
+                for (int k=0; k < bbMatrix_.getNumRows(); k++){
+                
+                    if(k < NUM_TIME_VARS){
+                        res = std::max(res, bbMatrix_.mpMul(pc_npVector[k], bbMatrix_(k,j)));
+                    }
+
+                    if(k == NUM_TIME_VARS + environment_.getRs1()){
+                        res = std::max(res, bbMatrix_.mpMul(conCrossMatrix[CROSS_ID_PC_NP][CROSS_ID_RS1], bbMatrix_(k,j)));
+                    }
+                
+                }
+                tempCol[i] = res;
+            }
+
+        }
+
+        // Assign tempCol
+        for(int i=0; i < bbMatrix_.getNumRows(); i++){
+
+            if(i < NUM_TIME_VARS){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == NUM_TIME_VARS + environment_.getRd()){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == OUT_CON_COL_PC_P){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+            if(i == OUT_CON_COL_PC_NP){
+                bbMatrix_(i,j) = tempCol[i];
+            }
+
+        }
+    }
+};

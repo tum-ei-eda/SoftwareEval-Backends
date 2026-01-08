@@ -24,6 +24,8 @@
 #include <iostream>
 #include <iomanip>
 
+// TODO: Add Matrix size to the templates, to make it fixed size. Use arrays instead of vector for the data!
+
 //T: Data type
 //E: Zero element (Max-Plus: -inf / epsilon)
 //U: Unit element (Max-Plus: 0)
@@ -45,8 +47,11 @@ public:
         return data[row_ * numCols + col_];
     };
 
-    size_t getNumRows(void) const { return numRows; };
-    size_t getNumCols(void) const { return numCols; };
+    //size_t getNumRows(void) const { return numRows; };
+    //size_t getNumCols(void) const { return numCols; };
+
+    int getNumRows(void) const { return (int)numRows; };
+    int getNumCols(void) const { return (int)numCols; };
 
     void setIdentity()
     {
