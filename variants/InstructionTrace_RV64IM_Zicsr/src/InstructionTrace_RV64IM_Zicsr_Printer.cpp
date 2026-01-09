@@ -17,23 +17,23 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
 
-#include "InstructionTrace_RV64IMF_Zicsr_Printer.h"
+#include "InstructionTrace_RV64IM_Zicsr_Printer.h"
 
 #include "Printer.h"
 
-#include "InstructionTrace_RV64IMF_Zicsr_Channel.h"
+#include "InstructionTrace_RV64IM_Zicsr_Channel.h"
 
 #include <iostream>
 #include <iomanip>
 
-extern InstructionPrinterSet* InstructionTrace_RV64IMF_Zicsr_InstrPrinterSet;
+extern InstructionPrinterSet* InstructionTrace_RV64IM_Zicsr_InstrPrinterSet;
 
-InstructionTrace_RV64IMF_Zicsr_Printer::InstructionTrace_RV64IMF_Zicsr_Printer(): Printer("InstructionTrace_RV64IMF_Zicsr_Printer", InstructionTrace_RV64IMF_Zicsr_InstrPrinterSet)
+InstructionTrace_RV64IM_Zicsr_Printer::InstructionTrace_RV64IM_Zicsr_Printer(): Printer("InstructionTrace_RV64IM_Zicsr_Printer", InstructionTrace_RV64IM_Zicsr_InstrPrinterSet)
 {}
 
-void InstructionTrace_RV64IMF_Zicsr_Printer::connectChannel(Channel* ch_)
+void InstructionTrace_RV64IM_Zicsr_Printer::connectChannel(Channel* ch_)
 {
-  InstructionTrace_RV64IMF_Zicsr_Channel* channel = static_cast<InstructionTrace_RV64IMF_Zicsr_Channel*>(ch_);
+  InstructionTrace_RV64IM_Zicsr_Channel* channel = static_cast<InstructionTrace_RV64IM_Zicsr_Channel*>(ch_);
   
   pc_ptr = channel->pc;
   code_ptr = channel->code;
@@ -41,7 +41,6 @@ void InstructionTrace_RV64IMF_Zicsr_Printer::connectChannel(Channel* ch_)
   imm_ptr = channel->imm;
   rs1_data_ptr = channel->rs1_data;
   rs2_data_ptr = channel->rs2_data;
-  rs3_data_ptr = channel->rs3_data;
   rd_data_ptr = channel->rd_data;
   jump_pc_ptr = channel->jump_pc;
   csr_ptr = channel->csr;
@@ -49,16 +48,15 @@ void InstructionTrace_RV64IMF_Zicsr_Printer::connectChannel(Channel* ch_)
   mem_addr_ptr = channel->mem_addr;
 }
 
-std::string InstructionTrace_RV64IMF_Zicsr_Printer::getPrintHeader(void)
+std::string InstructionTrace_RV64IM_Zicsr_Printer::getPrintHeader(void)
 {
   std::stringstream caption_strs;	
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "pc" << " , ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "code" << " , ";
-  caption_strs << std::setfill(' ') << std::setw(75) << std::left << "assembly" << " , ";
+  caption_strs << std::setfill(' ') << std::setw(50) << std::left << "assembly" << " , ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "imm" << " , ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs1_data" << " , ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs2_data" << " , ";
-  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs3_data" << " , ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rd_data" << " , ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "jump_pc" << " , ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "csr" << " , ";

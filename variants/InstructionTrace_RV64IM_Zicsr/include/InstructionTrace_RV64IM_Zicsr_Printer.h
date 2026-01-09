@@ -17,8 +17,8 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
                    
-#ifndef SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
-#define SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
+#ifndef SWEVAL_BACKENDS_INSTRUCTIONTRACE_RV64IM_ZICSR_PRINTER_H
+#define SWEVAL_BACKENDS_INSTRUCTIONTRACE_RV64IM_ZICSR_PRINTER_H
 
 #include "Printer.h"
 
@@ -27,22 +27,40 @@
 #include <string>
 #include <cstdint>
 
-class AssemblyTrace_RV64_Printer : public Printer
+class InstructionTrace_RV64IM_Zicsr_Printer : public Printer
 {
 public:
 
-  AssemblyTrace_RV64_Printer();
+  InstructionTrace_RV64IM_Zicsr_Printer();
 
   virtual void connectChannel(Channel*);
   virtual std::string getPrintHeader(void);
 
   int get_pc(void){ return pc_ptr[instrIndex]; };
+  int get_code(void){ return code_ptr[instrIndex]; };
   std::string get_assembly(void){ return assembly_ptr[instrIndex]; };
+  int get_imm(void){ return imm_ptr[instrIndex]; };
+  int get_rs1_data(void){ return rs1_data_ptr[instrIndex]; };
+  int get_rs2_data(void){ return rs2_data_ptr[instrIndex]; };
+  int get_rd_data(void){ return rd_data_ptr[instrIndex]; };
+  int get_jump_pc(void){ return jump_pc_ptr[instrIndex]; };
+  int get_csr(void){ return csr_ptr[instrIndex]; };
+  int get_csr_reg(void){ return csr_reg_ptr[instrIndex]; };
+  int get_mem_addr(void){ return mem_addr_ptr[instrIndex]; };
 
 private:
 
   int* pc_ptr;
+  int* code_ptr;
   char (*assembly_ptr)[50];
+  int* imm_ptr;
+  int* rs1_data_ptr;
+  int* rs2_data_ptr;
+  int* rd_data_ptr;
+  int* jump_pc_ptr;
+  int* csr_ptr;
+  int* csr_reg_ptr;
+  int* mem_addr_ptr;
 };
 
-#endif // SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
+#endif // SWEVAL_BACKENDS_INSTRUCTIONTRACE_RV64IM_ZICSR_PRINTER_H

@@ -16,33 +16,36 @@
 
 /********************* AUTO GENERATE FILE (create by M2-ISA-R::Trace-Generator) *********************/
 
-                   
-#ifndef SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
-#define SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
 
-#include "Printer.h"
+#ifndef SWEVAL_BACKENDS_INSTRUCTIONTRACE_RV64IM_ZICSR_CHANNEL_H
+#define SWEVAL_BACKENDS_INSTRUCTIONTRACE_RV64IM_ZICSR_CHANNEL_H
 
 #include "Channel.h"
 
 #include <string>
+#include <stdbool.h>
 #include <cstdint>
 
-class AssemblyTrace_RV64_Printer : public Printer
+class InstructionTrace_RV64IM_Zicsr_Channel: public Channel
 {
 public:
 
-  AssemblyTrace_RV64_Printer();
+  InstructionTrace_RV64IM_Zicsr_Channel() {};
+  ~InstructionTrace_RV64IM_Zicsr_Channel() {};
 
-  virtual void connectChannel(Channel*);
-  virtual std::string getPrintHeader(void);
+  int pc [100];
+  int code [100];
+  char assembly [100] [50];
+  int imm [100];
+  int rs1_data [100];
+  int rs2_data [100];
+  int rd_data [100];
+  int jump_pc [100];
+  int csr [100];
+  int csr_reg [100];
+  int mem_addr [100];
 
-  int get_pc(void){ return pc_ptr[instrIndex]; };
-  std::string get_assembly(void){ return assembly_ptr[instrIndex]; };
-
-private:
-
-  int* pc_ptr;
-  char (*assembly_ptr)[50];
+  virtual void *getTraceValueHook(std::string);
 };
 
-#endif // SWEVAL_BACKENDS_ASSEMBLYTRACE_RV64_PRINTER_H
+#endif // SWEVAL_BACKENDS_INSTRUCTIONTRACE_RV64IM_ZICSR_CHANNEL_H
