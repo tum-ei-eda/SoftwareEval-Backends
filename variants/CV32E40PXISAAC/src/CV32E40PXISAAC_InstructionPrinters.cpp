@@ -465,7 +465,24 @@ static InstructionPrinter *instrPrinter_custom0 = new InstructionPrinter(
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2_data() << " | ";
+    ret_strs << std::endl;
+    return ret_strs.str();
+  }
+);
+static InstructionPrinter *instrPrinter_custom1 = new InstructionPrinter(
+  CV32E40PXISAAC_InstrPrinterSet,
+  "custom1",
+  26,
+  [](Printer* printer_){
+    std::stringstream ret_strs;
+    CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs1() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rd() << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " | ";
     ret_strs << std::setfill('-') << std::setw(18) << "" << " | ";
+    ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_rs2_data() << " | ";
     ret_strs << std::endl;
     return ret_strs.str();
   }
@@ -473,7 +490,7 @@ static InstructionPrinter *instrPrinter_custom0 = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_div = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "div",
-  26,
+  27,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -490,7 +507,7 @@ static InstructionPrinter *instrPrinter_div = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_rem = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "rem",
-  27,
+  28,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -507,7 +524,7 @@ static InstructionPrinter *instrPrinter_rem = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_divu = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "divu",
-  28,
+  29,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -524,7 +541,7 @@ static InstructionPrinter *instrPrinter_divu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_remu = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "remu",
-  29,
+  30,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -541,7 +558,7 @@ static InstructionPrinter *instrPrinter_remu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_csrrw = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "csrrw",
-  30,
+  31,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -558,7 +575,7 @@ static InstructionPrinter *instrPrinter_csrrw = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_csrrs = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "csrrs",
-  31,
+  32,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -575,7 +592,7 @@ static InstructionPrinter *instrPrinter_csrrs = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_csrrc = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "csrrc",
-  32,
+  33,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -592,7 +609,7 @@ static InstructionPrinter *instrPrinter_csrrc = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_csrrwi = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "csrrwi",
-  33,
+  34,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -609,7 +626,7 @@ static InstructionPrinter *instrPrinter_csrrwi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_csrrsi = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "csrrsi",
-  34,
+  35,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -626,7 +643,7 @@ static InstructionPrinter *instrPrinter_csrrsi = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_csrrci = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "csrrci",
-  35,
+  36,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -643,7 +660,7 @@ static InstructionPrinter *instrPrinter_csrrci = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_sb = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "sb",
-  36,
+  37,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -660,7 +677,7 @@ static InstructionPrinter *instrPrinter_sb = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_sh = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "sh",
-  37,
+  38,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -677,7 +694,7 @@ static InstructionPrinter *instrPrinter_sh = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_sw = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "sw",
-  38,
+  39,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -694,7 +711,7 @@ static InstructionPrinter *instrPrinter_sw = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lw = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "lw",
-  39,
+  40,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -711,7 +728,7 @@ static InstructionPrinter *instrPrinter_lw = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lh = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "lh",
-  40,
+  41,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -728,7 +745,7 @@ static InstructionPrinter *instrPrinter_lh = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lhu = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "lhu",
-  41,
+  42,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -745,7 +762,7 @@ static InstructionPrinter *instrPrinter_lhu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lb = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "lb",
-  42,
+  43,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -762,7 +779,7 @@ static InstructionPrinter *instrPrinter_lb = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_lbu = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "lbu",
-  43,
+  44,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -779,7 +796,7 @@ static InstructionPrinter *instrPrinter_lbu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_beq = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "beq",
-  44,
+  45,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -796,7 +813,7 @@ static InstructionPrinter *instrPrinter_beq = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_bne = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "bne",
-  45,
+  46,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -813,7 +830,7 @@ static InstructionPrinter *instrPrinter_bne = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_blt = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "blt",
-  46,
+  47,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -830,7 +847,7 @@ static InstructionPrinter *instrPrinter_blt = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_bge = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "bge",
-  47,
+  48,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -847,7 +864,7 @@ static InstructionPrinter *instrPrinter_bge = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_bltu = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "bltu",
-  48,
+  49,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -864,7 +881,7 @@ static InstructionPrinter *instrPrinter_bltu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_bgeu = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "bgeu",
-  49,
+  50,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -881,7 +898,7 @@ static InstructionPrinter *instrPrinter_bgeu = new InstructionPrinter(
 static InstructionPrinter *instrPrinter__def = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "_def",
-  50,
+  51,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -898,7 +915,7 @@ static InstructionPrinter *instrPrinter__def = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_jal = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "jal",
-  51,
+  52,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);
@@ -915,7 +932,7 @@ static InstructionPrinter *instrPrinter_jal = new InstructionPrinter(
 static InstructionPrinter *instrPrinter_jalr = new InstructionPrinter(
   CV32E40PXISAAC_InstrPrinterSet,
   "jalr",
-  52,
+  53,
   [](Printer* printer_){
     std::stringstream ret_strs;
     CV32E40PXISAAC_Printer* printer = static_cast<CV32E40PXISAAC_Printer*>(printer_);

@@ -51,6 +51,10 @@ public:
   uint64_t IF_stage = 0;
   uint64_t ID_stage = 0;
   uint64_t EX_stage = 0;
+  uint64_t EX_substage_CUSTOM0_i = 0;
+  uint64_t EX_substage_CUSTOM0_o = 0;
+  uint64_t EX_substage_CUSTOM1_i = 0;
+  uint64_t EX_substage_CUSTOM1_o = 0;
   uint64_t WB_stage = 0;
 
 

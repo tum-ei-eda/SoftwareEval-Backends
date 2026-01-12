@@ -59,6 +59,10 @@ uint64_t CV32E40PXISAAC_PerformanceModel::getCycleCount(void)
     IF_stage 
     ,ID_stage
     ,EX_stage
+    ,EX_substage_CUSTOM0_i
+    ,EX_substage_CUSTOM0_o
+    ,EX_substage_CUSTOM1_i
+    ,EX_substage_CUSTOM1_o
     ,WB_stage
   });
 }

@@ -1198,15 +1198,76 @@ uint64_t n_uA_OF_B;
 n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
 // ID_stage
 uint64_t n_ID_stage;
-n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage});
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage, perfModel->EX_substage_CUSTOM0_i});
 perfModel->ID_stage = n_ID_stage;
-// CUSTOM0
-uint64_t n_CUSTOM0;
-n_CUSTOM0 = n_ID_stage + 1;
-perfModel->regModel.setXd(n_CUSTOM0);
+// CUSTOM0_I
+uint64_t n_CUSTOM0_I = n_ID_stage;
+// EX_substage_CUSTOM0_i
+uint64_t n_EX_substage_CUSTOM0_i;
+n_EX_substage_CUSTOM0_i = std::max({n_CUSTOM0_I, perfModel->EX_substage_CUSTOM0_o});
+perfModel->EX_substage_CUSTOM0_i = n_EX_substage_CUSTOM0_i;
+// CUSTOM0_O
+uint64_t n_CUSTOM0_O;
+n_CUSTOM0_O = n_EX_substage_CUSTOM0_i + 4;
+perfModel->regModel.setXd(n_CUSTOM0_O);
 // EX_stage
-uint64_t n_EX_stage = n_CUSTOM0;
+uint64_t n_EX_stage = n_CUSTOM0_O;
 perfModel->EX_stage = n_EX_stage;
+perfModel->EX_substage_CUSTOM0_o = n_EX_stage;
+
+  }
+);
+
+static SchedulingFunction *schedulingFunction_custom1 = new SchedulingFunction(
+  CV32E40PXISAAC_SchedulingFunctionSet,
+  "custom1",
+  26,
+  [](PerformanceModel* perfModel_){
+  CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
+  // Enter
+uint64_t n_Enter = perfModel->IF_stage;
+// IPort_R
+uint64_t n_IPort_R;
+uint64_t n_IPort_R_max;
+n_IPort_R_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_IPort_R = n_IPort_R_max + 1;
+// PCGen
+uint64_t n_PCGen;
+uint64_t n_PCGen_max;
+n_PCGen_max = std::max({n_Enter, perfModel->staBranchPredModel.getPc()});
+n_PCGen = n_PCGen_max + 1;
+perfModel->staBranchPredModel.setPc_p(n_PCGen);
+// IF_stage
+uint64_t n_IF_stage;
+n_IF_stage = std::max({n_IPort_R, n_PCGen, perfModel->ID_stage});
+perfModel->IF_stage = n_IF_stage;
+// Decoder
+uint64_t n_Decoder;
+n_Decoder = n_IF_stage + 1;
+// uA_OF_A
+uint64_t n_uA_OF_A;
+n_uA_OF_A = std::max({n_IF_stage, perfModel->regModel.getXa()});
+// uA_OF_B
+uint64_t n_uA_OF_B;
+n_uA_OF_B = std::max({n_IF_stage, perfModel->regModel.getXb()});
+// ID_stage
+uint64_t n_ID_stage;
+n_ID_stage = std::max({n_Decoder, n_uA_OF_A, n_uA_OF_B, perfModel->EX_stage, perfModel->EX_substage_CUSTOM1_i});
+perfModel->ID_stage = n_ID_stage;
+// CUSTOM1_I
+uint64_t n_CUSTOM1_I = n_ID_stage;
+// EX_substage_CUSTOM1_i
+uint64_t n_EX_substage_CUSTOM1_i;
+n_EX_substage_CUSTOM1_i = std::max({n_CUSTOM1_I, perfModel->EX_substage_CUSTOM1_o});
+perfModel->EX_substage_CUSTOM1_i = n_EX_substage_CUSTOM1_i;
+// CUSTOM1_O
+uint64_t n_CUSTOM1_O;
+n_CUSTOM1_O = n_EX_substage_CUSTOM1_i + 4;
+perfModel->regModel.setXd(n_CUSTOM1_O);
+// EX_stage
+uint64_t n_EX_stage = n_CUSTOM1_O;
+perfModel->EX_stage = n_EX_stage;
+perfModel->EX_substage_CUSTOM1_o = n_EX_stage;
 
   }
 );
@@ -1214,7 +1275,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_div = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "div",
-  26,
+  27,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1261,7 +1322,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_rem = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "rem",
-  27,
+  28,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1308,7 +1369,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_divu = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "divu",
-  28,
+  29,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1355,7 +1416,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_remu = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "remu",
-  29,
+  30,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1402,7 +1463,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_csrrw = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "csrrw",
-  30,
+  31,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1446,7 +1507,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_csrrs = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "csrrs",
-  31,
+  32,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1490,7 +1551,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_csrrc = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "csrrc",
-  32,
+  33,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1534,7 +1595,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_csrrwi = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "csrrwi",
-  33,
+  34,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1575,7 +1636,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_csrrsi = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "csrrsi",
-  34,
+  35,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1616,7 +1677,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_csrrci = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "csrrci",
-  35,
+  36,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1657,7 +1718,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_sb = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "sb",
-  36,
+  37,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1710,7 +1771,7 @@ perfModel->WB_stage = n_WB_stage;
 static SchedulingFunction *schedulingFunction_sh = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "sh",
-  37,
+  38,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1763,7 +1824,7 @@ perfModel->WB_stage = n_WB_stage;
 static SchedulingFunction *schedulingFunction_sw = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "sw",
-  38,
+  39,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1816,7 +1877,7 @@ perfModel->WB_stage = n_WB_stage;
 static SchedulingFunction *schedulingFunction_lw = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "lw",
-  39,
+  40,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1867,7 +1928,7 @@ perfModel->WB_stage = n_WB_stage;
 static SchedulingFunction *schedulingFunction_lh = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "lh",
-  40,
+  41,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1918,7 +1979,7 @@ perfModel->WB_stage = n_WB_stage;
 static SchedulingFunction *schedulingFunction_lhu = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "lhu",
-  41,
+  42,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -1969,7 +2030,7 @@ perfModel->WB_stage = n_WB_stage;
 static SchedulingFunction *schedulingFunction_lb = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "lb",
-  42,
+  43,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2020,7 +2081,7 @@ perfModel->WB_stage = n_WB_stage;
 static SchedulingFunction *schedulingFunction_lbu = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "lbu",
-  43,
+  44,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2071,7 +2132,7 @@ perfModel->WB_stage = n_WB_stage;
 static SchedulingFunction *schedulingFunction_beq = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "beq",
-  44,
+  45,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2118,7 +2179,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_bne = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "bne",
-  45,
+  46,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2165,7 +2226,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_blt = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "blt",
-  46,
+  47,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2212,7 +2273,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_bge = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "bge",
-  47,
+  48,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2259,7 +2320,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_bltu = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "bltu",
-  48,
+  49,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2306,7 +2367,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_bgeu = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "bgeu",
-  49,
+  50,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2353,7 +2414,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction__def = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "_def",
-  50,
+  51,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2380,7 +2441,7 @@ perfModel->IF_stage = n_IF_stage;
 static SchedulingFunction *schedulingFunction_jal = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "jal",
-  51,
+  52,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
@@ -2422,7 +2483,7 @@ perfModel->EX_stage = n_EX_stage;
 static SchedulingFunction *schedulingFunction_jalr = new SchedulingFunction(
   CV32E40PXISAAC_SchedulingFunctionSet,
   "jalr",
-  52,
+  53,
   [](PerformanceModel* perfModel_){
   CV32E40PXISAAC_PerformanceModel* perfModel = static_cast<CV32E40PXISAAC_PerformanceModel*>(perfModel_);
   // Enter
