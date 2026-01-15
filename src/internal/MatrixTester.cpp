@@ -297,6 +297,28 @@ void MatrixTester::execute(void){
             firstBBInstr = true;
             globalBBCnt++;
             getCurrentBB();
+
+            // Check if BB was mispredicted
+            if(firstBB){
+
+                firstBB = false;
+            
+                mispredictedBuffer[0][bufferCnt] = true;
+                mispredictedBuffer[1][bufferCnt] = true;
+                mispredictedBuffer[2][bufferCnt] = true;
+                mispredictedBuffer[3][bufferCnt] = true;
+
+                mispredictedBuffer[4][bufferCnt] = true;
+            }
+            else{
+                
+                mispredictedBuffer[0][bufferCnt] = true;
+                mispredictedBuffer[1][bufferCnt] = (curPc == prevBrTarget);
+                mispredictedBuffer[2][bufferCnt] = !(curPc == prevBrTarget);
+                mispredictedBuffer[3][bufferCnt] = (((curPc == prevBrTarget) && (curPc > prevBrPc)) || ((curPc != prevBrTarget) && (prevBrTarget < prevBrPc)));
+                
+                mispredictedBuffer[4][bufferCnt] = brPredModel.isMispredicted(ch_pc_ptr[curInstrIdx]);
+            }
         }
 
         // If BB seen for first time, build up BB-Object
@@ -309,14 +331,12 @@ void MatrixTester::execute(void){
         resolveBrPrediction();
         firstBBInstr = false;
 
-        //arrayPtr++;
-        //if(arrayPtr >= 1000) arrayPtr = 0;
     }
 }
 
 void MatrixTester::finalize(void){
     
-    int data[39] = {0};
+    /*int data[39] = {0};
     while(!bbFuncQueue.empty()){
         auto func = bbFuncQueue.front();
         func(data);
@@ -333,10 +353,23 @@ void MatrixTester::finalize(void){
             }
         }
 
-    }
+    }*/
+
+    updatePerformanceData();
 
     std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-    std::cout << "Estimated cycles: " << std::max(data[2],data[3]) << std::endl;
+    //std::cout << "Estimated cycles: " << std::max(performanceData[2],performanceData[3]) << std::endl;
+    
+    //std::cout << "Estimated cycles (No Br.Pred.): " << std::max(performanceData_noPred[2],performanceData_noPred[3]) << std::endl;
+    //std::cout << "Estimated cycles (Static: NT): " << std::max(performanceData_staNT[2],performanceData_staNT[3]) << std::endl;
+    //std::cout << "Estimated cycles (Static: T): " << std::max(performanceData_staT[2],performanceData_staT[3]) << std::endl;
+    
+    std::cout << "Estimated cycles (No Br.Pred.): " << std::max(performanceData[0][2],performanceData[0][3]) << std::endl;
+    std::cout << "Estimated cycles (Static: NT): " << std::max(performanceData[1][2],performanceData[1][3]) << std::endl;
+    std::cout << "Estimated cycles (Static: T): " << std::max(performanceData[2][2],performanceData[2][3]) << std::endl;
+    std::cout << "Estimated cycles (Static: BwT/FwNT): " << std::max(performanceData[3][2],performanceData[3][3]) << std::endl;
+    std::cout << "Estimated cycles (Dynamic: 2-bit): " << std::max(performanceData[4][2],performanceData[4][3]) << std::endl;
+
     std::cout << "Number of counted instructions: " << globalInstrCnt << std::endl;
     std::cout << "Number of counted basic blocks: " << globalBBCnt << std::endl;
     std::cout << "Number of unique instructions: " << uniqueInstrCnt << std::endl;
@@ -370,23 +403,45 @@ void MatrixTester::updateBBMatrix(void){
 void MatrixTester::resolveBrPrediction(void){
     if(isBranchInstr()){
 
-        // Resolve BranchPrediction Model
-        if(firstBB){
-            firstBB = false;
-        }
-        else{
-            mispredictedQueue.push((curPc == prevBrTarget));
-            //mispredictedArray[arrayPtr] = (curPc == prevBrTarget);
-        }
+        // Register branch with Branch-Prediction-Models
         prevBrTarget = ch_brTarget_ptr[curInstrIdx];
-
+        prevBrPc = ch_pc_ptr[curInstrIdx];
+        brPredModel.registerBranch(prevBrPc, prevBrTarget);
 
         if(!knownBB){
             curBB->createFunc(bbMatrix);
         }
-        bbFuncQueue.push(curBB->getFunc());
+        //bbFuncQueue.push(curBB->getFunc());
+        bbFuncBuffer[bufferCnt] = curBB->getFunc();
 
         activeBB = false;
         knownBB = false;
+
+        bufferCnt++;
+        if(bufferCnt >= 1000){
+            updatePerformanceData();
+            bufferCnt = 0;
+        }
     }
+}
+
+void MatrixTester::updatePerformanceData(void){
+
+    for(int i=0; i<5; i++){
+        for(int j=0; j < bufferCnt; j++){
+
+            bool mispredicted = mispredictedBuffer[i][j];
+            if(mispredicted){
+                performanceData[i][36] = performanceData[i][38];
+            }
+            else{
+                performanceData[i][36] = performanceData[i][37];
+            }
+
+            auto func = bbFuncBuffer[j];
+            func(performanceData[i]);
+
+        }
+    }
+
 }

@@ -1,0 +1,68 @@
+/*
+ * Copyright 2026 Chair of EDA, Technical University of Munich
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *	 http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef BR_PRED_MODEL_TEST
+#define BR_PRED_MODEL_TEST
+
+#include <stdbool.h>
+#include <array>
+#include <cstdint>
+
+class PredictFsm
+{
+public:
+    PredictFsm(){};
+    bool getPrediction(void);
+    void update(bool);
+private:
+    enum state_t {STRONG_NOT_TAKEN, WEAK_NOT_TAKEN, WEAK_TAKEN, STRONG_TAKEN};
+    state_t state = STRONG_NOT_TAKEN;
+};
+
+struct BranchHistoryEntry
+{
+    bool valid = false;
+    PredictFsm state;
+};
+
+class BranchHistoryTable
+{
+public:
+    BranchHistoryTable(){};
+    bool getPrediction(uint64_t);
+    void update(uint64_t, bool);
+private:
+    std::array<std::array<BranchHistoryEntry, 64>, 2> table;
+    int getPageIndex(uint64_t pc_) { return ((pc_ & 0x00000002) >> 1); };
+    int getRowIndex(uint64_t pc_) { return ((pc_ & 0x000000FC) >> 2); };
+};
+
+class BrPredModelTest
+{
+public:
+    BrPredModelTest(): bht() {};
+    void registerBranch(uint64_t, uint64_t);
+    bool isMispredicted(uint64_t);
+
+private:
+    BranchHistoryTable bht;
+
+    uint64_t brTarget;
+    uint64_t brPc;
+    bool predictedTaken;
+};
+
+#endif // BR_PRED_MODEL_TEST

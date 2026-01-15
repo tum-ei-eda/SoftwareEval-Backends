@@ -30,6 +30,8 @@
 
 #include "JITCompiler.h"
 
+#include "BrPredModelTest.h" // TODO: Test purposes
+
 #include <iostream>
 #include <cstdint>
 #include <memory>
@@ -134,7 +136,7 @@ class BasicBlock
 class MatrixTester: public Backend
 {
  public:
-  MatrixTester() : bbMatrix(39,39) {};
+  MatrixTester() : bbMatrix(39,39), brPredModel() {};
   ~MatrixTester() {};
 
   void connectChannel(Channel* channel_);
@@ -178,6 +180,7 @@ class MatrixTester: public Backend
 
   uint64_t curPc = 0;
   uint64_t prevBrTarget = 0;
+  uint64_t prevBrPc = 0;
 
   Matrix bbMatrix;
 
@@ -186,13 +189,24 @@ class MatrixTester: public Backend
 
   std::queue<JITFuncType> bbFuncQueue;
 
-  std::queue<bool> mispredictedQueue;  
-  //bool mispredictedArray[1000];
-  //int arrayPtr = 0;
+  //std::queue<bool> mispredictedQueue;  
+
+  int bufferCnt = 0;
+  //bool mispredictedBuffer[1000];
+  JITFuncType bbFuncBuffer[1000];
+
+  bool mispredictedBuffer[5][1000];
 
   void getCurrentBB(void);
   void updateBBMatrix(void);
   void resolveBrPrediction(void);
+
+  void updatePerformanceData(void);
+  //int performanceData[39] = {0};
+
+  int performanceData[5][39] = {0};
+
+  BrPredModelTest brPredModel;
 
 };
 

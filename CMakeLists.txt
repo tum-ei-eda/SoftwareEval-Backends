@@ -11,6 +11,7 @@ set(SRC_FILES
   src/internal/MatrixTester.cpp
   src/internal/InstrMatrix.cpp
   src/internal/InstrMatrix_CV32E40P.cpp
+  src/internal/BrPredModelTest.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${SRC_FILES})
