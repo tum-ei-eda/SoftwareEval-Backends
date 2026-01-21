@@ -305,7 +305,7 @@ public:
 
   auto setEnterLsuElmUnpackVs2(uint64_t enterTime_) -> void {
     auto const vs2 = vs2_ptr[getInstrIndex()];
-    auto const waitTime = getWaitTimeLsu(getLoadStoreEmul());
+    auto const waitTime = getWaitTimeLsu(getLmul());
     auto const maxRegisterTime =
         std::max(vectorRegisterModel[vs2] + 1, enterTime_);
 
@@ -368,10 +368,10 @@ public:
     auto const emul = getLoadStoreEmul();
     auto const cyclesPerRegister = vlen_ / VectorConfig::vMemWidth;
     auto const vd = vd_ptr[getInstrIndex()];
-    auto const maxStallTime =
-        std::max(vregWritePortLsuElmFree, vectorRegisterReads[vd]);
+    // auto const maxStallTime =
+    //     std::max(vregWritePortLsuElmFree, vectorRegisterReads[vd]);
     auto const writeStart = std::max(baseTimestamp_ + cyclesPerRegister + 1,
-                                     maxStallTime);
+                                     vregWritePortLsuElmFree);
     setRegisterTimes(vd, writeStart, emul, cyclesPerRegister);
 
     // Write port free 1 cycle before last register is valid
@@ -401,8 +401,7 @@ public:
   void setVd(uint64_t baseTimestamp_) {
     auto const vd = vd_ptr[getInstrIndex()];
     auto const cyclesPerRegister = (vlen_ / vlane_width_);
-    auto const writeTime =
-        std::max(baseTimestamp_ + cyclesPerRegister, vectorRegisterReads[vd]);
+    auto const writeTime = baseTimestamp_ + cyclesPerRegister;
 
     vectorRegisterModel[vd] = writeTime;
 
@@ -412,14 +411,14 @@ public:
     // lastWrite = writeTime;
   };
 
-  void setVs2ReadDone(uint64_t enterTime) {
-    auto const vs2 = vs2_ptr[getInstrIndex()];
-    auto const cyclesPerRegister = (vlen_ / getSew());
-    auto const emul = getLmul();
-    for (size_t i = 0; i < emul; ++i) {
-      vectorRegisterReads[vs2 + i] = enterTime + cyclesPerRegister;
-    }
-  }
+  // void setVs2ReadDone(uint64_t enterTime) {
+  //   auto const vs2 = vs2_ptr[getInstrIndex()];
+  //   auto const cyclesPerRegister = (vlen_ / getSew());
+  //   auto const emul = getLmul();
+  //   for (size_t i = 0; i < emul; ++i) {
+  //     vectorRegisterReads[vs2 + i] = enterTime + cyclesPerRegister;
+  //   }
+  // }
 
   // Set register timestamps for regular vector ALU instructions
   void setVdGroupArith(uint64_t const baseTimestamp_) {
@@ -491,7 +490,7 @@ public:
         writeStart + (emul * elementsPerRegister) + elementsPerRegister;
 
     for (size_t i = 0; i < emul; i++) {
-      vectorRegisterModel[registerBaseIndex + i] = writeEnd + 1;
+      vectorRegisterModel[registerBaseIndex + i] = writeEnd;
       // std::cout << "v" << registerBaseIndex + i << " @ " << writeEnd
       //           << ", d: " << (int)writeEnd - lastWrite << "\n";
     }
@@ -517,6 +516,7 @@ public:
     for (size_t i = 0; i < emul; ++i) {
       // TODO
       vectorRegisterModel[registerBaseIndex + i] = groupTimestamp;
+      std::cout << "v" << registerBaseIndex + i << " @ " << groupTimestamp << "\n";
     }
   }
 
@@ -570,6 +570,7 @@ private:
 
     for (size_t i = 0; i < emul; ++i) {
       vectorRegisterModel[registerBaseIndex + i] = runningTimestamp;
+      //std::cout << "v" << registerBaseIndex + i << " @ " << runningTimestamp << "\n";
       runningTimestamp += cyclesPerRegister;
     }
   }
@@ -583,8 +584,8 @@ private:
 
     for (size_t i = 0; i < emul; ++i) {
       vectorRegisterModel[vd + i] = runningTimestamp;
-      vectorRegisterReads[vs1 + i] = runningTimestamp;
-      vectorRegisterReads[vs2 + i] = runningTimestamp;
+      // vectorRegisterReads[vs1 + i] = runningTimestamp;
+      // vectorRegisterReads[vs2 + i] = runningTimestamp;
       runningTimestamp += cyclesPerRegister;
     }
   }
@@ -597,7 +598,7 @@ private:
 
     for (size_t i = 0; i < emul; ++i) {
       vectorRegisterModel[vd + i] = runningTimestamp;
-      vectorRegisterReads[vs2 + i] = runningTimestamp;
+      // vectorRegisterReads[vs2 + i] = runningTimestamp;
       runningTimestamp += cyclesPerRegister;
     }
   }

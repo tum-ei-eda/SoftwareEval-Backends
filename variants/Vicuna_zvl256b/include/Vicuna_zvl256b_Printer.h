@@ -16,8 +16,8 @@
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
                    
-#ifndef SWEVAL_BACKENDS_VICUNA_ZVL64B_PRINTER_H
-#define SWEVAL_BACKENDS_VICUNA_ZVL64B_PRINTER_H
+#ifndef SWEVAL_BACKENDS_VICUNA_ZVL256B_PRINTER_H
+#define SWEVAL_BACKENDS_VICUNA_ZVL256B_PRINTER_H
 
 #include "Printer.h"
 
@@ -26,11 +26,11 @@
 #include <string>
 #include <cstdint>
 
-class Vicuna_zvl64b_Printer : public Printer
+class Vicuna_zvl256b_Printer : public Printer
 {
 public:
 
-  Vicuna_zvl64b_Printer();
+  Vicuna_zvl256b_Printer();
 
   virtual void connectChannel(Channel*);
   virtual std::string getPrintHeader(void);
@@ -70,4 +70,4 @@ private:
   uint64_t* rs2_data_ptr;
 };
 
-#endif // SWEVAL_BACKENDS_VICUNA_ZVL64B_PRINTER_H
+#endif // SWEVAL_BACKENDS_VICUNA_ZVL256B_PRINTER_H

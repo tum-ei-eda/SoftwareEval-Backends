@@ -16,8 +16,8 @@
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
 
-#ifndef SWEVAL_BACKENDS_VICUNA_ZVL64B_CHANNEL_H
-#define SWEVAL_BACKENDS_VICUNA_ZVL64B_CHANNEL_H
+#ifndef SWEVAL_BACKENDS_VICUNA_ZVL128B_CHANNEL_H
+#define SWEVAL_BACKENDS_VICUNA_ZVL128B_CHANNEL_H
 
 #include "Channel.h"
 
@@ -25,12 +25,12 @@
 #include <stdbool.h>
 #include <cstdint>
 
-class Vicuna_zvl64b_Channel: public Channel
+class Vicuna_zvl128b_Channel: public Channel
 {
 public:
 
-  Vicuna_zvl64b_Channel() {};
-  ~Vicuna_zvl64b_Channel() {};
+  Vicuna_zvl128b_Channel() {};
+  ~Vicuna_zvl128b_Channel() {};
 
   uint64_t rs1 [100];
   uint64_t rs2 [100];
@@ -51,4 +51,4 @@ public:
   virtual void *getTraceValueHook(std::string);
 };
 
-#endif // SWEVAL_BACKENDS_VICUNA_ZVL64B_CHANNEL_H
+#endif // SWEVAL_BACKENDS_VICUNA_ZVL128B_CHANNEL_H

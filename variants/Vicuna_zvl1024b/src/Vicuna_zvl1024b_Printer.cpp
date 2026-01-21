@@ -16,23 +16,23 @@
 
 /********************* AUTO GENERATE FILE (create by Trace-Generator) *********************/
 
-#include "Vicuna_zvl64b_Printer.h"
+#include "Vicuna_zvl1024b_Printer.h"
 
 #include "Printer.h"
 
-#include "Vicuna_zvl64b_Channel.h"
+#include "Vicuna_zvl1024b_Channel.h"
 
 #include <iostream>
 #include <iomanip>
 
-extern InstructionPrinterSet* Vicuna_zvl64b_InstrPrinterSet;
+extern InstructionPrinterSet* Vicuna_zvl1024b_InstrPrinterSet;
 
-Vicuna_zvl64b_Printer::Vicuna_zvl64b_Printer(): Printer("Vicuna_zvl64b_Printer", Vicuna_zvl64b_InstrPrinterSet)
+Vicuna_zvl1024b_Printer::Vicuna_zvl1024b_Printer(): Printer("Vicuna_zvl1024b_Printer", Vicuna_zvl1024b_InstrPrinterSet)
 {}
 
-void Vicuna_zvl64b_Printer::connectChannel(Channel* ch_)
+void Vicuna_zvl1024b_Printer::connectChannel(Channel* ch_)
 {
-  Vicuna_zvl64b_Channel* channel = static_cast<Vicuna_zvl64b_Channel*>(ch_);
+  Vicuna_zvl1024b_Channel* channel = static_cast<Vicuna_zvl1024b_Channel*>(ch_);
   
   rs1_ptr = channel->rs1;
   rs2_ptr = channel->rs2;
@@ -51,7 +51,7 @@ void Vicuna_zvl64b_Printer::connectChannel(Channel* ch_)
   rs2_data_ptr = channel->rs2_data;
 }
 
-std::string Vicuna_zvl64b_Printer::getPrintHeader(void)
+std::string Vicuna_zvl1024b_Printer::getPrintHeader(void)
 {
   std::stringstream caption_strs;	
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs1" << " | ";

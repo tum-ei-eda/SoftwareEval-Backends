@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-#include "Vicuna_zvl64b_Channel.h"
+#include "Vicuna_zvl128b_Channel.h"
 
-void *Vicuna_zvl64b_Channel::getTraceValueHook(std::string trVal_)
+void *Vicuna_zvl128b_Channel::getTraceValueHook(std::string trVal_)
 {
   if(trVal_ == "rs1")
   {

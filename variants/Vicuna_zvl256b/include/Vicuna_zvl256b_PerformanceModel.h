@@ -17,8 +17,8 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
 
 
-#ifndef SWEVAL_BACKENDS_VICUNA_ZVL64B_PERFORMANCE_MODEL_H
-#define SWEVAL_BACKENDS_VICUNA_ZVL64B_PERFORMANCE_MODEL_H
+#ifndef SWEVAL_BACKENDS_VICUNA_ZVL256B_PERFORMANCE_MODEL_H
+#define SWEVAL_BACKENDS_VICUNA_ZVL256B_PERFORMANCE_MODEL_H
 
 #include <stdbool.h>
 #include <string>
@@ -41,15 +41,15 @@
 #include "models/cv32e40p/DividerModel.h"
 #include "models/cv32e40p/DividerUnsignedModel.h"
 
-namespace Vicuna_zvl64b{
+namespace Vicuna_zvl256b{
 
-extern SchedulingFunctionSet* Vicuna_zvl64b_SchedulingFunctionSet;
+extern SchedulingFunctionSet* Vicuna_zvl256b_SchedulingFunctionSet;
 
-class Vicuna_zvl64b_PerformanceModel : public PerformanceModel
+class Vicuna_zvl256b_PerformanceModel : public PerformanceModel
 {
 public:
 
-  Vicuna_zvl64b_PerformanceModel() : PerformanceModel("Vicuna_zvl64b", Vicuna_zvl64b_SchedulingFunctionSet)
+  Vicuna_zvl256b_PerformanceModel() : PerformanceModel("Vicuna_zvl256b", Vicuna_zvl256b_SchedulingFunctionSet)
     ,V_IQ_stg(2,0)
     ,V_EX_Arith_Unit_stg(5,0)
     ,V_EX_LSU_ELM_Unit_stg(2,0)
@@ -123,6 +123,6 @@ public:
 
 };
 
-} // namespace Vicuna_zvl64b
+} // namespace Vicuna_zvl256b
 
-#endif // SWEVAL_BACKENDS_VICUNA_ZVL64B_PERFORMANCE_MODEL_H
+#endif // SWEVAL_BACKENDS_VICUNA_ZVL256B_PERFORMANCE_MODEL_H
