@@ -17,6 +17,8 @@
 #ifndef SWEVAL_BACKENDS_TRACE_PRINTER_H
 #define SWEVAL_BACKENDS_TRACE_PRINTER_H
 
+#include <cstdint>
+
 #include "Channel.h"
 #include "Backend.h"
 #include "Printer.h"

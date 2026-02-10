@@ -38,7 +38,7 @@ public:
 
     // Tracing API
     std::string getInfoHeader(); 
-    std::string getInfoStream();
+    std::string getInfoStream() const;
   
 private:
     uint64_t pc_p = 0;

@@ -24,7 +24,7 @@
 #include <iostream> // Used for info prints in constructor. Replace with common print handling?
 #include <sstream> // Used for info prints in constructor. Replace with common print handling?
 #include <iomanip> // Used for info prints in constructor. Replace with common print handling?
-
+#include <unordered_set>
 MultiElementTimingVariable::MultiElementTimingVariable(int numElements_, int resetValue_) : NUM_ELEMENTS(numElements_)
 {
   fifo = new uint64_t[NUM_ELEMENTS];
@@ -45,7 +45,12 @@ uint64_t MultiElementTimingVariable::get(int depth_)
   return fifo[index];
 }
 
-PerformanceModel::PerformanceModel(std::string name_, SchedulingFunctionSet* schedulingFunctionSet_) : name(name_), schedulingFunctionSet(schedulingFunctionSet_)
+PerformanceModel::PerformanceModel(std::string name_, SchedulingFunctionSet* schedulingFunctionSet_)
+  : PerformanceModel(name_, schedulingFunctionSet_, nullptr)
+{}
+
+PerformanceModel::PerformanceModel(std::string name_, SchedulingFunctionSet* schedulingFunctionSet_, SchedulingPrinterSet* schedulingPrinterSet_) : name(name_), schedulingFunctionSet(schedulingFunctionSet_), schedulingPrinterSet(schedulingPrinterSet_)
+  // :PerformanceModel(std::string name_, schedulingFunctionSet_, nullptr): name(name_), schedulingFunctionSet(schedulingFunctionSet_)
 {
     schedulingFunctionSet->foreach([this](SchedulingFunction &func)
     {
@@ -56,6 +61,16 @@ PerformanceModel::PerformanceModel(std::string name_, SchedulingFunctionSet* sch
         }
         schedulingFunction_map[func.typeId] = func.schedulingFunction;
     });
+
+    if (schedulingPrinterSet){
+      schedulingPrinterSet->foreach([this](SchedulingPrinter &pr)
+      {
+        auto it = printerFunction_map.find(pr.typeId);
+        if (it != printerFunction_map.end())
+          return;
+        printerFunction_map[pr.typeId] = pr.schedulingPrinter;
+      });
+    }
 }
 
 void PerformanceModel::callSchedulingFunction(int typeId_)
@@ -84,6 +99,53 @@ SchedulingFunction::SchedulingFunction(SchedulingFunctionSet* parent_, std::stri
 {
     parentSet->addSchedulingFunction(this);
 }
+
+// std::string PerformanceModel::callSchedulingPrinter(int typeId_){
+//   return printerFunction_map[typeId_](this);
+// }
+
+std::string PerformanceModel::getPipelineStream(uint64_t typeId)
+{
+
+  if (printerFunction_map.empty()) {
+        return getPipelineStream();
+    }
+  static const std::unordered_set<int> kWBTypeIds = {35, 36, 37, 38, 39, 40, 41, 42};
+  static const std::unordered_set<int> kNoWBTypeIds = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34, 
+                                                      43,44,45,46,47,48,49,50,51,52};
+
+  int instrTypeId = static_cast<int>(typeId);
+  // int tempTypeId = 0;
+
+  // if (kWBTypeIds.count(instrTypeId)) {
+  //     tempTypeId = 1;
+  // } else if (kNoWBTypeIds.count(instrTypeId)) {
+  //     tempTypeId = 0;
+  // } else {
+  //     tempTypeId = 0;
+  // }
+  return printerFunction_map[instrTypeId](this);
+}
+
+void SchedulingPrinterSet::addSchedulingPrinter(SchedulingPrinter* p) {
+  schedulingPrinter_set.insert(p);
+}
+
+void SchedulingPrinterSet::foreach(std::function<void(SchedulingPrinter &)> func) {
+  for (auto it = schedulingPrinter_set.begin(); it != schedulingPrinter_set.end(); it++) {
+    func(**it);
+  }
+}
+
+SchedulingPrinter::SchedulingPrinter(SchedulingPrinterSet* parent_, std::string name_, int typeId_, std::function<std::string(PerformanceModel*)> pr_):
+  typeId(typeId_), 
+  name(name_), 
+  parentSet(parent_),
+  schedulingPrinter(pr_)
+{
+  parentSet->addSchedulingPrinter(this);
+}
+
 
 //int SharedResourceModel::getDelay(int prev_cycle)
 //{

@@ -70,7 +70,7 @@ std::string StaticBranchPredictModel::getInfoHeader()
   return ret_strs.str();
 }
 
-std::string StaticBranchPredictModel::getInfoStream()
+std::string StaticBranchPredictModel::getInfoStream() const
 {
   std::stringstream ret_strs;
   ret_strs << mispredicted_info;

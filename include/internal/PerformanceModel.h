@@ -46,11 +46,13 @@ private:
 };
 
 class SchedulingFunctionSet;
+class SchedulingPrinterSet;
 
 class PerformanceModel
 {
 public:
-    PerformanceModel(std::string, SchedulingFunctionSet*);
+    PerformanceModel(std::string, SchedulingFunctionSet*); 
+    PerformanceModel(std::string, SchedulingFunctionSet*, SchedulingPrinterSet*); //for CV32E40P
     virtual ~PerformanceModel() = default;
 
     const std::string name;
@@ -62,14 +64,17 @@ public:
     void newTraceBlock(void) { instrIndex = 0; };
     
     virtual uint64_t getCycleCount(void) = 0;
-    virtual std::string getPipelineStream(void) = 0;
+    virtual std::string getPipelineStream() = 0;
+    virtual std::string getPipelineStream(uint64_t typeId); //for CV32E40P
     virtual std::string getPrintHeader(void) = 0; 
   
     int instrIndex; // TODO: Make protected, with ConnectorModel as a friend?
 
 private:
     SchedulingFunctionSet* const schedulingFunctionSet;
+    SchedulingPrinterSet* const schedulingPrinterSet; //new
     std::map<int, std::function<void(PerformanceModel*)>> schedulingFunction_map;
+    std::map<int, std::function<std::string(PerformanceModel*)>> printerFunction_map; //new
 
 };
 
@@ -99,6 +104,32 @@ public:
 private:
     SchedulingFunctionSet* const parentSet;
 };
+
+class SchedulingPrinter;
+
+class SchedulingPrinterSet{
+public:
+    SchedulingPrinterSet(std::string name_) : name(name_) {};
+    const std::string name;
+    void addSchedulingPrinter(SchedulingPrinter*);
+    void foreach(std::function<void(SchedulingPrinter &)>);
+private:
+    std::set<SchedulingPrinter*> schedulingPrinter_set;
+};
+
+class SchedulingPrinter{
+    public:
+    SchedulingPrinter(SchedulingPrinterSet*, std::string, int, std::function<std::string(PerformanceModel*)>);
+    ~SchedulingPrinter();
+
+    const int typeId;
+    const std::string name;
+    const std::function<std::string(PerformanceModel*)> schedulingPrinter;
+
+private:
+    SchedulingPrinterSet* const parentSet;
+};
+
 
 class ConnectorModel
 {

@@ -1,5 +1,5 @@
 /*
-* Copyright 2025 Chair of EDA, Technical University of Munich
+* Copyright 2026 Chair of EDA, Technical University of Munich
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -35,12 +35,13 @@
 namespace CV32E40P{
 
 extern SchedulingFunctionSet* CV32E40P_SchedulingFunctionSet;
+extern SchedulingPrinterSet* CV32E40P_SchedulingPrinterSet;
 
 class CV32E40P_PerformanceModel : public PerformanceModel
 {
 public:
 
-  CV32E40P_PerformanceModel() : PerformanceModel("CV32E40P", CV32E40P_SchedulingFunctionSet)
+  CV32E40P_PerformanceModel() : PerformanceModel("CV32E40P", CV32E40P_SchedulingFunctionSet, CV32E40P_SchedulingPrinterSet)
     ,regModel(this)
     ,staBranchPredModel(this)
     ,divider(this)
@@ -65,7 +66,7 @@ public:
 
   virtual void connectChannel(Channel*);
   virtual uint64_t getCycleCount(void);
-  virtual std::string getPipelineStream(void);
+  std::string getPipelineStream() override;
   virtual std::string getPrintHeader(void);
 
 };

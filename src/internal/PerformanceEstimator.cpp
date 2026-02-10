@@ -54,7 +54,7 @@ void PerformanceEstimator::execute(void)
 
     if(streamer.isActive())
     {
-      streamer.stream(perfModel_ptr->getPipelineStream());
+      streamer.stream(perfModel_ptr->getPipelineStream(ch_typeId_ptr[instr_i]));
     }
 
   }
