@@ -1680,7 +1680,7 @@ void MatrixTester::connectChannel(Channel* channel_){
   ch_rs2_ptr = channel->rs2;
   ch_brTarget_ptr = channel->brTarget;
 
-  ch_isBranch_ptr = channel->isBranch;
+  //ch_isBranch_ptr = channel->isBranch;
 }
 
 void MatrixTester::initialize(void){
