@@ -8,6 +8,8 @@ set(SRC_FILES
   src/internal/PerformanceModel.cpp
   src/internal/TracePrinter.cpp
   src/internal/Printer.cpp
+
+  src/internal/BlockExtractor.cpp
   src/internal/MatrixTester.cpp
   src/internal/InstrMatrix.cpp
   src/internal/InstrMatrix_CV32E40P.cpp

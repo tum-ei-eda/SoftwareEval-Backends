@@ -1,5 +1,5 @@
 /*
-* Copyright 2025 Chair of EDA, Technical University of Munich
+* Copyright 2026 Chair of EDA, Technical University of Munich
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ public:
   ~AssemblyTrace_RV32_Channel() {};
 
   int pc [100];
-  char assembly [100] [50];
+  char assembly [100] [100];
 
   virtual void *getTraceValueHook(std::string);
 };

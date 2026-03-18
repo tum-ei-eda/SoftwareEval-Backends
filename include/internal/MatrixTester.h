@@ -101,6 +101,15 @@ class NodeTable
     std::string inArrName;
     std::string outArrName;
 
+    // TODO: Remove. Just for optimization testing
+    std::string getCode_CVA6(void);
+    std::string getCode_CVA6_opt1(void);
+    std::string getCode_CVA6_opt2(void);
+    std::string getCode_CVA6_opt3(void);
+    std::string getCode_CVA6_opt4(void);
+    std::string getCode_CVA6_opt5(void);
+    std::string getCode_CVA6_pyGen(void);
+
     static inline constexpr std::size_t NUM_COEFFS = 39; // TODO: Need to get this information for arch-specific matrix
 
 };
@@ -207,6 +216,9 @@ class MatrixTester: public Backend
   int performanceData[5][39] = {0};
 
   BrPredModelTest brPredModel;
+
+  // TODO: For CVA6 performance test. Delete:
+  void func_CVA6_preComp(int arr [39], int temp[30]);
 
 };
 

@@ -100,4 +100,8 @@
 #define MAX32(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,a1,a2,a3,a4,a5,a6) \
     MAX2(MAX16(a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p), MAX16(q,r,s,t,u,v,w,x,y,z,a1,a2,a3,a4,a5,a6))
 
+static inline int max2(int a, int b){
+    return a > b ? a : b;
+}
+
 #endif //MY_TEST_HEADER

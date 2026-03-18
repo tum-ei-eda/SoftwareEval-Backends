@@ -24,7 +24,7 @@
 #include <string>
 
 //using JITFuncType = int(*)(int, int);
-using JITFuncType = void(*)(int[32]);
+using JITFuncType = void(*)(int[32], int[30]);
 
 class JITCompiler
 {

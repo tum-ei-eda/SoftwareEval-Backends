@@ -1,5 +1,5 @@
 /*
-* Copyright 2025 Chair of EDA, Technical University of Munich
+* Copyright 2026 Chair of EDA, Technical University of Munich
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ static InstructionPrinter *instrPrinter__DEF = new InstructionPrinter(
     std::stringstream ret_strs;
     AssemblyTrace_RV32_Printer* printer = static_cast<AssemblyTrace_RV32_Printer*>(printer_);
     ret_strs << "0x" << std::setfill('0') << std::setw(16) << std::right << std::hex << printer->get_pc() << " ; ";
-    ret_strs << std::setfill(' ') << std::setw(50) << std::left << printer->get_assembly() << " ; ";
+    ret_strs << std::setfill(' ') << std::setw(100) << std::left << printer->get_assembly() << " ; ";
     ret_strs << std::endl;
     return ret_strs.str();
   }
