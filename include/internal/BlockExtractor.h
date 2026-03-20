@@ -30,6 +30,8 @@
 
 using std::uint64_t;
 
+namespace Block_Extractor{
+
 class Block{
 
 public:
@@ -65,6 +67,8 @@ private:
 
 };
 
+} // namespace Block_Extractor
+
 class BlockExtractor: public Backend{
 
 public:
@@ -93,8 +97,8 @@ private:
     int globalBlockCnt = 0;
     int uniqueBlockCnt = 0;
 
-    std::unordered_map<uint64_t, std::unique_ptr<Block>> blockMap;
-    Block* curBlock;
+    std::unordered_map<uint64_t, std::unique_ptr<Block_Extractor::Block>> blockMap;
+    Block_Extractor::Block* curBlock;
 
 };
 

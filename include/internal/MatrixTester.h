@@ -159,7 +159,37 @@ class MatrixTester: public Backend
   uint64_t getTypeId(void) const {return ch_typeId_ptr[curInstrIdx]; };
   
   bool isFirstBBInstr(void) { return firstBBInstr; };
-  bool isBranchInstr(void) { return (ch_isBranch_ptr[curInstrIdx] == 1); };
+  bool isBranchInstr(void) { return (ch_typeId_ptr[curInstrIdx] == 43
+    || ch_typeId_ptr[curInstrIdx] == 44
+    || ch_typeId_ptr[curInstrIdx] == 45
+    || ch_typeId_ptr[curInstrIdx] == 46
+    || ch_typeId_ptr[curInstrIdx] == 47
+    || ch_typeId_ptr[curInstrIdx] == 48
+    || ch_typeId_ptr[curInstrIdx] == 49
+    || ch_typeId_ptr[curInstrIdx] == 50
+    || ch_typeId_ptr[curInstrIdx] == 52
+    || ch_typeId_ptr[curInstrIdx] == 53
+  ); };
+
+  uint64_t mapTypeId(void){
+    uint64_t tId = getTypeId();
+    if (tId >= 0 && tId <= 9) return 1; // Arith_Xa_Xb
+    if (tId >= 10 && tId <= 18) return 2; // Arith_Xa
+    if (tId >= 19 && tId <= 20) return 3; // Arith_
+    if (tId == 21 ) return 4; // Mul
+    if (tId >= 22 && tId <= 24) return 5; // Mul_H
+    if (tId >= 29 && tId <= 31) return 6; // CSR_Xa
+    if (tId >= 32 && tId <= 34) return 7; // CSR_Xa
+    if (tId >= 35 && tId <= 37) return 8; // Store
+    if (tId >= 38 && tId <= 42) return 9; // Load
+    if (tId >= 43 && tId <= 48) return 10; // Branch
+    if (tId >= 49 && tId <= 50) return 11; // ExCtrl
+    if (tId == 51) return 0; // Default
+    if (tId == 52) return 12; // jal
+    if (tId == 53) return 13; // jalr
+    return 543;
+
+  }
 
  private:
 

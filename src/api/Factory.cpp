@@ -45,6 +45,9 @@
 #include "InstructionTrace_RV64IMF_Zicsr_Printer.h"
 #include "InstructionTrace_RV64IMF_Zicsr_Channel.h"
 
+#include "MAPExplorer.h"
+#include "CV32E40P_MAPExplorer.h"
+
 #include "MatrixTester.h"
 #include "BlockExtractor.h"
 #include "CV32E40P_BlockExtractor.h"
@@ -86,8 +89,10 @@ Backend* Factory::getPerformanceEstimator(int var_)
   switch((var_t)var_)
   {
     case CV32E40P:
-    return new CV32E40P::CV32E40P_BlockExtractor();
-		//return new MatrixTester();
+    //return new CV32E40P::CV32E40P_BlockExtractor();
+    //return new CV32E40P::CV32E40P_MAPExplorer();
+    //return new MAPExplorer();
+		return new MatrixTester();
     //perfModel = new CV32E40P::CV32E40P_PerformanceModel();
 		break;
 	  case CVA6:

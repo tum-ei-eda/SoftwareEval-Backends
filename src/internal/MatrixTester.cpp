@@ -1794,7 +1794,7 @@ void MatrixTester::getCurrentBB(void){
 }
 
 void MatrixTester::updateBBMatrix(void){   
-    auto instrMatrix = instrMatrixDict->getInstructionMatrix(getTypeId());
+    auto instrMatrix = instrMatrixDict->getInstructionMatrix(mapTypeId());
     if(firstBBInstr){
         instrMatrix->assign(bbMatrix, *this);
     }
@@ -1845,9 +1845,9 @@ void MatrixTester::updatePerformanceData(void){
             }
 
             // TODO: Re-enable function look-up
-            //auto func = bbFuncBuffer[j];
-            //func(performanceData[i], delayVector);
-            func_CVA6_preComp(performanceData[i], delayVector);
+            auto func = bbFuncBuffer[j];
+            func(performanceData[i], delayVector);
+            //func_CVA6_preComp(performanceData[i], delayVector);
 
         }
     }

@@ -46,7 +46,7 @@ void BlockExtractor::execute(void){
                 registeredBlock = true;
             }
             else{
-                blockMap.emplace(curPc, std::make_unique<Block>(uniqueBlockCnt, curPc, *blockInstrGen));
+                blockMap.emplace(curPc, std::make_unique<Block_Extractor::Block>(uniqueBlockCnt, curPc, *blockInstrGen));
                 uniqueBlockCnt++;
                 curBlock = blockMap[curPc].get();
                 registeredBlock = false;
@@ -80,17 +80,16 @@ void BlockExtractor::execute(void){
 void BlockExtractor::finalize(void){
 
     // Sort blocks from unordered map into a vector (sorted by id)
-    std::vector<Block*> blockVector;
+    std::vector<Block_Extractor::Block*> blockVector;
     blockVector.reserve(blockMap.size());
     for(const auto& [pc_i, block_i]: blockMap){
         blockVector.push_back(block_i.get());
     }
     std::sort(blockVector.begin(), blockVector.end(),
-        [](const Block* a, const Block* b){ return a->getId() < b->getId(); }
+        [](const Block_Extractor::Block* a, const Block_Extractor::Block* b){ return a->getId() < b->getId(); }
     );
 
     // Write json file
-    std::string outputPath = "testOutput_cofo_DELETE.json";
     std::ofstream file(outputPath);
 
     file << "{\n";
@@ -107,7 +106,8 @@ void BlockExtractor::finalize(void){
         
         file << "\t\t{\n";
         file << "\t\t\t\"id\": " << block_i->getId() << ",\n";
-        file << "\t\t\t\"pc\": " << block_i->getPc() << ",\n";
+        file << "\t\t\t\"startPc\": " << block_i->getPc() << ",\n";
+        file << "\t\t\t\"endPc\": " << block_i->getFinalPc() << ",\n";
         file << "\t\t\t\"callCnt\": " << block_i->getCallCnt() << ",\n";
         file << "\t\t\t\"instrs\": [\n";
         bool isFirstInstr = true;
