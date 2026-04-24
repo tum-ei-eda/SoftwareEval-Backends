@@ -44,9 +44,9 @@ void PerformanceEstimator::initialize(void)
 void PerformanceEstimator::execute(void)
 {
   int instrCnt = *ch_instrCnt_ptr;
-  
+
   perfModel_ptr->newTraceBlock();
-  
+
   for(int instr_i=0; instr_i < instrCnt; instr_i++)
   {
     perfModel_ptr->callSchedulingFunction(ch_typeId_ptr[instr_i]);
@@ -72,4 +72,9 @@ void PerformanceEstimator::finalize(void)
   std::cout << "-----------------------------------------------------------------------------------------------------------------\n";
 
   streamer.closeStream();
+}
+
+int64_t PerformanceEstimator::getEstimatedCycleCount(void)
+{
+  return perfModel_ptr->getCycleCount();
 }

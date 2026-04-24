@@ -35,15 +35,16 @@ class PerformanceEstimator: public Backend
   void initialize(void);
   void execute(void);
   void finalize(void);
+  int64_t getEstimatedCycleCount(void);
 
-  
+
  private:
   PerformanceModel* perfModel_ptr;
 
   // Pointer to channel content
   uint64_t* ch_typeId_ptr;
   uint64_t* ch_instrCnt_ptr;
-  
+
   uint64_t globalInstrCnt = 0;
 };
 
