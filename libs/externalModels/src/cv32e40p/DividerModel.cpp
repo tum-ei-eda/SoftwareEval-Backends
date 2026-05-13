@@ -44,7 +44,7 @@ int DividerModel::getDelay(void)
   }
   delay += (sign) ? 0 : 1;
   delay += 3;
-  
+
   return delay;
 }
 

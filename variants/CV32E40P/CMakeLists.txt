@@ -5,7 +5,8 @@ TARGET_SOURCES(SWEVAL_BACKENDS_LIB PRIVATE
 	src/CV32E40P_PerformanceModel.cpp
 	src/CV32E40P_InstructionPrinters.cpp
 	src/CV32E40P_Printer.cpp
-	src/CV32E40P_BlockSchedulingFunctions.cpp
+	#src/CV32E40P_BlockSchedulingFunctions.cpp
+	#src/CV32E40P_MAPExplorer.cpp
 )
 
 TARGET_INCLUDE_DIRECTORIES(SWEVAL_BACKENDS_LIB PRIVATE

@@ -17,51 +17,117 @@
 #ifndef SWEVAL_BACKENDS_BLOCK_SCHEDULING_FUNCTIONS_H
 #define SWEVAL_BACKENDS_BLOCK_SCHEDULING_FUNCTIONS_H
 
+// TODO: Does it make sense to move all this to MAPExplorer.h?
+
 #include <functional>
 #include <array>
+
+#include <iostream> // TODO: Debug. Remove
+#include <unordered_map>
 
 using std::uint64_t;
 
 namespace MAP_Explorer{
 
+static inline uint64_t max2(uint64_t a, uint64_t b){
+    return a > b ? a : b;
+}
+
 struct Block{
+    
+    using SchedFuncPtr = void(*)(uint64_t*, uint8_t*);
+
     int id;
     uint64_t startPc;
     uint64_t endPc;
-    std::function<void(uint64_t*)> scheduleFunction;
+    SchedFuncPtr scheduleFunction;
 
-    void runScheduleFunction(uint64_t* vec_) const { scheduleFunction(vec_); };
+    SchedFuncPtr getScheduleFunction() const { return scheduleFunction; };
 };
 
 class BlockDictionary{
 
 public:
-    BlockDictionary() {};
-    ~BlockDictionary() = default;
 
-    virtual const Block* getBlock(uint64_t) const = 0;
+    BlockDictionary(const MAP_Explorer::Block* const* blocks_, size_t numBlocks_, size_t delayVecSize_): 
+        blocks(blocks_), 
+        numBlocks(numBlocks_),
+        delayVecSize(delayVecSize_) 
+    {
+        blockMap.reserve(numBlocks);
+
+        for(size_t i=0; i<numBlocks; i++){
+            const Block* blk = blocks[i];
+            blockMap.emplace(blk->startPc, blk);
+            if(i < 10){
+                mostUsedBlocks[i] = blk;
+            }
+        }
+
+    };
+    
+    
+    
+    
+    ~BlockDictionary() = default;
+    //~BlockDictionary(){
+    //    std::cout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
+    //    std::cout << "Num block look-ups: " << lookUpCnt << std::endl;
+    //    std::cout << "Total look-up depth: " << lookUpDepth << std::endl;
+    //    std::cout << "Avg. look-up depth: " << (lookUpDepth / lookUpCnt) << std::endl;
+    //    std::cout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
+    //}
+
+    //inline const Block* getBlock(uint64_t pc_) const {
+    //    lookUpCnt++;
+    //    
+    //    for (size_t i = 0; i < numBlocks; i++){
+    //        if(blocks[i]->startPc == pc_){
+    //            lookUpDepth += (i+1);
+    //            return blocks[i];
+    //        }
+    //    }
+    //    return nullptr;   
+    //};
+
+    inline const Block* getBlock(uint64_t pc_) const {
+        //lookUpCnt++;
+        
+        for(size_t i=0; i < 10; i++){
+            if(mostUsedBlocks[i]->startPc == pc_){
+                return mostUsedBlocks[i];
+            }
+        }
+
+        auto it = blockMap.find(pc_);
+        if(it != blockMap.end()){
+            return it->second;
+        }
+        return nullptr;
+
+        //for (size_t i = 0; i < numBlocks; i++){
+        //    if(blocks[i]->startPc == pc_){
+        //        lookUpDepth += (i+1);
+        //        return blocks[i];
+        //    }
+        //}
+        //return nullptr;   
+    };
+
+    const size_t getDelayVecSize() const { return delayVecSize; };
+
+private:
+    const Block* const* blocks;
+    size_t numBlocks;
+    size_t delayVecSize;
+
+    std::unordered_map<uint64_t, const Block*> blockMap;
+    std::array<const Block*, 10> mostUsedBlocks;
+
+    //mutable int lookUpCnt = 0;
+    //mutable int lookUpDepth = 0; 
 
 };
-
-//template<size_t N>
-//class BlockDictionary{
-//
-//public:
-//    constexpr BlockDictionary(std::array<Block, N> blocks_): blocks(blocks_) {};
-//
-//    constexpr auto getBlock(uint64_t pc_) const -> const auto* {
-//        for (const auto& block_i : blocks){
-//            if(block_i.startPc == pc_){
-//                return &block_i;
-//            }
-//        }
-//        return nullptr;
-//    }
-//
-//private:
-//    std::array<Block, N> blocks;
-//
-//};
 
 } // namespace MAP_Explorer
 

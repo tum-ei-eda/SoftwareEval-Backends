@@ -37,7 +37,7 @@ int DividerUnsignedModel::getDelay(void)
   }
   delay += 1;
   delay += 3;
-  
+
   return delay;
 }
 

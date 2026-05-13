@@ -34,6 +34,7 @@ public:
 
 private:
   int findReverseOneIndex(uint64_t);
+
 };
 
 } // namespace cv32e40p

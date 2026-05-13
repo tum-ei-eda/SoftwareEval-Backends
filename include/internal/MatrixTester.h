@@ -33,6 +33,7 @@
 #include "BrPredModelTest.h" // TODO: Test purposes
 
 #include <iostream>
+#include <fstream> // TODO: Debug
 #include <cstdint>
 #include <memory>
 #include <unordered_map>
@@ -145,8 +146,12 @@ class BasicBlock
 class MatrixTester: public Backend
 {
  public:
-  MatrixTester() : bbMatrix(39,39), brPredModel() {};
-  ~MatrixTester() {};
+  MatrixTester() : bbMatrix(39,39), brPredModel() {
+    file.open(filePath);
+  };
+  ~MatrixTester() {
+    file.close();
+  };
 
   void connectChannel(Channel* channel_);
   void initialize(void);
@@ -249,6 +254,10 @@ class MatrixTester: public Backend
 
   // TODO: For CVA6 performance test. Delete:
   void func_CVA6_preComp(int arr [39], int temp[30]);
+
+  // TODO: DEBUG
+  std::string filePath = "MatrixTester.txt";
+  std::ofstream file;
 
 };
 

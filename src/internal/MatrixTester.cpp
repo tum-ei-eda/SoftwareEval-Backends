@@ -1849,6 +1849,15 @@ void MatrixTester::updatePerformanceData(void){
             func(performanceData[i], delayVector);
             //func_CVA6_preComp(performanceData[i], delayVector);
 
+            if(i==1){
+                for(int n=0; n<4; n++){
+                    file << performanceData[i][n] << ", ";
+                }
+                file << std::endl;
+            }
+
+            
+
         }
     }
 

@@ -17,23 +17,15 @@
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
 
 
-#ifndef SWEVAL_BACKENDS_CV32E40P_BLOCK_EXTRACTOR_H
-#define SWEVAL_BACKENDS_CV32E40P_BLOCK_EXTRACTOR_H
+#ifndef SWEVAL_BACKENDS_CV32E40P_DSE_BLOCK_SCHEDULING_FUNCTIONS_H
+#define SWEVAL_BACKENDS_CV32E40P_DSE_BLOCK_SCHEDULING_FUNCTIONS_H
 
-#include "MAPExplorer.h"
+#include "BlockSchedulingFunctions.h"
 
-#include "CV32E40P_BlockSchedulingFunctions.h"
+namespace CV32E40P_DSE{
 
-namespace CV32E40P{
+extern const MAP_Explorer::BlockDictionary CV32E40P_DSE_blockDict;
 
-class CV32E40P_MAPExplorer : public MAPExplorer{
+} // namespace CV32E40P_DSE
 
-public:
-    CV32E40P_MAPExplorer() : MAPExplorer(&CV32E40P_blockDict) {};
-    ~CV32E40P_MAPExplorer() = default;
-
-};
-
-} // namespace CV32E40P
-
-#endif // SWEVAL_BACKENDS_CV32E40P_BLOCK_EXTRACTOR_H
+#endif // SWEVAL_BACKENDS_CV32E40P_DSE_BLOCK_SCHEDULING_FUNCTIONS_H

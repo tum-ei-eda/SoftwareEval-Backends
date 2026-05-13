@@ -25,9 +25,19 @@
 #include "TracePrinter.h"
 #include "Printer.h"
 
+#include "CV32E40P_DSE_Printer.h"
+#include "CV32E40P_DSE_Channel.h"
+#include "CV32E40P_DSE_PerformanceModel.h"
+#include "CV32E40P_DSE_MAPExplorer.h"
+#include "CV32E40P_DSE_BlockExtractor.h"
+
 #include "CV32E40P_Channel.h"
+//#include "CV32E40P_MAPExplorer.h"
 #include "CV32E40P_PerformanceModel.h"
+//#include "CV32E40P_BlockSchedulingFunctions.h"
+#include "CV32E40P_BlockExtractor.h"
 #include "CV32E40P_Printer.h"
+#include "CV32E40P_BlockInstructionGenerator.h"
 
 #include "AssemblyTrace_RV32_Channel.h"
 #include "AssemblyTrace_RV32_Printer.h"
@@ -45,19 +55,15 @@
 #include "InstructionTrace_RV64IMF_Zicsr_Printer.h"
 #include "InstructionTrace_RV64IMF_Zicsr_Channel.h"
 
-#include "MAPExplorer.h"
-#include "CV32E40P_MAPExplorer.h"
-
-#include "MatrixTester.h"
-#include "BlockExtractor.h"
-#include "CV32E40P_BlockExtractor.h"
 
 namespace SwEvalBackends
 {
 
 int Factory::getVariantHandle(std::string varName_)
 {
-    	if(varName_ == "CV32E40P"){ return CV32E40P; }
+    	if(varName_ == "CV32E40P_DSE"){ return CV32E40P_DSE; }
+	if(varName_ == "CV32E40P"){ return CV32E40P_DSE; } // <- HACK: to quickly check CV32E40P_DSE
+	//if(varName_ == "CV32E40P"){ return CV32E40P; }
 	if(varName_ == "AssemblyTrace_RV32"){ return AssemblyTrace_RV32; }
 	if(varName_ == "InstructionTrace_RV32IM_Zicsr"){ return InstructionTrace_RV32IM_Zicsr; }
 	if(varName_ == "AssemblyTrace_RV64"){ return AssemblyTrace_RV64; }
@@ -71,7 +77,8 @@ Channel* Factory::getChannel(int var_)
 {
   switch((var_t)var_)
   {
-    	case CV32E40P: return new CV32E40P_Channel();
+    	case CV32E40P_DSE: return new CV32E40P_DSE_Channel();
+	case CV32E40P: return new CV32E40P_Channel();
 	case AssemblyTrace_RV32: return new AssemblyTrace_RV32_Channel();
 	case InstructionTrace_RV32IM_Zicsr: return new InstructionTrace_RV32IM_Zicsr_Channel();
 	case AssemblyTrace_RV64: return new AssemblyTrace_RV64_Channel();
@@ -88,14 +95,16 @@ Backend* Factory::getPerformanceEstimator(int var_)
   PerformanceModel* perfModel;
   switch((var_t)var_)
   {
-    case CV32E40P:
-    //return new CV32E40P::CV32E40P_BlockExtractor();
-    //return new CV32E40P::CV32E40P_MAPExplorer();
-    //return new MAPExplorer();
-		return new MatrixTester();
-    //perfModel = new CV32E40P::CV32E40P_PerformanceModel();
+    	case CV32E40P_DSE:
+		//return new CV32E40P_DSE::CV32E40P_DSE_BlockExtractor();
+		return new CV32E40P_DSE::CV32E40P_DSE_MAPExplorer();
+		//perfModel = new CV32E40P_DSE::CV32E40P_DSE_PerformanceModel();
 		break;
-	  case CVA6:
+	case CV32E40P:
+		//return new CV32E40P::CV32E40P_MAPExplorer();
+		perfModel = new CV32E40P::CV32E40P_PerformanceModel();
+		break;
+	case CVA6:
 		perfModel = new CVA6::CVA6_PerformanceModel();
 		break;
 
@@ -119,7 +128,10 @@ Backend* Factory::getTracePrinter(int var_)
   Printer* printer;
   switch((var_t)var_)
   {
-    	case CV32E40P:
+    	case CV32E40P_DSE:
+		printer = new CV32E40P_DSE_Printer();
+		break;
+	case CV32E40P:
 		printer = new CV32E40P_Printer();
 		break;
 	case AssemblyTrace_RV32:

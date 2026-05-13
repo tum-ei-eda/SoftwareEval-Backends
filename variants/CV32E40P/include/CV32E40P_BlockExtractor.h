@@ -16,7 +16,6 @@
 
 /********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
 
-
 #ifndef SWEVAL_BACKENDS_CV32E40P_BLOCK_EXTRACTOR_H
 #define SWEVAL_BACKENDS_CV32E40P_BLOCK_EXTRACTOR_H
 

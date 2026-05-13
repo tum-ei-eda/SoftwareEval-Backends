@@ -30,6 +30,7 @@ class Factory
 {
 private:
   enum var_t { 
+	CV32E40P_DSE,
 	CV32E40P,
 	AssemblyTrace_RV32,
 	InstructionTrace_RV32IM_Zicsr,
