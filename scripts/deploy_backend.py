@@ -85,13 +85,16 @@ def updateCMakeList_variant(lib_, variantName_):
     libName = "SWEVAL_" + lib_.name.upper() + "_LIB"
 
     srcFileEntries = ""
+    subDirEntries = ""
     for file_i in (targetDir / "src").iterdir():
         if file_i.is_file() and file_i.suffix == ".cpp":
             srcFileEntries += "\tsrc/" + file_i.name + "\n"
+        if file_i.is_dir():
+            subDirEntries += "\tsrc/" + file_i.name + "\n"
 
     # Substitute template and update cMakeFile
     template = string.Template(TEMPLATE_CMAKELIST_VARIANT)
-    output = template.substitute(libName=libName, files=srcFileEntries)
+    output = template.substitute(libName=libName, files=srcFileEntries, subDirs=subDirEntries)
     updateFile(cMakeFile, output)
     
 

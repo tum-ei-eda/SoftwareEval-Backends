@@ -29,6 +29,7 @@ void ICacheModel::updateDelay() {
 
     if(!isCacheable(pc)){
         delayBuffer = MEMORY_DELAY;
+
         return;
         //return MEMORY_DELAY;
     }
@@ -64,6 +65,7 @@ void ICacheModel::updateDelay() {
 
     //return MEMORY_DELAY;
     delayBuffer = MEMORY_DELAY;
+
     return;
 }
 

@@ -33,6 +33,7 @@ class BlockInstruction_add : public BlockInstruction{
 public:
     BlockInstruction_add(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -43,6 +44,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -62,6 +64,7 @@ class BlockInstruction_sub : public BlockInstruction{
 public:
     BlockInstruction_sub(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -72,6 +75,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -91,6 +95,7 @@ class BlockInstruction_xor : public BlockInstruction{
 public:
     BlockInstruction_xor(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -101,6 +106,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -120,6 +126,7 @@ class BlockInstruction_or : public BlockInstruction{
 public:
     BlockInstruction_or(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -130,6 +137,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -149,6 +157,7 @@ class BlockInstruction_and : public BlockInstruction{
 public:
     BlockInstruction_and(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -159,6 +168,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -178,6 +188,7 @@ class BlockInstruction_slt : public BlockInstruction{
 public:
     BlockInstruction_slt(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -188,6 +199,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -207,6 +219,7 @@ class BlockInstruction_sltu : public BlockInstruction{
 public:
     BlockInstruction_sltu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -217,6 +230,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -236,6 +250,7 @@ class BlockInstruction_sll : public BlockInstruction{
 public:
     BlockInstruction_sll(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -246,6 +261,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -265,6 +281,7 @@ class BlockInstruction_srl : public BlockInstruction{
 public:
     BlockInstruction_srl(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -275,6 +292,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -294,6 +312,7 @@ class BlockInstruction_sra : public BlockInstruction{
 public:
     BlockInstruction_sra(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -304,6 +323,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -323,6 +343,7 @@ class BlockInstruction_addi : public BlockInstruction{
 public:
     BlockInstruction_addi(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -332,6 +353,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -350,6 +372,7 @@ class BlockInstruction_xori : public BlockInstruction{
 public:
     BlockInstruction_xori(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -359,6 +382,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -377,6 +401,7 @@ class BlockInstruction_ori : public BlockInstruction{
 public:
     BlockInstruction_ori(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -386,6 +411,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -404,6 +430,7 @@ class BlockInstruction_andi : public BlockInstruction{
 public:
     BlockInstruction_andi(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -413,6 +440,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -431,6 +459,7 @@ class BlockInstruction_slti : public BlockInstruction{
 public:
     BlockInstruction_slti(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -440,6 +469,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -458,6 +488,7 @@ class BlockInstruction_sltiu : public BlockInstruction{
 public:
     BlockInstruction_sltiu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -467,6 +498,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -485,6 +517,7 @@ class BlockInstruction_slli : public BlockInstruction{
 public:
     BlockInstruction_slli(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -494,6 +527,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -512,6 +546,7 @@ class BlockInstruction_srli : public BlockInstruction{
 public:
     BlockInstruction_srli(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -521,6 +556,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -539,6 +575,7 @@ class BlockInstruction_srai : public BlockInstruction{
 public:
     BlockInstruction_srai(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -548,6 +585,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -566,6 +604,7 @@ class BlockInstruction_auipc : public BlockInstruction{
 public:
     BlockInstruction_auipc(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
     ~BlockInstruction_auipc() = default;
@@ -574,6 +613,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -591,6 +631,7 @@ class BlockInstruction_lui : public BlockInstruction{
 public:
     BlockInstruction_lui(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
     ~BlockInstruction_lui() = default;
@@ -599,6 +640,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -616,6 +658,7 @@ class BlockInstruction_mul : public BlockInstruction{
 public:
     BlockInstruction_mul(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -626,6 +669,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -645,6 +689,7 @@ class BlockInstruction_mulh : public BlockInstruction{
 public:
     BlockInstruction_mulh(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -655,6 +700,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -674,6 +720,7 @@ class BlockInstruction_mulhu : public BlockInstruction{
 public:
     BlockInstruction_mulhu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -684,6 +731,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -703,6 +751,7 @@ class BlockInstruction_mulhsu : public BlockInstruction{
 public:
     BlockInstruction_mulhsu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -713,6 +762,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -732,6 +782,7 @@ class BlockInstruction_div : public BlockInstruction{
 public:
     BlockInstruction_div(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -742,6 +793,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -761,6 +813,7 @@ class BlockInstruction_rem : public BlockInstruction{
 public:
     BlockInstruction_rem(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -771,6 +824,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -790,6 +844,7 @@ class BlockInstruction_divu : public BlockInstruction{
 public:
     BlockInstruction_divu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -800,6 +855,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -819,6 +875,7 @@ class BlockInstruction_remu : public BlockInstruction{
 public:
     BlockInstruction_remu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         rd = channel->rd[instrCnt_];
@@ -829,6 +886,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -848,6 +906,7 @@ class BlockInstruction_csrrw : public BlockInstruction{
 public:
     BlockInstruction_csrrw(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -857,6 +916,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -875,6 +935,7 @@ class BlockInstruction_csrrs : public BlockInstruction{
 public:
     BlockInstruction_csrrs(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -884,6 +945,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -902,6 +964,7 @@ class BlockInstruction_csrrc : public BlockInstruction{
 public:
     BlockInstruction_csrrc(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -911,6 +974,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -929,6 +993,7 @@ class BlockInstruction_csrrwi : public BlockInstruction{
 public:
     BlockInstruction_csrrwi(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
     ~BlockInstruction_csrrwi() = default;
@@ -937,6 +1002,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -954,6 +1020,7 @@ class BlockInstruction_csrrsi : public BlockInstruction{
 public:
     BlockInstruction_csrrsi(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
     ~BlockInstruction_csrrsi() = default;
@@ -962,6 +1029,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -979,6 +1047,7 @@ class BlockInstruction_csrrci : public BlockInstruction{
 public:
     BlockInstruction_csrrci(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
     ~BlockInstruction_csrrci() = default;
@@ -987,6 +1056,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -1004,6 +1074,7 @@ class BlockInstruction_sb : public BlockInstruction{
 public:
     BlockInstruction_sb(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
     };
@@ -1013,6 +1084,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1031,6 +1103,7 @@ class BlockInstruction_sh : public BlockInstruction{
 public:
     BlockInstruction_sh(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
     };
@@ -1040,6 +1113,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1058,6 +1132,7 @@ class BlockInstruction_sw : public BlockInstruction{
 public:
     BlockInstruction_sw(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
     };
@@ -1067,6 +1142,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1085,6 +1161,7 @@ class BlockInstruction_lw : public BlockInstruction{
 public:
     BlockInstruction_lw(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -1094,6 +1171,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -1112,6 +1190,7 @@ class BlockInstruction_lh : public BlockInstruction{
 public:
     BlockInstruction_lh(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -1121,6 +1200,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -1139,6 +1219,7 @@ class BlockInstruction_lhu : public BlockInstruction{
 public:
     BlockInstruction_lhu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -1148,6 +1229,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -1166,6 +1248,7 @@ class BlockInstruction_lb : public BlockInstruction{
 public:
     BlockInstruction_lb(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -1175,6 +1258,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -1193,6 +1277,7 @@ class BlockInstruction_lbu : public BlockInstruction{
 public:
     BlockInstruction_lbu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
     };
@@ -1202,6 +1287,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -1220,6 +1306,7 @@ class BlockInstruction_beq : public BlockInstruction{
 public:
     BlockInstruction_beq(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         isBranch = true;
@@ -1230,6 +1317,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1248,6 +1336,7 @@ class BlockInstruction_bne : public BlockInstruction{
 public:
     BlockInstruction_bne(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         isBranch = true;
@@ -1258,6 +1347,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1276,6 +1366,7 @@ class BlockInstruction_blt : public BlockInstruction{
 public:
     BlockInstruction_blt(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         isBranch = true;
@@ -1286,6 +1377,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1304,6 +1396,7 @@ class BlockInstruction_bge : public BlockInstruction{
 public:
     BlockInstruction_bge(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         isBranch = true;
@@ -1314,6 +1407,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1332,6 +1426,7 @@ class BlockInstruction_bltu : public BlockInstruction{
 public:
     BlockInstruction_bltu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         isBranch = true;
@@ -1342,6 +1437,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1360,6 +1456,7 @@ class BlockInstruction_bgeu : public BlockInstruction{
 public:
     BlockInstruction_bgeu(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rs2 = channel->rs2[instrCnt_];
         isBranch = true;
@@ -1370,6 +1467,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << rs2;
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1388,6 +1486,7 @@ class BlockInstruction_mret : public BlockInstruction{
 public:
     BlockInstruction_mret(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         isBranch = true;
     };
     ~BlockInstruction_mret() = default;
@@ -1396,6 +1495,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1412,6 +1512,7 @@ class BlockInstruction_ecall : public BlockInstruction{
 public:
     BlockInstruction_ecall(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         isBranch = true;
     };
     ~BlockInstruction_ecall() = default;
@@ -1420,6 +1521,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1436,6 +1538,7 @@ class BlockInstruction__def : public BlockInstruction{
 public:
     BlockInstruction__def(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
     };
     ~BlockInstruction__def() = default;
 
@@ -1443,6 +1546,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << "null";
@@ -1459,6 +1563,7 @@ class BlockInstruction_jal : public BlockInstruction{
 public:
     BlockInstruction_jal(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rd = channel->rd[instrCnt_];
         isBranch = true;
     };
@@ -1468,6 +1573,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;
@@ -1485,6 +1591,7 @@ class BlockInstruction_jalr : public BlockInstruction{
 public:
     BlockInstruction_jalr(Channel* channel_, uint64_t instrCnt_): BlockInstruction(channel_, instrCnt_) {
         CV32E40P_DSE_Channel* channel = static_cast<CV32E40P_DSE_Channel*>(channel_);
+        pc = channel->pc[instrCnt_];
         rs1 = channel->rs1[instrCnt_];
         rd = channel->rd[instrCnt_];
         isBranch = true;
@@ -1495,6 +1602,7 @@ public:
         std::stringstream ret_strs;
         ret_strs << offset_ << "{\n";
         ret_strs << offset_ << "\t\"typeId\": " << typeId;
+        ret_strs << ",\n" << offset_ << "\t\"pc\": " << pc;
         ret_strs << ",\n" << offset_ << "\t\"rs1\": " << rs1;
         ret_strs << ",\n" << offset_ << "\t\"rs2\": " << "null";
         ret_strs << ",\n" << offset_ << "\t\"rd\": " << rd;

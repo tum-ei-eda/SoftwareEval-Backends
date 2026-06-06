@@ -1,5 +1,5 @@
 /*
-* Copyright 2025 Chair of EDA, Technical University of Munich
+* Copyright 2026 Chair of EDA, Technical University of Munich
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -40,11 +40,11 @@ public:
   uint64_t get_rs2(void){ return rs2_ptr[instrIndex]; };
   uint64_t get_rd(void){ return rd_ptr[instrIndex]; };
   uint64_t get_pc(void){ return pc_ptr[instrIndex]; };
+  uint64_t get_addr(void){ return addr_ptr[instrIndex]; };
   uint64_t get_brTarget(void){ return brTarget_ptr[instrIndex]; };
   uint64_t get_imm(void){ return imm_ptr[instrIndex]; };
   uint64_t get_rs1_data(void){ return rs1_data_ptr[instrIndex]; };
   uint64_t get_rs2_data(void){ return rs2_data_ptr[instrIndex]; };
-  uint64_t get_addr(void){ return addr_ptr[instrIndex]; };
 
 private:
 
@@ -52,11 +52,11 @@ private:
   uint64_t* rs2_ptr;
   uint64_t* rd_ptr;
   uint64_t* pc_ptr;
+  uint64_t* addr_ptr;
   uint64_t* brTarget_ptr;
   uint64_t* imm_ptr;
   uint64_t* rs1_data_ptr;
   uint64_t* rs2_data_ptr;
-  uint64_t* addr_ptr;
 };
 
 #endif // SWEVAL_BACKENDS_CVA6_PRINTER_H

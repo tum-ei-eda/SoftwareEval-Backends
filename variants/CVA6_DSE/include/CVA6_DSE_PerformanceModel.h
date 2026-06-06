@@ -1,0 +1,105 @@
+/*
+* Copyright 2026 Chair of EDA, Technical University of Munich
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*	 http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+/********************* AUTO GENERATE FILE (create by M2-ISA-R-Perf) *********************/
+
+
+#ifndef SWEVAL_BACKENDS_CVA6_DSE_PERFORMANCE_MODEL_H
+#define SWEVAL_BACKENDS_CVA6_DSE_PERFORMANCE_MODEL_H
+
+#include <stdbool.h>
+#include <string>
+#include <cstdint>
+
+#include "PerformanceModel.h"
+#include "Channel.h"
+//#include "Configuration.h"
+
+#include "models/common/StandardRegisterModel.h"
+#include "models/cva6/BranchPredictionModel.h"
+#include "models/cva6/ClobberModel.h"
+#include "models/cv32e40p_dse/ICacheModel.h"
+#include "models/cva6_dse/DividerModel.h"
+#include "models/cva6_dse/DividerUnsignedModel.h"
+#include "models/cv32e40p_dse/DCacheModel.h"
+
+namespace CVA6_DSE{
+
+extern SchedulingFunctionSet* CVA6_DSE_SchedulingFunctionSet;
+
+class CVA6_DSE_PerformanceModel : public PerformanceModel
+{
+public:
+
+  // TODO: Find way to configure the models
+  //CVA6_DSE_PerformanceModel(SwEvalBackends::Configuration& cfg_) : PerformanceModel("CVA6_DSE", CVA6_DSE_SchedulingFunctionSet)
+  CVA6_DSE_PerformanceModel() : PerformanceModel("CVA6_DSE", CVA6_DSE_SchedulingFunctionSet)
+    ,IF_stage(9,0)
+    ,EX_stage(8,0)
+    ,COM_stage(2,0)
+    ,regModel(this)
+    ,dynBranchPredModel(this)
+    ,clobberModel(this)
+    ,iCache(this)
+    ,divider(this)
+    ,divider_u(this)
+    ,dCache(this)
+  {};
+
+  // Entrance-point "timing variable" (only used for info-stream)
+  uint64_t entrancePoint = 0;
+
+  // Single-Element Timing Variables
+  uint64_t PC_stage = 0;
+  uint64_t IF_substage_0 = 0;
+  uint64_t IF_substage_1 = 0;
+  uint64_t IF_substage_2 = 0;
+  uint64_t ID_stage = 0;
+  uint64_t IS_stage = 0;
+  uint64_t EX_substage_alu = 0;
+  uint64_t EX_substage_mul_i = 0;
+  uint64_t EX_substage_mul_o = 0;
+  uint64_t EX_substage_div = 0;
+  uint64_t EX_substage_lCtrl = 0;
+  uint64_t EX_substage_dCache = 0;
+  uint64_t EX_substage_lUnit = 0;
+  uint64_t EX_substage_sCtrl = 0;
+  uint64_t EX_substage_sUnit = 0;
+
+  // Multi-Element Timing Variables
+  MultiElementTimingVariable IF_stage;
+  MultiElementTimingVariable EX_stage;
+  MultiElementTimingVariable COM_stage;
+
+  // External Resource Models
+  common::StandardRegisterModel regModel;
+  cva6::BranchPredictionModel dynBranchPredModel;
+  cva6::ClobberModel clobberModel;
+  cv32e40p_dse::ICacheModel iCache;
+  cva6_dse::DividerModel divider;
+  cva6_dse::DividerUnsignedModel divider_u;
+  cv32e40p_dse::DCacheModel dCache;
+
+  virtual void connectChannel(Channel*);
+  virtual uint64_t getCycleCount(void);
+  virtual std::string getPipelineStream(void);
+  virtual std::string getPrintHeader(void);
+
+};
+
+} // namespace CVA6_DSE
+
+#endif // SWEVAL_BACKENDS_CVA6_DSE_PERFORMANCE_MODEL_H

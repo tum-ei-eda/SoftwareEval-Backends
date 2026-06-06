@@ -1,5 +1,5 @@
 /*
-* Copyright 2025 Chair of EDA, Technical University of Munich
+* Copyright 2026 Chair of EDA, Technical University of Munich
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -39,11 +39,11 @@ void CVA6_Printer::connectChannel(Channel* ch_)
   rs2_ptr = channel->rs2;
   rd_ptr = channel->rd;
   pc_ptr = channel->pc;
+  addr_ptr = channel->addr;
   brTarget_ptr = channel->brTarget;
   imm_ptr = channel->imm;
   rs1_data_ptr = channel->rs1_data;
   rs2_data_ptr = channel->rs2_data;
-  addr_ptr = channel->addr;
 }
 
 std::string CVA6_Printer::getPrintHeader(void)
@@ -53,11 +53,11 @@ std::string CVA6_Printer::getPrintHeader(void)
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs2" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rd" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "pc" << " | ";
+  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "addr" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "brTarget" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "imm" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs1_data" << " | ";
   caption_strs << std::setfill(' ') << std::setw(18) << std::left << "rs2_data" << " | ";
-  caption_strs << std::setfill(' ') << std::setw(18) << std::left << "addr" << " | ";
   caption_strs << std::endl;
 
   return caption_strs.str();

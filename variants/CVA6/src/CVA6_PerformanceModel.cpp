@@ -1,5 +1,5 @@
 /*
-* Copyright 2025 Chair of EDA, Technical University of Munich
+* Copyright 2026 Chair of EDA, Technical University of Munich
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -75,7 +75,6 @@ uint64_t CVA6_PerformanceModel::getCycleCount(void)
     ,IF_substage_0
     ,IF_substage_1
     ,IF_substage_2
-    ,IQ_stage.get(1)
     ,ID_stage
     ,IS_stage
     ,EX_stage.get(1)
@@ -98,7 +97,6 @@ std::string CVA6_PerformanceModel::getPipelineStream(void)
   ret_strs << entrancePoint;
   ret_strs << "," << PC_stage;
   ret_strs << "," << IF_stage.get(1);
-  ret_strs << "," << IQ_stage.get(1);
   ret_strs << "," << ID_stage;
   ret_strs << "," << IS_stage;
   ret_strs << "," << EX_stage.get(1);
@@ -116,7 +114,6 @@ std::string CVA6_PerformanceModel::getPrintHeader(void)
   ret_strs << "Enter";
   ret_strs << "," << "PC_stage";
   ret_strs << "," << "IF_stage";
-  ret_strs << "," << "IQ_stage";
   ret_strs << "," << "ID_stage";
   ret_strs << "," << "IS_stage";
   ret_strs << "," << "EX_stage";

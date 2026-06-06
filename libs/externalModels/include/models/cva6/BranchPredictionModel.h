@@ -134,6 +134,7 @@ private:
 
   bool jumpR_flag = false;
   bool return_flag = false;
+  bool ras_flag = false;
   
   uint64_t t_pc_pt = 0; // predicted and taken
   uint64_t t_pc_mp = 0; // mispredicted

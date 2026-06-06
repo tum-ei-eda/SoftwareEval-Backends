@@ -32,12 +32,12 @@ public:
     uint64_t* pc_ptr = nullptr;
     uint64_t* brTarget_ptr = nullptr;
 
-    void catchBranch() const { 
+    void catchBranch() { 
         prevBrTarget = brTarget_ptr[getInstrIdx()]; 
         predictedTaken = (prevBrTarget < pc_ptr[getInstrIdx()]);
     };
     
-    void evaluate() const { 
+    void evaluate() { 
         bool taken = (pc_ptr[getInstrIdx()] == prevBrTarget);
         mispredicted = !(taken ^ predictedTaken); 
     };

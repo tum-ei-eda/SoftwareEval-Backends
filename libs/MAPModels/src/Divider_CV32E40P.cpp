@@ -24,8 +24,6 @@ namespace map_models{
 //uint64_t Divider_CV32E40P::getDelay() const {
 void Divider_CV32E40P::updateDelay() { 
 
-  //return 1;
-
   uint64_t operand = rs2_data_ptr[getInstrIdx()];
   bool sign = (operand & 0x80000000);
   
@@ -50,7 +48,6 @@ void Divider_CV32E40P::updateDelay() {
   
   delayBuffer = delay;
 
-  //return delay;
 }
 
 int Divider_CV32E40P::findReverseOneIndex(uint64_t op_) const {

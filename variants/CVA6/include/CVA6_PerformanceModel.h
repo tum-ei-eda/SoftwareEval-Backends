@@ -1,5 +1,5 @@
 /*
-* Copyright 2025 Chair of EDA, Technical University of Munich
+* Copyright 2026 Chair of EDA, Technical University of Munich
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@
 
 #include "PerformanceModel.h"
 #include "Channel.h"
+//#include "Configuration.h"
 
 #include "models/common/StandardRegisterModel.h"
 #include "models/cva6/BranchPredictionModel.h"
@@ -43,9 +44,10 @@ class CVA6_PerformanceModel : public PerformanceModel
 {
 public:
 
+  // TODO: Find way to configure the models
+  //CVA6_PerformanceModel(SwEvalBackends::Configuration& cfg_) : PerformanceModel("CVA6", CVA6_SchedulingFunctionSet)
   CVA6_PerformanceModel() : PerformanceModel("CVA6", CVA6_SchedulingFunctionSet)
-    ,IF_stage(3,0)
-    ,IQ_stage(7,0)
+    ,IF_stage(9,0)
     ,EX_stage(8,0)
     ,COM_stage(2,0)
     ,regModel(this)
@@ -79,7 +81,6 @@ public:
 
   // Multi-Element Timing Variables
   MultiElementTimingVariable IF_stage;
-  MultiElementTimingVariable IQ_stage;
   MultiElementTimingVariable EX_stage;
   MultiElementTimingVariable COM_stage;
 

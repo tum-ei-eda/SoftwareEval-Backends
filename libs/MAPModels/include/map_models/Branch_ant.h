@@ -32,8 +32,8 @@ public:
     uint64_t* pc_ptr = nullptr;
     uint64_t* brTarget_ptr = nullptr;
 
-    void catchBranch() const { prevBrTarget = brTarget_ptr[getInstrIdx()]; };
-    void evaluate() const { mispredicted = (pc_ptr[getInstrIdx()] == prevBrTarget); };
+    void catchBranch() { prevBrTarget = brTarget_ptr[getInstrIdx()]; };
+    void evaluate() { mispredicted = (pc_ptr[getInstrIdx()] == prevBrTarget); };
     
     void shiftVector(uint64_t* vec_) const {
         if(mispredicted){

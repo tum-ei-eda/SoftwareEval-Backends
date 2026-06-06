@@ -40,6 +40,7 @@ struct Block{
     int id;
     uint64_t startPc;
     uint64_t endPc;
+    bool endOnBranch;
     SchedFuncPtr scheduleFunction;
 
     SchedFuncPtr getScheduleFunction() const { return scheduleFunction; };
@@ -49,10 +50,11 @@ class BlockDictionary{
 
 public:
 
-    BlockDictionary(const MAP_Explorer::Block* const* blocks_, size_t numBlocks_, size_t delayVecSize_): 
+    //BlockDictionary(const MAP_Explorer::Block* const* blocks_, size_t numBlocks_, size_t delayVecSize_):
+    BlockDictionary(const MAP_Explorer::Block* const* blocks_, size_t numBlocks_):
         blocks(blocks_), 
-        numBlocks(numBlocks_),
-        delayVecSize(delayVecSize_) 
+        numBlocks(numBlocks_)
+        //delayVecSize(delayVecSize_) 
     {
         blockMap.reserve(numBlocks);
 
@@ -114,12 +116,12 @@ public:
         //return nullptr;   
     };
 
-    const size_t getDelayVecSize() const { return delayVecSize; };
+    //const size_t getDelayVecSize() const { return delayVecSize; };
 
 private:
     const Block* const* blocks;
     size_t numBlocks;
-    size_t delayVecSize;
+    //size_t delayVecSize;
 
     std::unordered_map<uint64_t, const Block*> blockMap;
     std::array<const Block*, 10> mostUsedBlocks;

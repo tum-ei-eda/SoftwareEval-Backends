@@ -142,13 +142,14 @@ public:
 
 /* MAP EXPLORER */
 
-using MAPExplorerBase = MAP_Explorer::MAPExplorer<4, 2048, 54, 39, 2>;
+using MAPExplorerBase = MAP_Explorer::MAPExplorer<4, 2048, 256, 54, 39, 2, 4>;
 
 class CV32E40P_DSE_MAPExplorer : public MAPExplorerBase{
 
 public:
 
     using CombType = typename MAPExplorerBase::CombType;
+    using DVecType = typename MAPExplorerBase::DVecType;
     using ResGroupEntryType = typename MAPExplorerBase::ResGroupEntryType;
 
     CV32E40P_DSE_MAPExplorer();
@@ -167,8 +168,11 @@ private:
     // Instr -> ResourceGroup LUT
     static const std::array<const ResGroupEntryType, 54> resGroupLUT;
 
+    // Delay-Vectors
+    static std::array<DVecType, 256> delayVectors;
+
     // Combinations
-    static const std::array<CombType*, 2048> combs;
+    static std::array<CombType, 2048> combs;
 };
 
 } // namespace CV32E40P_DSE

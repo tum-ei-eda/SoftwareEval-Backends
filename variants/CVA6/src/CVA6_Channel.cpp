@@ -1,5 +1,5 @@
 /*
-* Copyright 2025 Chair of EDA, Technical University of Munich
+* Copyright 2026 Chair of EDA, Technical University of Munich
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -37,6 +37,10 @@ void *CVA6_Channel::getTraceValueHook(std::string trVal_)
   {
     return pc;
   }
+  if(trVal_ == "addr")
+  {
+    return addr;
+  }
   if(trVal_ == "brTarget")
   {
     return brTarget;
@@ -52,10 +56,6 @@ void *CVA6_Channel::getTraceValueHook(std::string trVal_)
   if(trVal_ == "rs2_data")
   {
     return rs2_data;
-  }
-  if(trVal_ == "addr")
-  {
-    return addr;
   }
   return nullptr;
 }

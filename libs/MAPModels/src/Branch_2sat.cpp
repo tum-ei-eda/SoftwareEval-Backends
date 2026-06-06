@@ -18,30 +18,30 @@
 
 namespace map_models{
 
-bool SaturationFsm_2Bit::getPrediction() const {
-    if(state == STRONG_TAKEN | state == WEAK_TAKEN){
-        return true;
-    }
-    return false;
-}
-
-void SaturationFsm_2Bit::update(bool taken_) const {
-    switch(state){
-
-        case STRONG_NOT_TAKEN: state = taken_ ? WEAK_NOT_TAKEN : STRONG_NOT_TAKEN;
-            break;
-
-        case WEAK_NOT_TAKEN: state = taken_ ? WEAK_TAKEN : STRONG_NOT_TAKEN;
-            break;
-
-        case WEAK_TAKEN: state = taken_ ? STRONG_TAKEN : WEAK_NOT_TAKEN;
-            break;
-
-        case STRONG_TAKEN: state = taken_ ? STRONG_TAKEN : WEAK_TAKEN;
-            break;
-
-        default: state = RESET_STATE;
-    }
-}
+//bool SaturationFsm_2Bit::getPrediction() const {
+//    if(state == STRONG_TAKEN | state == WEAK_TAKEN){
+//        return true;
+//    }
+//    return false;
+//}
+//
+//void SaturationFsm_2Bit::update(bool taken_) {
+//    switch(state){
+//
+//        case STRONG_NOT_TAKEN: state = taken_ ? WEAK_NOT_TAKEN : STRONG_NOT_TAKEN;
+//            break;
+//
+//        case WEAK_NOT_TAKEN: state = taken_ ? WEAK_TAKEN : STRONG_NOT_TAKEN;
+//            break;
+//
+//        case WEAK_TAKEN: state = taken_ ? STRONG_TAKEN : WEAK_NOT_TAKEN;
+//            break;
+//
+//        case STRONG_TAKEN: state = taken_ ? STRONG_TAKEN : WEAK_TAKEN;
+//            break;
+//
+//        default: state = RESET_STATE;
+//    }
+//}
 
 } // namespace map_models

@@ -15,6 +15,14 @@
 # 
 
 TEMPLATE_CMAKELIST_VARIANT = """
+SET(SUBDIRS
+  $subDirs
+)
+
+FOREACH(dir $${SUBDIRS})
+  ADD_SUBDIRECTORY($${dir})
+ENDFOREACH()
+
 TARGET_SOURCES($libName PRIVATE
   $files
 )

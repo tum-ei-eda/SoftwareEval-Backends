@@ -37,6 +37,7 @@ public:
 
 protected:
     uint64_t typeId;
+    uint64_t pc;
     bool isBranch = false;
 };
 

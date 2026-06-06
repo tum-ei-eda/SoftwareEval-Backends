@@ -22,6 +22,8 @@
 #include <string>
 #include <sstream>
 
+#include <iostream>
+
 namespace cva6{
 
 // TODO: Find a better way to define this constant!?
@@ -141,10 +143,11 @@ void BranchPredictionModel::setPc_p_jr(uint64_t pc_p_)
   if(isCall() | isReturn())
   {
     branchTarget = INVALID_BRANCH_ADDRESS;
-    
+    ras_flag = true;
+
     if(isReturn())
     {
-      return_flag = true;
+      //return_flag = true;
       branchTarget = ras.pop();
     }
           
@@ -213,7 +216,8 @@ uint64_t BranchPredictionModel::getPc_mp(void)
     isMispredict = (curPc != branchTarget);
 
     // Update BTB
-    if(isMispredict & !return_flag)
+    //if(isMispredict & !return_flag)
+    if(isMispredict & !ras_flag)
     {
       btb.update(branchPc, curPc);
     }
@@ -258,6 +262,7 @@ uint64_t BranchPredictionModel::getPc_pt(void)
   {
     jumpR_flag = false;
     return_flag = false;
+    ras_flag = false;
     if(!isMispredict)
     {
       pc_info = t_pc_pt;

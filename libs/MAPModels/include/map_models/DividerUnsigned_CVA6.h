@@ -1,0 +1,45 @@
+/*
+ * Copyright 2023 Chair of EDA, Technical University of Munich
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *	 http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+#ifndef MAP_MODEL_DIVIDER_UNSIGNED_CVA6_H
+#define MAP_MODEL_DIVIDER_UNSIGNED_CVA6_H
+
+#include <cstdint>
+
+#include "Models.h"
+
+namespace map_models{
+
+class DividerUnsigned_CVA6 : public ResourceModel{
+
+public:
+  DividerUnsigned_CVA6() {};
+  ~DividerUnsigned_CVA6() = default;
+
+  // Trace values
+  uint64_t* rs1_data_ptr;
+  uint64_t* rs2_data_ptr;
+
+protected:
+  void updateDelay();
+
+private:
+  int findLeadingZeroCnt(uint64_t);
+};
+
+} // namespace cva6_dse
+  
+#endif // CVA6_DSE_DIVIDER_UNSIGNED_MODEL_H

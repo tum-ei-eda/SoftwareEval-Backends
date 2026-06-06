@@ -18,6 +18,7 @@
 #define MAP_MODEL_BRANCH_2SAT_H
 
 #include "Models.h"
+#include "BranchHistoryTabel.h"
 
 #include <vector>
 
@@ -28,51 +29,51 @@ struct Branch_2sat_Config {
     int NUM_ROWS = 64;
 };
 
-class SaturationFsm_2Bit{
+//class SaturationFsm_2Bit{
+//
+//public:
+//    SaturationFsm_2Bit() {};
+//    ~SaturationFsm_2Bit() = default;
+//
+//    bool getPrediction() const;
+//    void update(bool);
+//
+//private:
+//    enum state_t {STRONG_NOT_TAKEN, WEAK_NOT_TAKEN, WEAK_TAKEN, STRONG_TAKEN};
+//    state_t RESET_STATE = WEAK_TAKEN;
+//    state_t state = RESET_STATE;
+//};
 
-public:
-    SaturationFsm_2Bit() {};
-    ~SaturationFsm_2Bit() = default;
-
-    bool getPrediction() const;
-    void update(bool) const;
-
-private:
-    enum state_t {STRONG_NOT_TAKEN, WEAK_NOT_TAKEN, WEAK_TAKEN, STRONG_TAKEN};
-    state_t RESET_STATE = WEAK_TAKEN;
-    mutable state_t state = RESET_STATE;
-};
-
-class BranchHistoryTable{
-
-public:
-    
-    BranchHistoryTable(int numPages_, int numRows_): 
-        numPages(numPages_),
-        numPageBits(__builtin_ctzll(numPages)),
-        numRows(numRows_),
-        numRowBits(__builtin_ctzll(numRows)),
-        table(numPages_ * numRows_) 
-        {};
-    ~BranchHistoryTable() = default;
-
-    bool getPrediction(uint64_t pc_) const { return table[indexTable(pc_)].getPrediction(); };
-    void update(uint64_t pc_, bool taken_) const { table[indexTable(pc_)].update(taken_); };
-
-private:
-    int const numRows, numPages;
-    int const numRowBits, numPageBits;
-    std::vector<SaturationFsm_2Bit> table;
-
-    int getPageIdx(uint64_t pc_) const { return (int)((pc_ >> 2) & ((1ULL << numPageBits) -1)); };
-    int getRowIdx(uint64_t pc_) const { return (int)((pc_ >> (2 + numPageBits)) & ((1ULL << numRowBits) -1)); };
-    int indexTable(uint64_t pc_) const { 
-        int pageIdx = getPageIdx(pc_);
-        int rowIdx = getRowIdx(pc_);
-        return pageIdx*numRows + rowIdx; 
-    };
-
-};
+//class BranchHistoryTable{
+//
+//public:
+//    
+//    BranchHistoryTable(int numPages_, int numRows_): 
+//        numPages(numPages_),
+//        numPageBits(__builtin_ctzll(numPages)),
+//        numRows(numRows_),
+//        numRowBits(__builtin_ctzll(numRows)),
+//        table(numPages_ * numRows_) 
+//        {};
+//    ~BranchHistoryTable() = default;
+//
+//    bool getPrediction(uint64_t pc_) const { return table[indexTable(pc_)].getPrediction(); };
+//    void update(uint64_t pc_, bool taken_) { table[indexTable(pc_)].update(taken_); };
+//
+//private:
+//    int const numRows, numPages;
+//    int const numRowBits, numPageBits;
+//    std::vector<SaturationFsm_2Bit> table;
+//
+//    int getPageIdx(uint64_t pc_) const { return (int)((pc_ >> 2) & ((1ULL << numPageBits) -1)); };
+//    int getRowIdx(uint64_t pc_) const { return (int)((pc_ >> (2 + numPageBits)) & ((1ULL << numRowBits) -1)); };
+//    int indexTable(uint64_t pc_) const { 
+//        int pageIdx = getPageIdx(pc_);
+//        int rowIdx = getRowIdx(pc_);
+//        return pageIdx*numRows + rowIdx; 
+//    };
+//
+//};
 
 class Branch_2sat: public BranchModel {
 
@@ -83,14 +84,14 @@ public:
     uint64_t* pc_ptr = nullptr;
     uint64_t* brTarget_ptr = nullptr;
 
-    void catchBranch() const { 
+    void catchBranch() { 
         prevBrTarget = brTarget_ptr[getInstrIdx()]; 
         brInstrPc = pc_ptr[getInstrIdx()];
     };
     
-    void evaluate() const { 
+    void evaluate() { 
         bool taken =   (pc_ptr[getInstrIdx()] == prevBrTarget);
-        bool predictedTaken = bht.getPrediction(brInstrPc);  
+        bool predictedTaken = bht.getPrediction(brInstrPc, 0); // TODO: Could add the immediate here  
         mispredicted = !(taken ^ predictedTaken);
         bht.update(brInstrPc, taken);
     };
@@ -105,11 +106,11 @@ public:
     };
 
 private:
-    mutable bool mispredicted = true;
-    mutable uint64_t prevBrTarget = 0;
-    mutable uint64_t brInstrPc = 0;
+    bool mispredicted = true;
+    uint64_t prevBrTarget = 0;
+    uint64_t brInstrPc = 0;
 
-    BranchHistoryTable bht;
+    BranchHistoryTabel bht;
 };
 
 } // namespace map_models

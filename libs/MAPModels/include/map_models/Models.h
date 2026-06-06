@@ -70,8 +70,8 @@ public:
     BranchModel() {};
     virtual ~BranchModel() = default;
 
-    virtual void catchBranch() const = 0;
-    virtual void evaluate() const = 0;
+    virtual void catchBranch() = 0; // Called on branch instruction
+    virtual void evaluate() = 0; // Called on block-start (i.e. instr after branch-instr)
     virtual void shiftVector(uint64_t*) const = 0;
 
 };

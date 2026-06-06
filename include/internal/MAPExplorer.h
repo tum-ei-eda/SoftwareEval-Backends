@@ -123,32 +123,53 @@ struct ResGroupEntry {
     std::array<ResourceGroup*, MAX_RES> resGroups;
 };
 
+template<size_t NUM_RES_GROUPS, size_t D_VEC_SIZE>
+class DelayVector{
+
+public:
+
+    DelayVector(const std::array<map_models::ResourceModel*, NUM_RES_GROUPS>& resModels_){
+        for(int i=0; i<NUM_RES_GROUPS; i++){
+            bufferPtrs[i] = resModels_[i]->connectBuffer();
+        }
+    }
+
+    // TODO: Possible to avoid reading the same buffer again and again?
+    // Would require ResourceGroup to know which DelayVectors are connected to the same model?
+    inline void fetchDelay(int resGrId_){ delayVector[delayVecIdx++] = *bufferPtrs[resGrId_]; }
+
+    inline void reset() { delayVecIdx = 0; }
+
+    inline uint8_t* connectVector() { return delayVector.data(); };
+
+private:
+
+    std::array<uint8_t, D_VEC_SIZE> delayVector{0};
+    int delayVecIdx = 0;
+
+    //std::array<const uint8_t*, NUM_RES_GROUPS> bufferPtrs{nullptr};
+    std::array<const uint8_t*, NUM_RES_GROUPS> bufferPtrs{};
+
+};
+
 template<size_t NUM_RES_GROUPS, size_t T_VEC_SIZE>
 class Combination{
 
 public:
     
     using SchedFuncPtr = typename Block::SchedFuncPtr;
+    using DVecType = DelayVector<NUM_RES_GROUPS, 100>; // TODO: D_VEC_SIZE hard-coded, to avoid re-compilation for ever benchmark
 
-    Combination(const std::array<map_models::ResourceModel*, NUM_RES_GROUPS>& resModels_, map_models::BranchModel* brModel_):
-        brModel_ptr(brModel_)
-    {
-        for(int i=0; i<NUM_RES_GROUPS; i++){
-            bufferPtrs[i] = resModels_[i]->connectBuffer();
+    Combination(DVecType* delayVec_, map_models::BranchModel* brModel_):
+        brModel_ptr(brModel_),
+        delayVector_ptr(delayVec_->connectVector())
+    {}
+
+    void executeScheduling(SchedFuncPtr func_, bool branchShift_) {
+        if(branchShift_){
+            brModel_ptr->shiftVector(timingVector.data());
         }
-    }
-
-    void fetchDelay(int resGrId_){
-        delayVector[delayVecIdx++] = *bufferPtrs[resGrId_];
-    }
-
-    void updateBranchConnectors() {
-        brModel_ptr->shiftVector(timingVector.data());
-    }
-
-    void executeScheduling(SchedFuncPtr func_) {
-        func_(timingVector.data(), delayVector.data());
-        delayVecIdx = 0;
+        func_(timingVector.data(), delayVector_ptr);
     }
 
     // TODO: Remove these public functions. No longer needed?
@@ -156,34 +177,35 @@ public:
 
 private:
 
-    map_models::BranchModel* brModel_ptr = nullptr;
-    std::array<const uint8_t*, NUM_RES_GROUPS> bufferPtrs{nullptr};
-
     std::array<uint64_t, T_VEC_SIZE> timingVector{0};
-    std::array<uint8_t, 100> delayVector{0}; // TODO: D_VEC_SIZE is hard-coded for now!
 
-    int delayVecIdx = 0;
+    map_models::BranchModel* brModel_ptr = nullptr;
+    uint8_t* delayVector_ptr = nullptr;
 
 };
 
-template<size_t NUM_RES_GROUPS, size_t NUM_COMBS, size_t NUM_INSTR_TYPES, size_t T_VEC_SIZE, size_t MAX_RES>
+template<size_t NUM_RES_GROUPS, size_t NUM_COMBS, size_t NUM_D_VECS, size_t NUM_INSTR_TYPES, size_t T_VEC_SIZE, size_t MAX_RES, int NUM_STAGE_VARS>
 class MAPExplorer : public Backend{
 
 public:
     
     using CombType = Combination<NUM_RES_GROUPS, T_VEC_SIZE>;
+    //using DVecType = DelayVector<NUM_RES_GROUPS, 100>; // TODO: D_VEC_SIZE hard-coded, to avoid re-compilation for ever benchmark
+    using DVecType = typename CombType::DVecType;
     using ResGroupEntryType = ResGroupEntry<MAX_RES>;
 
     MAPExplorer(const MAP_Explorer::BlockDictionary* blkDict_, 
         const std::array<const ResGroupEntryType, NUM_INSTR_TYPES>& resGroupLUT_,
         const std::array<ResourceGroup*, NUM_RES_GROUPS>& resGrps_,
         BranchGroup* brGrp_,
-        const std::array<CombType*, NUM_COMBS>& combs_
+        std::array<DVecType, NUM_D_VECS>& dVecs_,
+        std::array<CombType, NUM_COMBS>& combs_
     ):
         blkDict(blkDict_),
         resGroupLUT(resGroupLUT_),
         resourceGroups(resGrps_),
         branchGroup(brGrp_),
+        delayVectors(dVecs_),
         combinations(combs_)
     {};
 
@@ -208,9 +230,8 @@ public:
                 curBlk = blkDict->getBlock(curPc);
 
                 // Evaluate branch
-                branchGroup->evaluate();
-                for(int i=0; i<NUM_COMBS; i++){
-                    combinations[i]->updateBranchConnectors();
+                if(prevBlkEndOnBranch){
+                    branchGroup->evaluate();
                 }
 
             }
@@ -220,23 +241,38 @@ public:
             for(uint8_t gr_i=0; gr_i< entry.cnt; gr_i++){
                 auto group = entry.resGroups[gr_i];
                 group->calcDelays();
-                for(int i=0; i<NUM_COMBS; i++){
-                    combinations[i]->fetchDelay(group->groupId);
+                for(int i=0; i<NUM_D_VECS; i++){
+                    delayVectors[i].fetchDelay(group->groupId);
                 }
             }
 
             // End of block reached
             if(curPc == curBlk->endPc){
 
-                // Update branch models            
-                branchGroup->catchBranch();
+                //bool endOnBranch = curBlk->endOnBranch;
 
                 // Execute block-scheduling-function
                 auto schedFunc = curBlk->getScheduleFunction();
                 for(int i=0; i<NUM_COMBS; i++){
-                    combinations[i]->executeScheduling(schedFunc);
+                    combinations[i].executeScheduling(schedFunc, prevBlkEndOnBranch);
                 }
 
+                //if(curBlk->endOnBranch){
+                //    std::cout << "§" << getMaxCycleCount(combinations[0]) << std::endl;
+                //}
+
+                // If block ended on a branch, update Branch models
+                if(curBlk->endOnBranch){            
+                    branchGroup->catchBranch();
+                }
+                
+
+                // Clear delay-vectors for next block
+                for(int i=0; i<NUM_D_VECS; i++){
+                    delayVectors[i].reset();
+                }
+                
+                prevBlkEndOnBranch = curBlk->endOnBranch;
                 activeBlock = false;
             }
         }
@@ -247,7 +283,8 @@ public:
         std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
         for(int i=0; i<NUM_COMBS; i++){
             auto comb_i = combinations[i];
-            std::cout << "Estimated cycles (Comb_" << i << "): " << std::max(comb_i->getTimingVector()[2],comb_i->getTimingVector()[3]) << std::endl;
+            //std::cout << "Estimated cycles (Comb_" << i << "): " << std::max(comb_i.getTimingVector()[2],comb_i.getTimingVector()[3]) << std::endl;
+            std::cout << "Estimated cycles (Comb_" << i << "): " << getMaxCycleCount(comb_i) << std::endl;
         }
         std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
 
@@ -259,11 +296,13 @@ protected:
     uint64_t* ch_typeId_ptr;
     uint64_t* ch_pc_ptr;
 
+    // Iteration-variable must be member, so external models can connect to it
     int curInstrIdx = 0;
 
 private:
 
     bool activeBlock = false;
+    bool prevBlkEndOnBranch = false;
 
     const MAP_Explorer::BlockDictionary* blkDict;
     const MAP_Explorer::Block* curBlk;
@@ -271,7 +310,108 @@ private:
     const std::array<const ResGroupEntryType, NUM_INSTR_TYPES>& resGroupLUT;
     const std::array<ResourceGroup*, NUM_RES_GROUPS> resourceGroups;
     BranchGroup* const branchGroup;
-    const std::array<CombType*, NUM_COMBS>& combinations;
+    std::array<DVecType, NUM_D_VECS>& delayVectors;
+    std::array<CombType, NUM_COMBS>& combinations;
+
+    uint64_t getMaxCycleCount(CombType& comb_){
+        uint64_t maxCnt = 0;
+        auto tVec = comb_.getTimingVector();
+        for(int i=0; i<NUM_STAGE_VARS; i++){
+            maxCnt = std::max(maxCnt, tVec[i]);
+        }
+        return maxCnt;
+    }
+
+};
+
+// Atlas is the test-version of a MAPExplorer which uses instruction-schedules instead of block-schedules
+
+template<size_t NUM_RES_GROUPS, size_t NUM_COMBS, size_t NUM_D_VECS, size_t NUM_INSTR_TYPES, size_t T_VEC_SIZE, size_t MAX_RES, int NUM_STAGE_VARS>
+class Atlas : public Backend{
+
+public:
+    
+    using CombType = Combination<NUM_RES_GROUPS, T_VEC_SIZE>;
+    using DVecType = typename CombType::DVecType;
+    using ResGroupEntryType = ResGroupEntry<MAX_RES>;
+
+    Atlas(//const MAP_Explorer::BlockDictionary* blkDict_, 
+        const std::array<const ResGroupEntryType, NUM_INSTR_TYPES>& resGroupLUT_,
+        const std::array<ResourceGroup*, NUM_RES_GROUPS>& resGrps_,
+        BranchGroup* brGrp_,
+        std::array<DVecType, NUM_D_VECS>& dVecs_,
+        std::array<CombType, NUM_COMBS>& combs_
+    ):
+        //blkDict(blkDict_),
+        resGroupLUT(resGroupLUT_),
+        resourceGroups(resGrps_),
+        branchGroup(brGrp_),
+        delayVectors(dVecs_),
+        combinations(combs_)
+    {};
+
+    ~Atlas() = default;
+
+    virtual void connectChannel(Channel*) = 0;
+    
+    void initialize(void) {
+        std::cout << "ATLAS initialized!" << std::endl;
+    };
+
+    void execute(void) {
+        
+        for(curInstrIdx=0; curInstrIdx<*ch_instrCnt_ptr; curInstrIdx++){
+
+            uint64_t curPc = ch_pc_ptr[curInstrIdx];
+
+            // Call resource models
+            const auto& entry = resGroupLUT[ch_typeId_ptr[curInstrIdx]];
+            for(uint8_t gr_i=0; gr_i< entry.cnt; gr_i++){
+                auto group = entry.resGroups[gr_i];
+                group->calcDelays();
+                for(int i=0; i<NUM_D_VECS; i++){
+                    delayVectors[i].fetchDelay(group->groupId);
+                }
+            }
+        }
+    };  
+    
+    void finalize(void) {
+        
+        std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+        for(int i=0; i<NUM_COMBS; i++){
+            auto comb_i = combinations[i];
+            std::cout << "Estimated cycles (Comb_" << i << "): " << getMaxCycleCount(comb_i) << std::endl;
+        }
+        std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+
+    };
+
+protected:
+
+    uint64_t* ch_instrCnt_ptr;
+    uint64_t* ch_typeId_ptr;
+    uint64_t* ch_pc_ptr;
+
+    // Iteration-variable must be member, so external models can connect to it
+    int curInstrIdx = 0;
+
+private:
+
+    const std::array<const ResGroupEntryType, NUM_INSTR_TYPES>& resGroupLUT;
+    const std::array<ResourceGroup*, NUM_RES_GROUPS> resourceGroups;
+    BranchGroup* const branchGroup;
+    std::array<DVecType, NUM_D_VECS>& delayVectors;
+    std::array<CombType, NUM_COMBS>& combinations;
+
+    uint64_t getMaxCycleCount(CombType& comb_){
+        uint64_t maxCnt = 0;
+        auto tVec = comb_.getTimingVector();
+        for(int i=0; i<NUM_STAGE_VARS; i++){
+            maxCnt = std::max(maxCnt, tVec[i]);
+        }
+        return maxCnt;
+    }
 
 };
 

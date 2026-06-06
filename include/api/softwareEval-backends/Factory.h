@@ -32,6 +32,7 @@ private:
   enum var_t { 
 	CV32E40P_DSE,
 	CV32E40P,
+	CVA6_DSE,
 	AssemblyTrace_RV32,
 	InstructionTrace_RV32IM_Zicsr,
 	AssemblyTrace_RV64,
@@ -42,6 +43,8 @@ public:
   int getVariantHandle(std::string);
   Channel* getChannel(int);
   Backend* getPerformanceEstimator(int);
+  Backend* getMAPExplorer(int);
+  Backend* getBlockExtractor(int);
   Backend* getTracePrinter(int);
 };
 

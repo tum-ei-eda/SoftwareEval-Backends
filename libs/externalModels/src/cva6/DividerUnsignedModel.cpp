@@ -22,6 +22,7 @@ namespace cva6{
 
 int DividerUnsignedModel::getDelay(void)
 {
+  
   int delay = 0;
 
   uint64_t op_a = rs1_data_ptr[getInstrIndex()];
