@@ -37,10 +37,10 @@ void PredictFsm::update(bool taken)
   case STRONG_NOT_TAKEN: state = taken ? WEAK_NOT_TAKEN : STRONG_NOT_TAKEN;
     break;
 
-  case WEAK_NOT_TAKEN: state = taken ? STRONG_TAKEN : STRONG_NOT_TAKEN;
+  case WEAK_NOT_TAKEN: state = taken ? WEAK_TAKEN : STRONG_NOT_TAKEN;
     break;
 
-  case WEAK_TAKEN: state = taken ? STRONG_TAKEN : STRONG_NOT_TAKEN;
+  case WEAK_TAKEN: state = taken ? STRONG_TAKEN : WEAK_NOT_TAKEN;
     break;
 
   case STRONG_TAKEN: state = taken ? STRONG_TAKEN : WEAK_TAKEN;
@@ -152,6 +152,7 @@ void DynamicBranchPredictModel::setPc_p(int pc_p_)
 
 void DynamicBranchPredictModel::setPc_np(int pc_np_)
 {
+  pc_np = pc_np_;
   branchInstr = true;
   branchInstrPc = pc_ptr[getInstrIndex()];
   comp_branchAddr = brTarget_ptr[getInstrIndex()];
@@ -189,17 +190,21 @@ void DynamicBranchPredictModel::setPc_np(int pc_np_)
   
 }
 
-int DynamicBranchPredictModel::getPc()
+uint64_t DynamicBranchPredictModel::getPc()
 {
   if(!branchInstr)
   {
     return pc_p;
   }
 
+  branch_info = true;
+  mispredicted_info = false;
+  pc_info = pc_p;
   branchInstr = false;
   
   int curPc = pc_ptr[getInstrIndex()];
-  bool taken = (curPc == pred_branchAddr) | (curPc == comp_branchAddr);
+
+  bool taken = (curPc == comp_branchAddr);
 
   bht.update(branchInstrPc, taken);
   if(curPc == comp_branchAddr)
@@ -216,8 +221,28 @@ int DynamicBranchPredictModel::getPc()
     return pc_p;
   }
 
+  mispredicted_info = true;
+  pc_info = pc_np;
   return pc_np;
   
+}
+
+std::string DynamicBranchPredictModel::getInfoHeader()
+{
+  std::stringstream ret_strs;
+  ret_strs << "br:is_branch";
+  ret_strs << "," << "br:mispredict";
+  return ret_strs.str();
+}
+
+std::string DynamicBranchPredictModel::getInfoStream()
+{
+  std::stringstream ret_strs;
+  ret_strs << branch_info;
+  ret_strs << "," << mispredicted_info;
+  branch_info = false;
+  mispredicted_info = false;
+  return ret_strs.str();
 }
 
 } // namespace common

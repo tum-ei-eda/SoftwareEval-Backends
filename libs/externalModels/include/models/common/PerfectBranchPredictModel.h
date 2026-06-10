@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-#ifndef COMMON_STATIC_BRANCH_PREDICT_MODEL_H
-#define COMMON_STATIC_BRANCH_PREDICT_MODEL_H
+#ifndef COMMON_PERFECT_BRANCH_PREDICT_MODEL_H
+#define COMMON_PERFECT_BRANCH_PREDICT_MODEL_H
 
 #include "PerformanceModel.h"
 
@@ -24,10 +24,10 @@
 
 namespace common{
 
-class StaticBranchPredictModel : public ConnectorModel
+class PerfectBranchPredictModel : public ConnectorModel
 {
 public:
-    StaticBranchPredictModel(PerformanceModel* parent_) : ConnectorModel("StaticBranchPredictModel", parent_) {};
+    PerfectBranchPredictModel(PerformanceModel* parent_) : ConnectorModel("PerfectBranchPredictModel", parent_) {};
 
     uint64_t* pc_ptr;
     uint64_t* brTarget_ptr;
@@ -53,4 +53,4 @@ private:
 
 } //namespace common
   
-#endif //COMMON_STATIC_BRANCH_PREDICT_MODEL_H
+#endif //COMMON_PERFECT_BRANCH_PREDICT_MODEL_H

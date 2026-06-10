@@ -22,6 +22,7 @@
 #include <stdbool.h>
 #include <map>
 #include <list>
+#include <sstream>
 
 // TODO: Check where unsigned int should be used instead of int!
 
@@ -74,7 +75,12 @@ public:
 
     void setPc_p(int);
     void setPc_np(int);
-    int getPc(void);
+    uint64_t getPc(void);
+
+    // Tracing API
+    std::string getInfoHeader(); 
+    std::string getInfoStream();
+    
     
 private:
     int pc_p = 0;
@@ -92,6 +98,11 @@ private:
     
     const int BUFFER_DEPTH;
     std::list<int> pcFifo;
+
+    // Status variables for info-print (tracing)
+    bool branch_info = false;
+    bool mispredicted_info = false;
+    uint64_t pc_info = 0;
 
 };
 
