@@ -1,0 +1,22 @@
+cmake_minimum_required(VERSION 3.16)
+project(PrefetcherTests CXX)
+
+set(INCLUDE_DIR ../include)
+set(PREFETCH_SRC_DIR ../src/common/cache/prefetching)
+set(REPLACE_SRC_DIR ../src/common/cache/replacement)
+
+add_executable(test_nextline test_NextLinePrefetcher.cpp
+    ${PREFETCH_SRC_DIR}/NextLinePrefetcher.cpp
+)
+target_include_directories(test_nextline PRIVATE ${INCLUDE_DIR})
+
+add_executable(test_stride test_StridePrefetcher.cpp
+    ${PREFETCH_SRC_DIR}/StridePrefetcher.cpp
+)
+target_include_directories(test_stride PRIVATE ${INCLUDE_DIR})
+
+add_executable(test_stream test_StreamPrefetcher.cpp
+    ${PREFETCH_SRC_DIR}/StreamPrefetcher.cpp
+    ${REPLACE_SRC_DIR}/TreePLRU.cpp
+)
+target_include_directories(test_stream PRIVATE ${INCLUDE_DIR})
