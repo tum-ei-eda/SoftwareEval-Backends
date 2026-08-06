@@ -21,18 +21,9 @@ struct CacheCfg {
   int miss_delay = 7;
   int not_cacheable_delay = 9;
 
-  // T
-  // uint32_t num_ways = 1;
-  // uint32_t num_sets = 4;
-  // uint32_t line_size = 16;
-  // // S
   uint32_t num_ways = 2;
   uint32_t num_sets = 8;
   uint32_t line_size = 32;
-  // // M
-  // uint32_t num_ways = 4;
-  // uint32_t num_sets = 32;
-  // uint32_t line_size = 64;
 
   bool use_addr_filter = true;
   uint64_t filter_lo = 0x80000000;
