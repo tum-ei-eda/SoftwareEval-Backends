@@ -4,4 +4,5 @@ TARGET_SOURCES(SWEVAL_BACKENDS_LIB PRIVATE
     TAGEPredictor.cpp
     TageBranchPredictModel.cpp
     PerfectBranchPredictModel.cpp
+    BimodalBranchPredictModel.cpp
 )
