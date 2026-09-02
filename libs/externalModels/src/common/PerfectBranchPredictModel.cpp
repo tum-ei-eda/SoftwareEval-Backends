@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include "models/common/StaticBranchPredictModel.h"
+#include "models/common/PerfectBranchPredictModel.h"
 
 #include <cstdint>
 #include <string>
@@ -22,21 +22,21 @@
 
 namespace common{
 
-void StaticBranchPredictModel::setPc_p(uint64_t pc_p_)
+void PerfectBranchPredictModel::setPc_p(uint64_t pc_p_)
 {
   // Every instruction calls setPc_p, so assume it is not a branch
   branchInstr = false;
   pc_p = pc_p_;
 }
 
-void StaticBranchPredictModel::setPc_np(uint64_t pc_np_)
+void PerfectBranchPredictModel::setPc_np(uint64_t pc_np_)
 {
   pc_np = pc_np_;
   branchInstr = true;
   branchTarget = brTarget_ptr[getInstrIndex()];
 }
 
-uint64_t StaticBranchPredictModel::getPc(void)
+uint64_t PerfectBranchPredictModel::getPc(void)
 {
   if(!branchInstr)
   {
@@ -46,33 +46,23 @@ uint64_t StaticBranchPredictModel::getPc(void)
   branch_info = true;
   mispredicted_info = false;
   pc_info = pc_p;
-  branchInstr = false;
 
-  // Always predict branch-not-taken
-  if(pc_ptr[getInstrIndex()] == branchTarget)
-  {
-    mispredicted_info = true;
-    pc_info = pc_np;
-    return pc_np;
-  }
   return pc_p;
 }
 
-std::string StaticBranchPredictModel::getInfoHeader()
+std::string PerfectBranchPredictModel::getInfoHeader()
 {
   std::stringstream ret_strs;
   ret_strs << "br:is_branch";
   ret_strs << "," << "br:mispredict";
-  ret_strs << "," << "br:pc_avail";
   return ret_strs.str();
 }
 
-std::string StaticBranchPredictModel::getInfoStream()
+std::string PerfectBranchPredictModel::getInfoStream()
 {
   std::stringstream ret_strs;
   ret_strs << branch_info;
   ret_strs << "," << mispredicted_info;
-  ret_strs << "," << pc_info;
   branch_info = false;
   mispredicted_info = false;
   return ret_strs.str();
