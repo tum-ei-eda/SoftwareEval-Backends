@@ -93,11 +93,12 @@ bool TagePredictor::predict(uint32_t pc) {
     }
 
     // If provider is new (u=0) and weak, use alternate prediction
-    finalPred = provPred;  // Default to provider prediction
+    finalPred = provPred;
     if (provBank != -1) {
         Entry& e = taggedTables[provBank][provIdx];
-        if (e.u == 0 && (e.ctr == 0 || e.ctr == -1)) {
-            finalPred = altPred;  // Use alternate prediction for newly allocated entries
+        bool newlyAllocated = (e.u == 0 && (e.ctr == 0 || e.ctr == -1));
+        if (newlyAllocated && useAltOnNewAlloc >= 8) {
+            finalPred = altPred;
         }
     }
 
@@ -117,6 +118,8 @@ void TagePredictor::update(uint32_t pc, bool actual) {
     } else {
         // update provider entry
         Entry& e = taggedTables[provBank][provIdx];
+        bool newlyAllocated = (e.u == 0 && (e.ctr == 0 || e.ctr == -1));
+        
         if (actual && e.ctr < 3) {
             e.ctr++;
         } else if (!actual && e.ctr > -4) {
@@ -131,6 +134,14 @@ void TagePredictor::update(uint32_t pc, bool actual) {
                 if (e.u > 0) e.u--;
             }
         }
+
+        // update global useAltOnNewAlloc counter
+        
+        if (newlyAllocated && provPred != altPred) {
+            if (altPred == actual && useAltOnNewAlloc < 15) useAltOnNewAlloc++;
+            else if (altPred != actual && useAltOnNewAlloc > 0) useAltOnNewAlloc--;
+        }
+        
     }
 
     // Allocation: If mispredicted, try to allocate in longer history bank
@@ -144,8 +155,6 @@ void TagePredictor::update(uint32_t pc, bool actual) {
                     allocBank = i;
                 } else if (rand() % 3 == 0) {
                     allocBank = i;
-                    break;
-                } else {
                     break;
                 }
             }

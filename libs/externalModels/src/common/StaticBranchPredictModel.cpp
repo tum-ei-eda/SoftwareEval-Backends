@@ -46,6 +46,7 @@ uint64_t StaticBranchPredictModel::getPc(void)
   branch_info = true;
   mispredicted_info = false;
   pc_info = pc_p;
+  branchInstr = false;
 
   // Always predict branch-not-taken
   if(pc_ptr[getInstrIndex()] == branchTarget)

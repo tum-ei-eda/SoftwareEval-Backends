@@ -42,6 +42,8 @@ uint64_t TageBranchPredictModel::getPc() {
     
     bool taken = (curPc == comp_branchAddr);
 
+    mispredicted_info = pred_taken != taken;
+
     tage.update(branchInstrPc, taken);
 
     if(curPc == comp_branchAddr) {
@@ -55,7 +57,6 @@ uint64_t TageBranchPredictModel::getPc() {
         return pc_p;
     }
 
-    mispredicted_info = true;
     pc_info = pc_np;
     return pc_np;
 }

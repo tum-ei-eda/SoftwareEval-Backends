@@ -40,6 +40,7 @@ private:
 
     int branchCnt; // for aging
     bool resetMSB = true; // for alternating which bit to reset during aging
+    int useAltOnNewAlloc = 8;
 
     // status variables
     int provBank, altBank;
