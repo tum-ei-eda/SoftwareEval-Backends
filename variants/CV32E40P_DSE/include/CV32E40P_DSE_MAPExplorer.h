@@ -25,6 +25,7 @@
 #include "Channel.h"
 
 #include "CV32E40P_DSE_BlockSchedulingFunctions.h"
+#include "CV32E40P_DSE_InstructionSchedulingFunctions.h"
 
 
 #include "map_models/Branch_ant.h"
@@ -89,6 +90,22 @@ map_models::ICacheModel,
 map_models::ICacheModel,
 map_models::ICacheModel,
 map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
 map_models::ICacheModel
 >{
 
@@ -131,6 +148,22 @@ map_models::DCacheModel,
 map_models::DCacheModel,
 map_models::DCacheModel,
 map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
 map_models::DCacheModel
 >{
 
@@ -142,15 +175,17 @@ public:
 
 /* MAP EXPLORER */
 
-using MAPExplorerBase = MAP_Explorer::MAPExplorer<4, 2048, 256, 54, 39, 2, 4>;
+template<bool USE_BLK>
+using MAPExplorerBase = MAP_Explorer::MAPExplorer<USE_BLK, 4, 8192, 1024, 54, 39, 2, 4>;
 
-class CV32E40P_DSE_MAPExplorer : public MAPExplorerBase{
+template<bool USE_BLK>
+class CV32E40P_DSE_MAPExplorer : public MAPExplorerBase<USE_BLK>{
 
 public:
 
-    using CombType = typename MAPExplorerBase::CombType;
-    using DVecType = typename MAPExplorerBase::DVecType;
-    using ResGroupEntryType = typename MAPExplorerBase::ResGroupEntryType;
+    using CombType = typename MAPExplorerBase<USE_BLK>::CombType;
+    using DVecType = typename MAPExplorerBase<USE_BLK>::DVecType;
+    using ResGroupEntryType = typename MAPExplorerBase<USE_BLK>::ResGroupEntryType;
 
     CV32E40P_DSE_MAPExplorer();
     ~CV32E40P_DSE_MAPExplorer() = default;
@@ -169,10 +204,10 @@ private:
     static const std::array<const ResGroupEntryType, 54> resGroupLUT;
 
     // Delay-Vectors
-    static std::array<DVecType, 256> delayVectors;
+    static std::array<DVecType, 1024> delayVectors;
 
     // Combinations
-    static std::array<CombType, 2048> combs;
+    static std::array<CombType, 8192> combs;
 };
 
 } // namespace CV32E40P_DSE

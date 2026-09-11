@@ -24,7 +24,7 @@
 namespace CV32E40P_DSE{
 
 extern const MAP_Explorer::Block block_277;
-extern const MAP_Explorer::Block block_426;
+extern const MAP_Explorer::Block block_427;
 extern const MAP_Explorer::Block block_269;
 extern const MAP_Explorer::Block block_270;
 extern const MAP_Explorer::Block block_279;
@@ -37,10 +37,9 @@ extern const MAP_Explorer::Block block_284;
 extern const MAP_Explorer::Block block_286;
 extern const MAP_Explorer::Block block_287;
 extern const MAP_Explorer::Block block_288;
-extern const MAP_Explorer::Block block_425;
+extern const MAP_Explorer::Block block_426;
 extern const MAP_Explorer::Block block_416;
 extern const MAP_Explorer::Block block_418;
-extern const MAP_Explorer::Block block_439;
 extern const MAP_Explorer::Block block_440;
 extern const MAP_Explorer::Block block_441;
 extern const MAP_Explorer::Block block_442;
@@ -66,6 +65,7 @@ extern const MAP_Explorer::Block block_461;
 extern const MAP_Explorer::Block block_462;
 extern const MAP_Explorer::Block block_463;
 extern const MAP_Explorer::Block block_464;
+extern const MAP_Explorer::Block block_465;
 extern const MAP_Explorer::Block block_301;
 extern const MAP_Explorer::Block block_406;
 extern const MAP_Explorer::Block block_302;
@@ -90,12 +90,11 @@ extern const MAP_Explorer::Block block_392;
 extern const MAP_Explorer::Block block_393;
 extern const MAP_Explorer::Block block_389;
 extern const MAP_Explorer::Block block_390;
-extern const MAP_Explorer::Block block_427;
+extern const MAP_Explorer::Block block_428;
 extern const MAP_Explorer::Block block_345;
 extern const MAP_Explorer::Block block_346;
 extern const MAP_Explorer::Block block_347;
 extern const MAP_Explorer::Block block_348;
-extern const MAP_Explorer::Block block_466;
 extern const MAP_Explorer::Block block_467;
 extern const MAP_Explorer::Block block_468;
 extern const MAP_Explorer::Block block_469;
@@ -107,27 +106,26 @@ extern const MAP_Explorer::Block block_474;
 extern const MAP_Explorer::Block block_475;
 extern const MAP_Explorer::Block block_476;
 extern const MAP_Explorer::Block block_477;
-extern const MAP_Explorer::Block block_479;
+extern const MAP_Explorer::Block block_478;
 extern const MAP_Explorer::Block block_480;
 extern const MAP_Explorer::Block block_481;
 extern const MAP_Explorer::Block block_482;
 extern const MAP_Explorer::Block block_483;
-extern const MAP_Explorer::Block block_495;
-extern const MAP_Explorer::Block block_561;
-extern const MAP_Explorer::Block block_562;
-extern const MAP_Explorer::Block block_485;
+extern const MAP_Explorer::Block block_484;
+extern const MAP_Explorer::Block block_496;
 extern const MAP_Explorer::Block block_486;
 extern const MAP_Explorer::Block block_487;
 extern const MAP_Explorer::Block block_488;
 extern const MAP_Explorer::Block block_489;
-extern const MAP_Explorer::Block block_491;
 extern const MAP_Explorer::Block block_490;
-extern const MAP_Explorer::Block block_493;
+extern const MAP_Explorer::Block block_492;
+extern const MAP_Explorer::Block block_491;
 extern const MAP_Explorer::Block block_494;
-extern const MAP_Explorer::Block block_522;
+extern const MAP_Explorer::Block block_495;
+extern const MAP_Explorer::Block block_523;
 extern const MAP_Explorer::Block block_298;
 extern const MAP_Explorer::Block block_299;
-extern const MAP_Explorer::Block block_498;
+extern const MAP_Explorer::Block block_499;
 extern const MAP_Explorer::Block block_312;
 extern const MAP_Explorer::Block block_313;
 extern const MAP_Explorer::Block block_314;
@@ -137,26 +135,25 @@ extern const MAP_Explorer::Block block_369;
 extern const MAP_Explorer::Block block_370;
 extern const MAP_Explorer::Block block_371;
 extern const MAP_Explorer::Block block_267;
-extern const MAP_Explorer::Block block_424;
-extern const MAP_Explorer::Block block_435;
+extern const MAP_Explorer::Block block_425;
 extern const MAP_Explorer::Block block_436;
 extern const MAP_Explorer::Block block_437;
 extern const MAP_Explorer::Block block_438;
-extern const MAP_Explorer::Block block_465;
-extern const MAP_Explorer::Block block_484;
-extern const MAP_Explorer::Block block_492;
-extern const MAP_Explorer::Block block_496;
+extern const MAP_Explorer::Block block_439;
+extern const MAP_Explorer::Block block_466;
+extern const MAP_Explorer::Block block_485;
+extern const MAP_Explorer::Block block_493;
 extern const MAP_Explorer::Block block_497;
-extern const MAP_Explorer::Block block_526;
-extern const MAP_Explorer::Block block_529;
+extern const MAP_Explorer::Block block_498;
+extern const MAP_Explorer::Block block_527;
 extern const MAP_Explorer::Block block_530;
 extern const MAP_Explorer::Block block_531;
 extern const MAP_Explorer::Block block_532;
 extern const MAP_Explorer::Block block_533;
-extern const MAP_Explorer::Block block_536;
+extern const MAP_Explorer::Block block_534;
 extern const MAP_Explorer::Block block_537;
 extern const MAP_Explorer::Block block_538;
-extern const MAP_Explorer::Block block_540;
+extern const MAP_Explorer::Block block_539;
 extern const MAP_Explorer::Block block_541;
 extern const MAP_Explorer::Block block_542;
 extern const MAP_Explorer::Block block_543;
@@ -169,15 +166,15 @@ extern const MAP_Explorer::Block block_549;
 extern const MAP_Explorer::Block block_550;
 extern const MAP_Explorer::Block block_551;
 extern const MAP_Explorer::Block block_552;
+extern const MAP_Explorer::Block block_553;
 extern const MAP_Explorer::Block block_271;
-extern const MAP_Explorer::Block block_478;
+extern const MAP_Explorer::Block block_479;
 extern const MAP_Explorer::Block block_408;
 extern const MAP_Explorer::Block block_337;
 extern const MAP_Explorer::Block block_338;
 extern const MAP_Explorer::Block block_340;
 extern const MAP_Explorer::Block block_273;
 extern const MAP_Explorer::Block block_272;
-extern const MAP_Explorer::Block block_556;
 extern const MAP_Explorer::Block block_297;
 extern const MAP_Explorer::Block block_276;
 extern const MAP_Explorer::Block block_280;
@@ -193,6 +190,8 @@ extern const MAP_Explorer::Block block_405;
 extern const MAP_Explorer::Block block_407;
 extern const MAP_Explorer::Block block_409;
 extern const MAP_Explorer::Block block_410;
+extern const MAP_Explorer::Block block_564;
+extern const MAP_Explorer::Block block_565;
 extern const MAP_Explorer::Block block_354;
 extern const MAP_Explorer::Block block_355;
 extern const MAP_Explorer::Block block_356;
@@ -201,11 +200,7 @@ extern const MAP_Explorer::Block block_358;
 extern const MAP_Explorer::Block block_359;
 extern const MAP_Explorer::Block block_353;
 extern const MAP_Explorer::Block block_352;
-extern const MAP_Explorer::Block block_635;
-extern const MAP_Explorer::Block block_636;
-extern const MAP_Explorer::Block block_187;
-extern const MAP_Explorer::Block block_189;
-extern const MAP_Explorer::Block block_430;
+extern const MAP_Explorer::Block block_431;
 extern const MAP_Explorer::Block block_290;
 extern const MAP_Explorer::Block block_291;
 extern const MAP_Explorer::Block block_292;
@@ -235,13 +230,7 @@ extern const MAP_Explorer::Block block_373;
 extern const MAP_Explorer::Block block_374;
 extern const MAP_Explorer::Block block_375;
 extern const MAP_Explorer::Block block_376;
-extern const MAP_Explorer::Block block_196;
-extern const MAP_Explorer::Block block_428;
-extern const MAP_Explorer::Block block_190;
-extern const MAP_Explorer::Block block_191;
-extern const MAP_Explorer::Block block_192;
-extern const MAP_Explorer::Block block_195;
-extern const MAP_Explorer::Block block_243;
+extern const MAP_Explorer::Block block_429;
 extern const MAP_Explorer::Block block_399;
 extern const MAP_Explorer::Block block_400;
 extern const MAP_Explorer::Block block_411;
@@ -251,25 +240,28 @@ extern const MAP_Explorer::Block block_414;
 extern const MAP_Explorer::Block block_415;
 extern const MAP_Explorer::Block block_420;
 extern const MAP_Explorer::Block block_421;
-extern const MAP_Explorer::Block block_515;
+extern const MAP_Explorer::Block block_187;
+extern const MAP_Explorer::Block block_189;
+extern const MAP_Explorer::Block block_196;
+extern const MAP_Explorer::Block block_190;
+extern const MAP_Explorer::Block block_191;
+extern const MAP_Explorer::Block block_192;
+extern const MAP_Explorer::Block block_195;
 extern const MAP_Explorer::Block block_516;
 extern const MAP_Explorer::Block block_517;
 extern const MAP_Explorer::Block block_518;
 extern const MAP_Explorer::Block block_519;
 extern const MAP_Explorer::Block block_520;
 extern const MAP_Explorer::Block block_521;
-extern const MAP_Explorer::Block block_524;
+extern const MAP_Explorer::Block block_522;
+extern const MAP_Explorer::Block block_525;
 extern const MAP_Explorer::Block block_335;
-extern const MAP_Explorer::Block block_136;
-extern const MAP_Explorer::Block block_698;
-extern const MAP_Explorer::Block block_137;
-extern const MAP_Explorer::Block block_433;
 extern const MAP_Explorer::Block block_434;
+extern const MAP_Explorer::Block block_435;
+extern const MAP_Explorer::Block block_559;
 extern const MAP_Explorer::Block block_361;
 extern const MAP_Explorer::Block block_362;
 extern const MAP_Explorer::Block block_382;
-extern const MAP_Explorer::Block block_193;
-extern const MAP_Explorer::Block block_194;
 extern const MAP_Explorer::Block block_296;
 extern const MAP_Explorer::Block block_305;
 extern const MAP_Explorer::Block block_336;
@@ -294,31 +286,64 @@ extern const MAP_Explorer::Block block_395;
 extern const MAP_Explorer::Block block_396;
 extern const MAP_Explorer::Block block_397;
 extern const MAP_Explorer::Block block_398;
-extern const MAP_Explorer::Block block_523;
-extern const MAP_Explorer::Block block_525;
-extern const MAP_Explorer::Block block_204;
+extern const MAP_Explorer::Block block_193;
+extern const MAP_Explorer::Block block_194;
+extern const MAP_Explorer::Block block_524;
+extern const MAP_Explorer::Block block_526;
 extern const MAP_Explorer::Block block_419;
-extern const MAP_Explorer::Block block_429;
-extern const MAP_Explorer::Block block_431;
+extern const MAP_Explorer::Block block_430;
 extern const MAP_Explorer::Block block_432;
-extern const MAP_Explorer::Block block_266;
+extern const MAP_Explorer::Block block_433;
 extern const MAP_Explorer::Block block_274;
 extern const MAP_Explorer::Block block_275;
 extern const MAP_Explorer::Block block_282;
 extern const MAP_Explorer::Block block_422;
 extern const MAP_Explorer::Block block_423;
+extern const MAP_Explorer::Block block_424;
+extern const MAP_Explorer::Block block_503;
+extern const MAP_Explorer::Block block_638;
+extern const MAP_Explorer::Block block_639;
+extern const MAP_Explorer::Block block_504;
+extern const MAP_Explorer::Block block_505;
+extern const MAP_Explorer::Block block_507;
+extern const MAP_Explorer::Block block_243;
+extern const MAP_Explorer::Block block_509;
+extern const MAP_Explorer::Block block_510;
+extern const MAP_Explorer::Block block_511;
+extern const MAP_Explorer::Block block_512;
+extern const MAP_Explorer::Block block_513;
+extern const MAP_Explorer::Block block_514;
+extern const MAP_Explorer::Block block_515;
+extern const MAP_Explorer::Block block_136;
+extern const MAP_Explorer::Block block_701;
+extern const MAP_Explorer::Block block_137;
+extern const MAP_Explorer::Block block_500;
+extern const MAP_Explorer::Block block_502;
+extern const MAP_Explorer::Block block_506;
+extern const MAP_Explorer::Block block_508;
+extern const MAP_Explorer::Block block_204;
+extern const MAP_Explorer::Block block_265;
+extern const MAP_Explorer::Block block_266;
+extern const MAP_Explorer::Block block_268;
+extern const MAP_Explorer::Block block_501;
+extern const MAP_Explorer::Block block_528;
+extern const MAP_Explorer::Block block_529;
+extern const MAP_Explorer::Block block_535;
+extern const MAP_Explorer::Block block_536;
+extern const MAP_Explorer::Block block_540;
+extern const MAP_Explorer::Block block_554;
+extern const MAP_Explorer::Block block_555;
 extern const MAP_Explorer::Block block_177;
 extern const MAP_Explorer::Block block_178;
 extern const MAP_Explorer::Block block_202;
-extern const MAP_Explorer::Block block_502;
 extern const MAP_Explorer::Block block_188;
-extern const MAP_Explorer::Block block_668;
-extern const MAP_Explorer::Block block_669;
-extern const MAP_Explorer::Block block_670;
 extern const MAP_Explorer::Block block_671;
+extern const MAP_Explorer::Block block_672;
+extern const MAP_Explorer::Block block_673;
 extern const MAP_Explorer::Block block_674;
-extern const MAP_Explorer::Block block_675;
-extern const MAP_Explorer::Block block_676;
+extern const MAP_Explorer::Block block_677;
+extern const MAP_Explorer::Block block_678;
+extern const MAP_Explorer::Block block_679;
 extern const MAP_Explorer::Block block_78;
 extern const MAP_Explorer::Block block_80;
 extern const MAP_Explorer::Block block_203;
@@ -334,17 +359,14 @@ extern const MAP_Explorer::Block block_83;
 extern const MAP_Explorer::Block block_84;
 extern const MAP_Explorer::Block block_233;
 extern const MAP_Explorer::Block block_250;
-extern const MAP_Explorer::Block block_503;
-extern const MAP_Explorer::Block block_504;
-extern const MAP_Explorer::Block block_506;
-extern const MAP_Explorer::Block block_634;
-extern const MAP_Explorer::Block block_638;
-extern const MAP_Explorer::Block block_639;
-extern const MAP_Explorer::Block block_666;
-extern const MAP_Explorer::Block block_667;
-extern const MAP_Explorer::Block block_672;
-extern const MAP_Explorer::Block block_673;
-extern const MAP_Explorer::Block block_677;
+extern const MAP_Explorer::Block block_637;
+extern const MAP_Explorer::Block block_641;
+extern const MAP_Explorer::Block block_642;
+extern const MAP_Explorer::Block block_669;
+extern const MAP_Explorer::Block block_670;
+extern const MAP_Explorer::Block block_675;
+extern const MAP_Explorer::Block block_676;
+extern const MAP_Explorer::Block block_680;
 extern const MAP_Explorer::Block block_15;
 extern const MAP_Explorer::Block block_20;
 extern const MAP_Explorer::Block block_21;
@@ -366,37 +388,30 @@ extern const MAP_Explorer::Block block_186;
 extern const MAP_Explorer::Block block_197;
 extern const MAP_Explorer::Block block_198;
 extern const MAP_Explorer::Block block_199;
-extern const MAP_Explorer::Block block_508;
-extern const MAP_Explorer::Block block_509;
-extern const MAP_Explorer::Block block_510;
-extern const MAP_Explorer::Block block_511;
-extern const MAP_Explorer::Block block_512;
-extern const MAP_Explorer::Block block_513;
-extern const MAP_Explorer::Block block_514;
-extern const MAP_Explorer::Block block_575;
-extern const MAP_Explorer::Block block_576;
-extern const MAP_Explorer::Block block_577;
 extern const MAP_Explorer::Block block_578;
 extern const MAP_Explorer::Block block_579;
 extern const MAP_Explorer::Block block_580;
 extern const MAP_Explorer::Block block_581;
 extern const MAP_Explorer::Block block_582;
-extern const MAP_Explorer::Block block_586;
-extern const MAP_Explorer::Block block_587;
-extern const MAP_Explorer::Block block_588;
+extern const MAP_Explorer::Block block_583;
+extern const MAP_Explorer::Block block_584;
+extern const MAP_Explorer::Block block_585;
 extern const MAP_Explorer::Block block_589;
 extern const MAP_Explorer::Block block_590;
-extern const MAP_Explorer::Block block_594;
-extern const MAP_Explorer::Block block_596;
+extern const MAP_Explorer::Block block_591;
+extern const MAP_Explorer::Block block_592;
+extern const MAP_Explorer::Block block_593;
 extern const MAP_Explorer::Block block_597;
 extern const MAP_Explorer::Block block_599;
 extern const MAP_Explorer::Block block_600;
-extern const MAP_Explorer::Block block_601;
 extern const MAP_Explorer::Block block_602;
 extern const MAP_Explorer::Block block_603;
 extern const MAP_Explorer::Block block_604;
 extern const MAP_Explorer::Block block_605;
 extern const MAP_Explorer::Block block_606;
+extern const MAP_Explorer::Block block_607;
+extern const MAP_Explorer::Block block_608;
+extern const MAP_Explorer::Block block_609;
 extern const MAP_Explorer::Block block_52;
 extern const MAP_Explorer::Block block_53;
 extern const MAP_Explorer::Block block_62;
@@ -438,25 +453,18 @@ extern const MAP_Explorer::Block block_234;
 extern const MAP_Explorer::Block block_235;
 extern const MAP_Explorer::Block block_236;
 extern const MAP_Explorer::Block block_249;
-extern const MAP_Explorer::Block block_499;
-extern const MAP_Explorer::Block block_501;
-extern const MAP_Explorer::Block block_505;
-extern const MAP_Explorer::Block block_507;
-extern const MAP_Explorer::Block block_583;
-extern const MAP_Explorer::Block block_584;
-extern const MAP_Explorer::Block block_585;
-extern const MAP_Explorer::Block block_608;
-extern const MAP_Explorer::Block block_609;
-extern const MAP_Explorer::Block block_627;
-extern const MAP_Explorer::Block block_628;
+extern const MAP_Explorer::Block block_586;
+extern const MAP_Explorer::Block block_587;
+extern const MAP_Explorer::Block block_588;
+extern const MAP_Explorer::Block block_611;
+extern const MAP_Explorer::Block block_612;
 extern const MAP_Explorer::Block block_630;
 extern const MAP_Explorer::Block block_631;
-extern const MAP_Explorer::Block block_632;
 extern const MAP_Explorer::Block block_633;
-extern const MAP_Explorer::Block block_637;
+extern const MAP_Explorer::Block block_634;
+extern const MAP_Explorer::Block block_635;
+extern const MAP_Explorer::Block block_636;
 extern const MAP_Explorer::Block block_640;
-extern const MAP_Explorer::Block block_641;
-extern const MAP_Explorer::Block block_642;
 extern const MAP_Explorer::Block block_643;
 extern const MAP_Explorer::Block block_644;
 extern const MAP_Explorer::Block block_645;
@@ -480,9 +488,9 @@ extern const MAP_Explorer::Block block_662;
 extern const MAP_Explorer::Block block_663;
 extern const MAP_Explorer::Block block_664;
 extern const MAP_Explorer::Block block_665;
-extern const MAP_Explorer::Block block_678;
-extern const MAP_Explorer::Block block_679;
-extern const MAP_Explorer::Block block_680;
+extern const MAP_Explorer::Block block_666;
+extern const MAP_Explorer::Block block_667;
+extern const MAP_Explorer::Block block_668;
 extern const MAP_Explorer::Block block_681;
 extern const MAP_Explorer::Block block_682;
 extern const MAP_Explorer::Block block_683;
@@ -490,9 +498,12 @@ extern const MAP_Explorer::Block block_684;
 extern const MAP_Explorer::Block block_685;
 extern const MAP_Explorer::Block block_686;
 extern const MAP_Explorer::Block block_687;
-extern const MAP_Explorer::Block block_692;
-extern const MAP_Explorer::Block block_693;
-extern const MAP_Explorer::Block block_703;
+extern const MAP_Explorer::Block block_688;
+extern const MAP_Explorer::Block block_689;
+extern const MAP_Explorer::Block block_690;
+extern const MAP_Explorer::Block block_695;
+extern const MAP_Explorer::Block block_696;
+extern const MAP_Explorer::Block block_706;
 extern const MAP_Explorer::Block block_0;
 extern const MAP_Explorer::Block block_1;
 extern const MAP_Explorer::Block block_2;
@@ -664,24 +675,13 @@ extern const MAP_Explorer::Block block_261;
 extern const MAP_Explorer::Block block_262;
 extern const MAP_Explorer::Block block_263;
 extern const MAP_Explorer::Block block_264;
-extern const MAP_Explorer::Block block_265;
-extern const MAP_Explorer::Block block_268;
-extern const MAP_Explorer::Block block_500;
-extern const MAP_Explorer::Block block_527;
-extern const MAP_Explorer::Block block_528;
-extern const MAP_Explorer::Block block_534;
-extern const MAP_Explorer::Block block_535;
-extern const MAP_Explorer::Block block_539;
-extern const MAP_Explorer::Block block_553;
-extern const MAP_Explorer::Block block_554;
-extern const MAP_Explorer::Block block_555;
+extern const MAP_Explorer::Block block_556;
 extern const MAP_Explorer::Block block_557;
 extern const MAP_Explorer::Block block_558;
-extern const MAP_Explorer::Block block_559;
 extern const MAP_Explorer::Block block_560;
+extern const MAP_Explorer::Block block_561;
+extern const MAP_Explorer::Block block_562;
 extern const MAP_Explorer::Block block_563;
-extern const MAP_Explorer::Block block_564;
-extern const MAP_Explorer::Block block_565;
 extern const MAP_Explorer::Block block_566;
 extern const MAP_Explorer::Block block_567;
 extern const MAP_Explorer::Block block_568;
@@ -691,15 +691,15 @@ extern const MAP_Explorer::Block block_571;
 extern const MAP_Explorer::Block block_572;
 extern const MAP_Explorer::Block block_573;
 extern const MAP_Explorer::Block block_574;
-extern const MAP_Explorer::Block block_591;
-extern const MAP_Explorer::Block block_592;
-extern const MAP_Explorer::Block block_593;
+extern const MAP_Explorer::Block block_575;
+extern const MAP_Explorer::Block block_576;
+extern const MAP_Explorer::Block block_577;
+extern const MAP_Explorer::Block block_594;
 extern const MAP_Explorer::Block block_595;
+extern const MAP_Explorer::Block block_596;
 extern const MAP_Explorer::Block block_598;
-extern const MAP_Explorer::Block block_607;
+extern const MAP_Explorer::Block block_601;
 extern const MAP_Explorer::Block block_610;
-extern const MAP_Explorer::Block block_611;
-extern const MAP_Explorer::Block block_612;
 extern const MAP_Explorer::Block block_613;
 extern const MAP_Explorer::Block block_614;
 extern const MAP_Explorer::Block block_615;
@@ -714,23 +714,26 @@ extern const MAP_Explorer::Block block_623;
 extern const MAP_Explorer::Block block_624;
 extern const MAP_Explorer::Block block_625;
 extern const MAP_Explorer::Block block_626;
+extern const MAP_Explorer::Block block_627;
+extern const MAP_Explorer::Block block_628;
 extern const MAP_Explorer::Block block_629;
-extern const MAP_Explorer::Block block_688;
-extern const MAP_Explorer::Block block_689;
-extern const MAP_Explorer::Block block_690;
+extern const MAP_Explorer::Block block_632;
 extern const MAP_Explorer::Block block_691;
+extern const MAP_Explorer::Block block_692;
+extern const MAP_Explorer::Block block_693;
 extern const MAP_Explorer::Block block_694;
-extern const MAP_Explorer::Block block_695;
-extern const MAP_Explorer::Block block_696;
 extern const MAP_Explorer::Block block_697;
+extern const MAP_Explorer::Block block_698;
 extern const MAP_Explorer::Block block_699;
 extern const MAP_Explorer::Block block_700;
-extern const MAP_Explorer::Block block_701;
 extern const MAP_Explorer::Block block_702;
+extern const MAP_Explorer::Block block_703;
+extern const MAP_Explorer::Block block_704;
+extern const MAP_Explorer::Block block_705;
 
-const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
+const std::array<const MAP_Explorer::Block*, 707> CV32E40P_DSE_blocks{{
     &block_277,
-    &block_426,
+    &block_427,
     &block_269,
     &block_270,
     &block_279,
@@ -743,10 +746,9 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_286,
     &block_287,
     &block_288,
-    &block_425,
+    &block_426,
     &block_416,
     &block_418,
-    &block_439,
     &block_440,
     &block_441,
     &block_442,
@@ -772,6 +774,7 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_462,
     &block_463,
     &block_464,
+    &block_465,
     &block_301,
     &block_406,
     &block_302,
@@ -796,12 +799,11 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_393,
     &block_389,
     &block_390,
-    &block_427,
+    &block_428,
     &block_345,
     &block_346,
     &block_347,
     &block_348,
-    &block_466,
     &block_467,
     &block_468,
     &block_469,
@@ -813,27 +815,26 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_475,
     &block_476,
     &block_477,
-    &block_479,
+    &block_478,
     &block_480,
     &block_481,
     &block_482,
     &block_483,
-    &block_495,
-    &block_561,
-    &block_562,
-    &block_485,
+    &block_484,
+    &block_496,
     &block_486,
     &block_487,
     &block_488,
     &block_489,
-    &block_491,
     &block_490,
-    &block_493,
+    &block_492,
+    &block_491,
     &block_494,
-    &block_522,
+    &block_495,
+    &block_523,
     &block_298,
     &block_299,
-    &block_498,
+    &block_499,
     &block_312,
     &block_313,
     &block_314,
@@ -843,26 +844,25 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_370,
     &block_371,
     &block_267,
-    &block_424,
-    &block_435,
+    &block_425,
     &block_436,
     &block_437,
     &block_438,
-    &block_465,
-    &block_484,
-    &block_492,
-    &block_496,
+    &block_439,
+    &block_466,
+    &block_485,
+    &block_493,
     &block_497,
-    &block_526,
-    &block_529,
+    &block_498,
+    &block_527,
     &block_530,
     &block_531,
     &block_532,
     &block_533,
-    &block_536,
+    &block_534,
     &block_537,
     &block_538,
-    &block_540,
+    &block_539,
     &block_541,
     &block_542,
     &block_543,
@@ -875,15 +875,15 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_550,
     &block_551,
     &block_552,
+    &block_553,
     &block_271,
-    &block_478,
+    &block_479,
     &block_408,
     &block_337,
     &block_338,
     &block_340,
     &block_273,
     &block_272,
-    &block_556,
     &block_297,
     &block_276,
     &block_280,
@@ -899,6 +899,8 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_407,
     &block_409,
     &block_410,
+    &block_564,
+    &block_565,
     &block_354,
     &block_355,
     &block_356,
@@ -907,11 +909,7 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_359,
     &block_353,
     &block_352,
-    &block_635,
-    &block_636,
-    &block_187,
-    &block_189,
-    &block_430,
+    &block_431,
     &block_290,
     &block_291,
     &block_292,
@@ -941,13 +939,7 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_374,
     &block_375,
     &block_376,
-    &block_196,
-    &block_428,
-    &block_190,
-    &block_191,
-    &block_192,
-    &block_195,
-    &block_243,
+    &block_429,
     &block_399,
     &block_400,
     &block_411,
@@ -957,25 +949,28 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_415,
     &block_420,
     &block_421,
-    &block_515,
+    &block_187,
+    &block_189,
+    &block_196,
+    &block_190,
+    &block_191,
+    &block_192,
+    &block_195,
     &block_516,
     &block_517,
     &block_518,
     &block_519,
     &block_520,
     &block_521,
-    &block_524,
+    &block_522,
+    &block_525,
     &block_335,
-    &block_136,
-    &block_698,
-    &block_137,
-    &block_433,
     &block_434,
+    &block_435,
+    &block_559,
     &block_361,
     &block_362,
     &block_382,
-    &block_193,
-    &block_194,
     &block_296,
     &block_305,
     &block_336,
@@ -1000,31 +995,64 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_396,
     &block_397,
     &block_398,
-    &block_523,
-    &block_525,
-    &block_204,
+    &block_193,
+    &block_194,
+    &block_524,
+    &block_526,
     &block_419,
-    &block_429,
-    &block_431,
+    &block_430,
     &block_432,
-    &block_266,
+    &block_433,
     &block_274,
     &block_275,
     &block_282,
     &block_422,
     &block_423,
+    &block_424,
+    &block_503,
+    &block_638,
+    &block_639,
+    &block_504,
+    &block_505,
+    &block_507,
+    &block_243,
+    &block_509,
+    &block_510,
+    &block_511,
+    &block_512,
+    &block_513,
+    &block_514,
+    &block_515,
+    &block_136,
+    &block_701,
+    &block_137,
+    &block_500,
+    &block_502,
+    &block_506,
+    &block_508,
+    &block_204,
+    &block_265,
+    &block_266,
+    &block_268,
+    &block_501,
+    &block_528,
+    &block_529,
+    &block_535,
+    &block_536,
+    &block_540,
+    &block_554,
+    &block_555,
     &block_177,
     &block_178,
     &block_202,
-    &block_502,
     &block_188,
-    &block_668,
-    &block_669,
-    &block_670,
     &block_671,
+    &block_672,
+    &block_673,
     &block_674,
-    &block_675,
-    &block_676,
+    &block_677,
+    &block_678,
+    &block_679,
     &block_78,
     &block_80,
     &block_203,
@@ -1040,17 +1068,14 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_84,
     &block_233,
     &block_250,
-    &block_503,
-    &block_504,
-    &block_506,
-    &block_634,
-    &block_638,
-    &block_639,
-    &block_666,
-    &block_667,
-    &block_672,
-    &block_673,
-    &block_677,
+    &block_637,
+    &block_641,
+    &block_642,
+    &block_669,
+    &block_670,
+    &block_675,
+    &block_676,
+    &block_680,
     &block_15,
     &block_20,
     &block_21,
@@ -1072,37 +1097,30 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_197,
     &block_198,
     &block_199,
-    &block_508,
-    &block_509,
-    &block_510,
-    &block_511,
-    &block_512,
-    &block_513,
-    &block_514,
-    &block_575,
-    &block_576,
-    &block_577,
     &block_578,
     &block_579,
     &block_580,
     &block_581,
     &block_582,
-    &block_586,
-    &block_587,
-    &block_588,
+    &block_583,
+    &block_584,
+    &block_585,
     &block_589,
     &block_590,
-    &block_594,
-    &block_596,
+    &block_591,
+    &block_592,
+    &block_593,
     &block_597,
     &block_599,
     &block_600,
-    &block_601,
     &block_602,
     &block_603,
     &block_604,
     &block_605,
     &block_606,
+    &block_607,
+    &block_608,
+    &block_609,
     &block_52,
     &block_53,
     &block_62,
@@ -1144,25 +1162,18 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_235,
     &block_236,
     &block_249,
-    &block_499,
-    &block_501,
-    &block_505,
-    &block_507,
-    &block_583,
-    &block_584,
-    &block_585,
-    &block_608,
-    &block_609,
-    &block_627,
-    &block_628,
+    &block_586,
+    &block_587,
+    &block_588,
+    &block_611,
+    &block_612,
     &block_630,
     &block_631,
-    &block_632,
     &block_633,
-    &block_637,
+    &block_634,
+    &block_635,
+    &block_636,
     &block_640,
-    &block_641,
-    &block_642,
     &block_643,
     &block_644,
     &block_645,
@@ -1186,9 +1197,9 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_663,
     &block_664,
     &block_665,
-    &block_678,
-    &block_679,
-    &block_680,
+    &block_666,
+    &block_667,
+    &block_668,
     &block_681,
     &block_682,
     &block_683,
@@ -1196,9 +1207,12 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_685,
     &block_686,
     &block_687,
-    &block_692,
-    &block_693,
-    &block_703,
+    &block_688,
+    &block_689,
+    &block_690,
+    &block_695,
+    &block_696,
+    &block_706,
     &block_0,
     &block_1,
     &block_2,
@@ -1370,24 +1384,13 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_262,
     &block_263,
     &block_264,
-    &block_265,
-    &block_268,
-    &block_500,
-    &block_527,
-    &block_528,
-    &block_534,
-    &block_535,
-    &block_539,
-    &block_553,
-    &block_554,
-    &block_555,
+    &block_556,
     &block_557,
     &block_558,
-    &block_559,
     &block_560,
+    &block_561,
+    &block_562,
     &block_563,
-    &block_564,
-    &block_565,
     &block_566,
     &block_567,
     &block_568,
@@ -1397,15 +1400,15 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_572,
     &block_573,
     &block_574,
-    &block_591,
-    &block_592,
-    &block_593,
+    &block_575,
+    &block_576,
+    &block_577,
+    &block_594,
     &block_595,
+    &block_596,
     &block_598,
-    &block_607,
+    &block_601,
     &block_610,
-    &block_611,
-    &block_612,
     &block_613,
     &block_614,
     &block_615,
@@ -1420,19 +1423,22 @@ const std::array<const MAP_Explorer::Block*, 704> CV32E40P_DSE_blocks{{
     &block_624,
     &block_625,
     &block_626,
+    &block_627,
+    &block_628,
     &block_629,
-    &block_688,
-    &block_689,
-    &block_690,
+    &block_632,
     &block_691,
+    &block_692,
+    &block_693,
     &block_694,
-    &block_695,
-    &block_696,
     &block_697,
+    &block_698,
     &block_699,
     &block_700,
-    &block_701,
-    &block_702
+    &block_702,
+    &block_703,
+    &block_704,
+    &block_705
 }};
 
 extern const MAP_Explorer::BlockDictionary CV32E40P_DSE_blockDict{CV32E40P_DSE_blocks.data(), CV32E40P_DSE_blocks.size()};

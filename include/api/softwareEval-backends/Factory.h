@@ -44,6 +44,7 @@ public:
   Channel* getChannel(int);
   Backend* getPerformanceEstimator(int);
   Backend* getMAPExplorer(int);
+  Backend* getMAPExplorer_InstructionScheduling(int);
   Backend* getBlockExtractor(int);
   Backend* getTracePrinter(int);
 };

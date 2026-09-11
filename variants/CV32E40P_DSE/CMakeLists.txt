@@ -7,6 +7,7 @@ TARGET_SOURCES(SWEVAL_BACKENDS_LIB PRIVATE
 	src/CV32E40P_DSE_InstructionPrinters.cpp
 	src/CV32E40P_DSE_Printer.cpp
 	src/CV32E40P_DSE_PerformanceModel.cpp
+	src/CV32E40P_DSE_InstructionSchedulingFunctions.cpp
 
 )
 

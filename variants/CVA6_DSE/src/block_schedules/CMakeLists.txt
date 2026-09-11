@@ -15,8 +15,4 @@ TARGET_SOURCES(SWEVAL_BACKENDS_LIB PRIVATE
     CVA6_DSE_BlockSchedules_12.cpp
     CVA6_DSE_BlockSchedules_13.cpp
     CVA6_DSE_BlockSchedules_14.cpp
-    CVA6_DSE_BlockSchedules_15.cpp
-    CVA6_DSE_BlockSchedules_16.cpp
-    CVA6_DSE_BlockSchedules_17.cpp
-    CVA6_DSE_BlockSchedules_18.cpp
 )

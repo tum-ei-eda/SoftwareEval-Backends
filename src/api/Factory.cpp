@@ -143,8 +143,18 @@ Backend* Factory::getMAPExplorer(int var_)
 {
   switch((var_t)var_)
   {
-    case CV32E40P_DSE: return new CV32E40P_DSE::CV32E40P_DSE_MAPExplorer();
-	case CVA6_DSE: return new CVA6_DSE::CVA6_DSE_MAPExplorer();
+    case CV32E40P_DSE: return new CV32E40P_DSE::CV32E40P_DSE_MAPExplorer<true>();
+	case CVA6_DSE: return new CVA6_DSE::CVA6_DSE_MAPExplorer<true>();
+    default: return nullptr;
+  }
+}
+
+Backend* Factory::getMAPExplorer_InstructionScheduling(int var_)
+{
+  switch((var_t)var_)
+  {
+    case CV32E40P_DSE: return new CV32E40P_DSE::CV32E40P_DSE_MAPExplorer<false>();
+	case CVA6_DSE: return new CVA6_DSE::CVA6_DSE_MAPExplorer<false>();
     default: return nullptr;
   }
 }

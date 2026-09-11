@@ -15,7 +15,7 @@ TARGET_SOURCES(SWEVAL_BACKENDS_LIB PRIVATE
 	src/CVA6_DSE_PerformanceModel.cpp
 	src/CVA6_DSE_InstructionPrinters.cpp
 	src/CVA6_DSE_MAPExplorer.cpp
-
+	src/CVA6_DSE_InstructionSchedulingFunctions.cpp
 )
 
 TARGET_INCLUDE_DIRECTORIES(SWEVAL_BACKENDS_LIB PRIVATE

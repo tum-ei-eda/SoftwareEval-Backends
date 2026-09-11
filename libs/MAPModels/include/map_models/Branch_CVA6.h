@@ -126,6 +126,7 @@ public:
     };
 
     void shiftVector(uint64_t* vec_) const {
+        
         if(mispredicted){ // mispredicted
             vec_[98] = vec_[103]; // pc_mp = pc_c
             vec_[99] = 0; // pc_pt = 0

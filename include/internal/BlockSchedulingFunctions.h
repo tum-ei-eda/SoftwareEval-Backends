@@ -19,11 +19,13 @@
 
 // TODO: Does it make sense to move all this to MAPExplorer.h?
 
-#include <functional>
-#include <array>
+//#include <functional>
+//#include <array>
 
-#include <iostream> // TODO: Debug. Remove
-#include <unordered_map>
+//#include <iostream> // TODO: Debug. Remove
+//#include <unordered_map>
+
+#include <cstdint>
 
 using std::uint64_t;
 
@@ -46,90 +48,52 @@ struct Block{
     SchedFuncPtr getScheduleFunction() const { return scheduleFunction; };
 };
 
-class BlockDictionary{
-
-public:
-
-    //BlockDictionary(const MAP_Explorer::Block* const* blocks_, size_t numBlocks_, size_t delayVecSize_):
-    BlockDictionary(const MAP_Explorer::Block* const* blocks_, size_t numBlocks_):
-        blocks(blocks_), 
-        numBlocks(numBlocks_)
-        //delayVecSize(delayVecSize_) 
-    {
-        blockMap.reserve(numBlocks);
-
-        for(size_t i=0; i<numBlocks; i++){
-            const Block* blk = blocks[i];
-            blockMap.emplace(blk->startPc, blk);
-            if(i < 10){
-                mostUsedBlocks[i] = blk;
-            }
-        }
-
-    };
-    
-    
-    
-    
-    ~BlockDictionary() = default;
-    //~BlockDictionary(){
-    //    std::cout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
-    //    std::cout << "Num block look-ups: " << lookUpCnt << std::endl;
-    //    std::cout << "Total look-up depth: " << lookUpDepth << std::endl;
-    //    std::cout << "Avg. look-up depth: " << (lookUpDepth / lookUpCnt) << std::endl;
-    //    std::cout << "+++++++++++++++++++++++++++++++++++++++++" << std::endl;
-    //}
-
-    //inline const Block* getBlock(uint64_t pc_) const {
-    //    lookUpCnt++;
-    //    
-    //    for (size_t i = 0; i < numBlocks; i++){
-    //        if(blocks[i]->startPc == pc_){
-    //            lookUpDepth += (i+1);
-    //            return blocks[i];
-    //        }
-    //    }
-    //    return nullptr;   
-    //};
-
-    inline const Block* getBlock(uint64_t pc_) const {
-        //lookUpCnt++;
-        
-        for(size_t i=0; i < 10; i++){
-            if(mostUsedBlocks[i]->startPc == pc_){
-                return mostUsedBlocks[i];
-            }
-        }
-
-        auto it = blockMap.find(pc_);
-        if(it != blockMap.end()){
-            return it->second;
-        }
-        return nullptr;
-
-        //for (size_t i = 0; i < numBlocks; i++){
-        //    if(blocks[i]->startPc == pc_){
-        //        lookUpDepth += (i+1);
-        //        return blocks[i];
-        //    }
-        //}
-        //return nullptr;   
-    };
-
-    //const size_t getDelayVecSize() const { return delayVecSize; };
-
-private:
-    const Block* const* blocks;
-    size_t numBlocks;
-    //size_t delayVecSize;
-
-    std::unordered_map<uint64_t, const Block*> blockMap;
-    std::array<const Block*, 10> mostUsedBlocks;
-
-    //mutable int lookUpCnt = 0;
-    //mutable int lookUpDepth = 0; 
-
-};
+//class BlockDictionary{
+//
+//public:
+//
+//    BlockDictionary(const MAP_Explorer::Block* const* blocks_, size_t numBlocks_):
+//        blocks(blocks_), 
+//        numBlocks(numBlocks_)
+//    {
+//        blockMap.reserve(numBlocks);
+//
+//        for(size_t i=0; i<numBlocks; i++){
+//            const Block* blk = blocks[i];
+//            blockMap.emplace(blk->startPc, blk);
+//            if(i < 10){
+//                mostUsedBlocks[i] = blk;
+//            }
+//        }
+//
+//    };
+//    
+//    ~BlockDictionary() = default;
+//
+//    inline const Block* getBlock(uint64_t pc_) const {
+//        
+//        for(size_t i=0; i < 10; i++){
+//            if(mostUsedBlocks[i]->startPc == pc_){
+//                return mostUsedBlocks[i];
+//            }
+//        }
+//
+//        auto it = blockMap.find(pc_);
+//        if(it != blockMap.end()){
+//            return it->second;
+//        }
+//        return nullptr;
+// 
+//    };
+//
+//private:
+//    const Block* const* blocks;
+//    size_t numBlocks;
+//
+//    std::unordered_map<uint64_t, const Block*> blockMap;
+//    std::array<const Block*, 10> mostUsedBlocks;
+//
+//};
 
 } // namespace MAP_Explorer
 

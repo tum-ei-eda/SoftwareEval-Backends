@@ -20,7 +20,7 @@
 #ifndef SWEVAL_BACKENDS_CVA6_DSE_BLOCK_SCHEDULING_FUNCTIONS_H
 #define SWEVAL_BACKENDS_CVA6_DSE_BLOCK_SCHEDULING_FUNCTIONS_H
 
-#include "BlockSchedulingFunctions.h"
+#include "BlockSchedulingDictionary.h"
 
 namespace CVA6_DSE{
 

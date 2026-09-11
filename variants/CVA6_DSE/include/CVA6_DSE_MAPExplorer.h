@@ -25,6 +25,7 @@
 #include "Channel.h"
 
 #include "CVA6_DSE_BlockSchedulingFunctions.h"
+#include "CVA6_DSE_InstructionSchedulingFunctions.h"
 
 
 #include "map_models/Branch_CVA6.h"
@@ -52,6 +53,21 @@ namespace CVA6_DSE{
 /* BRANCH GROUP */
 
 class CVA6_DSE_BranchGroup : public MAP_Explorer::BranchGroupT<
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
+map_models::Branch_CVA6,
 map_models::Branch_CVA6
 >{
 
@@ -63,6 +79,37 @@ public:
 /* RESOURCE GROUPS */
 
 class CVA6_DSE_ICACHE_ResourceGroup : public MAP_Explorer::ResourceGroupT<
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
+map_models::ICacheModel,
 map_models::ICacheModel
 >{
 
@@ -90,6 +137,37 @@ public:
 };
 
 class CVA6_DSE_DCACHE_ResourceGroup : public MAP_Explorer::ResourceGroupT<
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
+map_models::DCacheModel,
 map_models::DCacheModel
 >{
 
@@ -101,15 +179,17 @@ public:
 
 /* MAP EXPLORER */
 
-using MAPExplorerBase = MAP_Explorer::MAPExplorer<4, 1, 1, 68, 104, 2, 34>;
+template<bool USE_BLK>
+using MAPExplorerBase = MAP_Explorer::MAPExplorer<USE_BLK, 4, 16384, 1024, 68, 104, 2, 34>;
 
-class CVA6_DSE_MAPExplorer : public MAPExplorerBase{
+template<bool USE_BLK>
+class CVA6_DSE_MAPExplorer : public MAPExplorerBase<USE_BLK>{
 
 public:
 
-    using CombType = typename MAPExplorerBase::CombType;
-    using DVecType = typename MAPExplorerBase::DVecType;
-    using ResGroupEntryType = typename MAPExplorerBase::ResGroupEntryType;
+    using CombType = typename MAPExplorerBase<USE_BLK>::CombType;
+    using DVecType = typename MAPExplorerBase<USE_BLK>::DVecType;
+    using ResGroupEntryType = typename MAPExplorerBase<USE_BLK>::ResGroupEntryType;
 
     CVA6_DSE_MAPExplorer();
     ~CVA6_DSE_MAPExplorer() = default;
@@ -128,10 +208,10 @@ private:
     static const std::array<const ResGroupEntryType, 68> resGroupLUT;
 
     // Delay-Vectors
-    static std::array<DVecType, 1> delayVectors;
+    static std::array<DVecType, 1024> delayVectors;
 
     // Combinations
-    static std::array<CombType, 1> combs;
+    static std::array<CombType, 16384> combs;
 };
 
 } // namespace CVA6_DSE

@@ -20,7 +20,7 @@
 #ifndef SWEVAL_BACKENDS_CV32E40P_DSE_BLOCK_SCHEDULING_FUNCTIONS_H
 #define SWEVAL_BACKENDS_CV32E40P_DSE_BLOCK_SCHEDULING_FUNCTIONS_H
 
-#include "BlockSchedulingFunctions.h"
+#include "BlockSchedulingDictionary.h"
 
 namespace CV32E40P_DSE{
 
